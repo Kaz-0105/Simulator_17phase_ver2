@@ -1,0 +1,11 @@
+simulator: 
+  folder: "two_lane"
+
+controller:
+  method: "mppi"
+
+mppi:
+  N_p : 10
+  N_c : 3
+  dt : 1
+  
