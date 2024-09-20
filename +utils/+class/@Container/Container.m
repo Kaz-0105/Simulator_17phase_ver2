@@ -1,4 +1,4 @@
-classdef Container < utils.class.Common & dynamicprops
+classdef Container < utils.class.Common
     methods
         function obj = Container()
         end
@@ -9,6 +9,10 @@ classdef Container < utils.class.Common & dynamicprops
 
         function element = itemByKey(obj, key)
             element = obj.Elements(key);
+        end
+
+        function keys = getKeys(obj)
+            keys = cell2mat(obj.Elements.keys);
         end
     end
 end

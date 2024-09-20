@@ -1,4 +1,4 @@
-classdef Common < handle
+classdef Common < handle & dynamicprops
     properties
     end
 

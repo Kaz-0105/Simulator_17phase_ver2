@@ -2,6 +2,7 @@ classdef Field < utils.class.Common
     properties
         Config;
         Simulator;
+        Controllers;
         Intersections;
         Roads;
     end

@@ -8,33 +8,50 @@ classdef Roads < utils.class.Container
     end
 
     methods
-        function obj = Roads(Field_or_Intersections)
+        function obj = Roads(Field_or_Intersection, type)
             % Configクラスを設定
-            obj.Config = Field_or_Intersections.get('Config');
+            obj.Config = Field_or_Intersection.get('Config');
 
             % typeによって分岐
-            if isa(Field_or_Intersections, 'simulator.field.Field')
+            if isa(Field_or_Intersection, 'simulator.Field')
                 % プロパティにFieldクラスを追加
                 prop = addprop(obj, 'Field');
                 prop.SetAccess = 'public';
                 prop.GetAccess = 'public';
 
                 % Fieldクラスを設定
-                obj.Field = Field_or_Intersections;
+                obj.Field = Field_or_Intersection;
 
-                % 要素クラスを作成
-                obj.create('Elements', 1);
-            elseif isa(Field_or_Intersections, 'simulator.field.Intersections')
                 % プロパティにIntersectionsクラスを追加
                 prop = addprop(obj, 'Intersections');
                 prop.SetAccess = 'public';
                 prop.GetAccess = 'public';
 
                 % Intersectionsクラスを設定
-                obj.Intersections = Field_or_Intersections;
+                obj.Intersections = obj.Field.get('Intersections');
+                obj.Intersections.set('Roads', obj);
 
                 % 要素クラスを作成
-                obj.create('Elements', 2);
+                obj.create('Elements', 'Field');
+            elseif isa(Field_or_Intersection, 'simulator.field.Intersection')
+                % プロパティにIntersectionsクラスを追加
+                prop = addprop(obj, 'Intersection');
+                prop.SetAccess = 'public';
+                prop.GetAccess = 'public';
+
+                % Intersectionsクラスを設定
+                obj.Intersection = Field_or_Intersection;
+
+                % プロパティにtypeを追加
+                prop = addprop(obj, 'type');
+                prop.SetAccess = 'public';
+                prop.GetAccess = 'public';
+
+                % typeを設定
+                obj.type = type;
+
+                % 要素クラスを作成
+                obj.create('Elements', 'Intersection');
             else
                 error('error: invalid argument');
             end

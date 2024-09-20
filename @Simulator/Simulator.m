@@ -2,6 +2,7 @@ classdef Simulator < utils.class.Common
     properties
         Config;
         Field;
+        Controllers;
     end
 
     properties
@@ -18,6 +19,9 @@ classdef Simulator < utils.class.Common
 
             % Fieldクラスを作成
             obj.Field = simulator.Field(obj);
+
+            % Controllersクラスを作成
+            obj.Controllers = simulator.Controllers(obj);
         end
     end
 

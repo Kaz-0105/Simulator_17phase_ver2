@@ -10,7 +10,15 @@ function update(obj, property_name)
         end
 
     elseif strcmp(property_name, 'Roads')
+        % Roadクラスを走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % RoadクラスにIntersectionを作成
+            Road.create('Intersections');
+        end
     else
-        error('Field:update', 'Invalid property name');
+        error('error: Property name is invalid.');
     end
 end

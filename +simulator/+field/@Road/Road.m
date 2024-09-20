@@ -17,4 +17,8 @@ classdef Road < utils.class.Common
             obj.Roads = Roads;
         end
     end
+
+    methods
+        create(obj, property_name);
+    end
 end
