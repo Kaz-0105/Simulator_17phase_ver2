@@ -15,6 +15,12 @@ function create(obj, property_name)
         % シミュレーション時間を設定
         obj.simulator.time = data.simulator.time;
 
+        % Vissimのシード値を設定
+        obj.simulator.seed = data.simulator.seed;
+
+        % VissimのシミュレーションのモードをQuickModeにするか設定
+        obj.simulator.quick_mode = logical(data.simulator.quick_mode);
+
     elseif strcmp(property_name, 'Vissim')
         % VissimのCOMオブジェクトを取得
         obj.Vissim = actxserver('VISSIM.Vissim');
@@ -24,6 +30,9 @@ function create(obj, property_name)
         layx_file = [pwd, '\layout\', char(obj.simulator.folder), '\network.layx']; 
         obj.Vissim.LoadNet(inpx_file);
         obj.Vissim.LoadLayout(layx_file);
+
+        % VissimにQuickModeを設定
+        obj.Vissim.Graphics.set('AttValue', 'QuickMode', obj.simulator.quick_mode);
 
     elseif strcmp(property_name, 'network')
         % 構造体を初期化

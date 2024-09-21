@@ -3091,7 +3091,7 @@
 		</reducedSpeedArea>
 	</reducedSpeedAreas>
 	<signalControllers>
-		<signalController active="true" cycTm="0" cycTmIsVar="false" debug="false" guiFile="#exe#vissig_gui.dll" name="" no="1" offset="0" progFile="#exe#vissig_controller.dll" progNo="1" scDetRecLabelDet="PORTNUMBER" scDetRecLabelSG="NUMBER" scDetRecShortNam="false" sigTmsTabAutoConfig="true" sigTmsTabLabelDet="PORTNUMBER" sigTmsTabLabelSG="NUMBER" supplyFile1="#exe#vissig.config" supplyFile2="#data#two_lane.sig" supplyFile3="" type="FIXEDTIME">
+		<signalController active="true" cycTm="0" cycTmIsVar="false" debug="false" guiFile="#exe#vissig_gui.dll" name="" no="1" offset="0" progFile="#exe#vissig_controller.dll" progNo="1" scDetRecLabelDet="PORTNUMBER" scDetRecLabelSG="NUMBER" scDetRecShortNam="false" sigTmsTabAutoConfig="true" sigTmsTabLabelDet="PORTNUMBER" sigTmsTabLabelSG="NUMBER" supplyFile1="#exe#vissig.config" supplyFile2="#data#network.sig" supplyFile3="" type="FIXEDTIME">
 			<rampMeterPara metEvalInt="60" metRateQDisp="0.25" occupDes="0.25" occupQDispAct="0.5" occupQDispDeact="0.1" regPara="0.019444444444444441"/>
 			<sgs>
 				<signalGroup actuationType="UNDEFINED" amber="3" callDetPortNo="0" chkOutDetPortNo="0" clearTm="0" greenFlsh="0" maxGreen="0" minGreen="5" minRed="1" name="Signal group 1" no="1" redAmber="0" type="NORMAL"/>

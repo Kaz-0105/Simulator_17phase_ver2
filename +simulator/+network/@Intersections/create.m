@@ -22,6 +22,15 @@ function create(obj, property_name)
             % Elementsにintersectionをプッシュ
             obj.Elements(Intersection.get('id')) = Intersection;
         end
+    elseif strcmp(property_name, 'Roads')
+        % Intersectionクラスを走査
+        for intersection_id = 1: obj.count()
+            % Intersectionクラスを取得
+            Intersection = obj.itemByKey(intersection_id);
+
+            % IntersectionクラスにRoadsを作成
+            Intersection.create('Roads');
+        end
     else
         error('Property name is invalid.');
     end

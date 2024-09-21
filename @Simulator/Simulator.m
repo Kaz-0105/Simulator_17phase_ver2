@@ -9,13 +9,28 @@ classdef Simulator < utils.class.Common
         Vissim;
     end
 
+    properties
+        dt;
+        time;
+        seed;
+
+        current_time;
+    end
+
     methods
         function obj = Simulator(Config)
             % Configクラスを設定
             obj.Config = Config;
 
-            % Vissimと接続（COMオブジェクトの取得（Vissim））
+            % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % ステップ時間とシミュレーション時間を設定
+            obj.create('dt');
+            obj.create('time');
+
+            % 現在の時間の初期化
+            obj.current_time = 0;
 
             % Networkクラスを作成
             obj.Network = simulator.Network(obj);

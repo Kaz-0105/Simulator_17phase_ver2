@@ -54,6 +54,12 @@ function create(obj, property_name)
         % Comオブジェクトを取得
         main_link.Vissim = Links.ItemByKey(main_link.id);
 
+        % main_linkの長さを取得
+        main_link.length = main_link.Vissim.get('AttValue', 'Length2D');
+
+        % lanesを取得
+        main_link.lanes = main_link.Vissim.Lanes.Count();
+
         % linksにmain_linkをプッシュ
         obj.links.main = main_link;
 
@@ -72,6 +78,9 @@ function create(obj, property_name)
 
                 % Comオブジェクトを取得
                 link.Vissim = Links.ItemByKey(link.id);
+
+                % linkの長さを取得
+                link.length = link.Vissim.get('AttValue', 'Length2D');
 
                 % linkをbranch_leftにプッシュ
                 branch_left.link = link;
@@ -98,6 +107,13 @@ function create(obj, property_name)
                         % Comオブジェクトを設定
                         connector.Vissim = Link;
 
+                        % connectorの長さを取得
+                        connector.length = Link.get('AttValue', 'Length2D');
+
+                        % from_posとto_posを取得
+                        connector.from_pos = Link.get('AttValue', 'FromPos');
+                        connector.to_pos = Link.get('AttValue', 'ToPos');
+
                         % branch_leftにconnectorをプッシュ
                         branch_left.connector = connector;
 
@@ -122,6 +138,9 @@ function create(obj, property_name)
 
                 % Comオブジェクトを取得
                 link.Vissim = Links.ItemByKey(link.id);
+
+                % linkの長さを取得
+                link.length = link.Vissim.get('AttValue', 'Length2D');
 
                 % linkをbranch_rightにプッシュ
                 branch_right.link = link;
@@ -148,6 +167,13 @@ function create(obj, property_name)
                         % Comオブジェクトを設定
                         connector.Vissim = Link;
 
+                        % connectorの長さを取得
+                        connector.length = Link.get('AttValue', 'Length2D');
+
+                        % from_posとto_posを取得
+                        connector.from_pos = Link.get('AttValue', 'FromPos');
+                        connector.to_pos = Link.get('AttValue', 'ToPos');
+
                         % branch_rightにconnectorをプッシュ
                         branch_right.connector = connector;
 
@@ -159,6 +185,101 @@ function create(obj, property_name)
                 end
             end
         end
+    elseif strcmp(property_name, 'SignalHead')
+        % NetworkクラスのComオブジェクトを取得 
+        Network = obj.Roads.get('Network');
+        Net = Network.get('Vissim');
+
+        % SignalHeadsのComオブジェクトを取得
+        SignalHeads = Net.SignalHeads;
+
+        for SignalHead = SignalHeads.GetAll()'
+            % セルから取り出し
+            SignalHead = SignalHead{1};
+
+            % SignalHeadが設置されているConnectorを取得
+            Connector = SignalHead.Lane.Link;
+
+            % 対応するLinkを取得
+            Link = Connector.FromLink;
+
+            % リンクのIDを取得
+            link_id = Link.get('AttValue', 'No');
+
+            % SignalHeadがこの道路内に存在するかで分岐
+            if link_id == obj.links.main.id
+                % link構造体を取得
+                link = obj.links.main;
+
+                % signal_head構造体を初期化
+                signal_head = struct();
+
+                % id, Comオブジェクト, 位置を取得
+                signal_head.id = SignalHead.get('AttValue', 'No');
+                signal_head.Vissim = SignalHead;
+                signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
+
+                % signal_headsが存在しない場合
+                if ~isfield(link, 'signal_heads')
+                    link.signal_heads = signal_head;
+                else
+                    link.signal_heads(1, end + 1) = signal_head;
+                end
+
+                % linksにmain_linkをプッシュ
+                obj.links.main = link;
+
+            elseif isfield(obj.links, 'branch')
+                if isfield(obj.links.branch, 'left')
+                    if link_id == obj.links.branch.left.link.id
+                        % link構造体を取得
+                        link = obj.links.branch.left.link;
+
+                        % signal_head構造体を初期化
+                        signal_head = struct();
+                        
+                        % id, Comオブジェクト, 位置を取得
+                        signal_head.id = SignalHead.get('AttValue', 'No');
+                        signal_head.Vissim = SignalHead;
+                        signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
+
+                        % signal_headsが存在しない場合
+                        if ~isfield(link, 'signal_heads')
+                            link.signal_heads = signal_head;
+                        else
+                            link.signal_heads(1, end + 1) = signal_head;
+                        end
+
+                        % links.branch.leftにlinkをプッシュ
+                        obj.links.branch.left.link = link;
+                    end
+                elseif isfield(obj.links.branch, 'right')
+                    if link_id == obj.links.branch.right.link.id
+                        % link構造体を取得
+                        link = obj.links.branch.right.link;
+
+                        % signal_head構造体を初期化
+                        signal_head = struct();
+
+                        % id, Comオブジェクト, 位置を取得
+                        signal_head.id = SignalHead.get('AttValue', 'No');
+                        signal_head.Vissim = SignalHead;
+                        signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
+
+                        % signal_headsが存在しない場合
+                        if ~isfield(link, 'signal_heads')
+                            link.signal_heads = signal_head;
+                        else
+                            link.signal_heads(1, end + 1) = signal_head;
+                        end
+
+                        % links.branch.rightにlinkをプッシュ
+                        obj.links.branch.right.link = link;
+                    end
+                end
+            end
+        end
+ 
     else
         error('error: Property name is invalid.');
     end

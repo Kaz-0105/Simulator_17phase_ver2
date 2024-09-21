@@ -64,7 +64,27 @@ function create(obj, property_name, type)
             end
         else
             error('Type is invalid.');
-        end 
+        end
+
+    elseif strcmp(property_name, 'SignalHeads')
+        % Roadクラスを走査
+        for road_id = obj.getKeys()
+            % Roadクラスを取得
+            Road = obj.itemByKey(road_id);
+
+            % RoadクラスにVissimのSignalHeadオブジェクトをセット
+            Road.create('SignalHead');
+        end
+
+    elseif strcmp(property_name, 'Intersections')
+        % Roadクラスを走査
+        for road_id = 1: obj.count()
+            % Roadクラスを取得
+            Road = obj.itemByKey(road_id);
+
+            % RoadクラスにIntersectionを作成
+            Road.create('Intersections');
+        end
     else
         error('Property name is invalid.');
     end

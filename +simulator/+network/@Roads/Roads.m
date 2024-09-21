@@ -33,6 +33,9 @@ classdef Roads < utils.class.Container
 
                 % 要素クラスを作成
                 obj.create('Elements', 'Network');
+
+                % 要素クラスにVissimのSignalHeadオブジェクトをセット
+                obj.create('SignalHeads');
             elseif isa(Network_or_Intersection, 'simulator.network.Intersection')
                 % プロパティにIntersectionsクラスを追加
                 prop = addprop(obj, 'Intersection');
@@ -60,5 +63,6 @@ classdef Roads < utils.class.Container
 
     methods
         create(obj, property_name, type);
+        update(obj, property_name);
     end
 end

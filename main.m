@@ -6,3 +6,6 @@ config = Config();
 
 % Simulatorクラスの初期化
 simulator = Simulator(config);
+
+% Simulatorクラスを実行
+simulator.run();
