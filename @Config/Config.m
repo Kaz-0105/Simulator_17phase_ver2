@@ -1,9 +1,12 @@
 classdef Config < utils.class.Common
     properties
+        Vissim;
+    end
+
+    properties
         simulator;
-        field;
-        intersections;
-        roads;
+        network;
+        controllers;
     end
 
     methods
@@ -11,14 +14,14 @@ classdef Config < utils.class.Common
             % Simulatorクラス用の設定を作成
             obj.create('simulator');
 
-            % Fieldクラス用の設定を作成
-            obj.create('field');
+            % VissimのCOMオブジェクトを作成
+            obj.create('Vissim');
 
-            % Intersectionsクラス用の設定を作成
-            obj.create('intersections');
+            % Networkクラス用の設定を作成
+            obj.create('network');
 
-            % Roadsクラス用の設定を作成
-            obj.create('roads');
+            % Controllersクラス用の設定を作成
+            obj.create('controllers');
         end
     end
 

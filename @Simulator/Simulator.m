@@ -1,7 +1,7 @@
 classdef Simulator < utils.class.Common
     properties
         Config;
-        Field;
+        Network;
         Controllers;
     end
 
@@ -17,8 +17,8 @@ classdef Simulator < utils.class.Common
             % Vissimと接続（COMオブジェクトの取得（Vissim））
             obj.create('Vissim');
 
-            % Fieldクラスを作成
-            obj.Field = simulator.Field(obj);
+            % Networkクラスを作成
+            obj.Network = simulator.Network(obj);
 
             % Controllersクラスを作成
             obj.Controllers = simulator.Controllers(obj);
@@ -27,5 +27,6 @@ classdef Simulator < utils.class.Common
 
     methods
         create(obj, property_name);
+        run(obj);
     end
 end

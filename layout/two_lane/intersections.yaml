@@ -1,5 +1,6 @@
 intersections:
   - id : 1
+    method : "MPC"
     input_roads :
       - id : 1
         road_id : 5

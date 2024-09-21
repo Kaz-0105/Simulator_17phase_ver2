@@ -9,19 +9,43 @@ function create(obj, property_name)
         % シミュレーションに使用するフォルダを設定
         obj.simulator.folder = char(data.simulator.folder);
 
-    elseif strcmp(property_name, 'field')
-        % 構造体を初期化
-        obj.field = struct();
+        % ステップ時間を設定
+        obj.simulator.dt = data.simulator.dt;
 
+        % シミュレーション時間を設定
+        obj.simulator.time = data.simulator.time;
+
+    elseif strcmp(property_name, 'Vissim')
+        % VissimのCOMオブジェクトを取得
+        obj.Vissim = actxserver('VISSIM.Vissim');
+
+        % inpxファイルとlayxファイルの読み込み
+        inpx_file = [pwd, '\layout\', char(obj.simulator.folder), '\network.inpx'];
+        layx_file = [pwd, '\layout\', char(obj.simulator.folder), '\network.layx']; 
+        obj.Vissim.LoadNet(inpx_file);
+        obj.Vissim.LoadLayout(layx_file);
+
+    elseif strcmp(property_name, 'network')
+        % 構造体を初期化
+        obj.network = struct();
+
+        % Intersectionsクラス用の設定を作成
+        obj.create('intersections');
+
+        % Roadsクラス用の設定を作成
+        obj.create('roads');
 
     elseif strcmp(property_name, 'intersections')
         % 構造体を初期化
-        obj.intersections = [];
+        intersections = struct();
 
         % 交差点のデータを取得
         folder = obj.simulator.folder;
         path = [pwd, '\layout\', folder, '\intersections.yaml'];
         data = yaml.loadFile(path);
+
+        % IntersectionsMapの初期化
+        IntersectionsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
 
         % 交差点を走査
         for intersection_data = data.intersections
@@ -33,6 +57,9 @@ function create(obj, property_name)
 
             % 交差点のIDを設定
             intersection.id = intersection_data.id;
+
+            % 交差点の制御方式を設定
+            intersection.method = intersection_data.method;
 
             % 構造体を初期化
             input_roads = [];
@@ -82,35 +109,63 @@ function create(obj, property_name)
             % output_roadsをintersectionにプッシュ
             intersection.output_roads = output_roads;
 
-            % intersectionsにintersectionをプッシュ
-            obj.intersections = [obj.intersections, intersection];
+            % IntersectionsMapにintersectionをプッシュ  
+            IntersectionsMap(intersection.id) = intersection;
+
+            % IntersectionsMapをintersectionsにプッシュ
+            intersections.IntersectionsMap = IntersectionsMap;
+
+            % intersectionsをnetworkにプッシュ
+            obj.network.intersections = intersections;
         end
 
     elseif strcmp(property_name, 'roads')
-        obj.roads = [];
+        % 構造体を初期化
+        roads = struct();
 
         % 道路のデータを取得
         folder = obj.simulator.folder;
         path = [pwd, '\layout\', folder, '\roads.yaml'];
         data = yaml.loadFile(path);
 
+        % RoadsMapの初期化
+        RoadsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+
         % 道路を走査
         for road_data = data.roads
             % セルから取り出し
             road_data = road_data{1};
 
-            % 構造体を初期化
-            road = struct();
-
-            % 道路のIDを取得
-            road.id = road_data.id;
-
-            % 道路のリンクのIDを取得
-            road.link_id = road_data.link_id;
-
-            % roadsにroadをプッシュ
-            obj.roads = [obj.roads, road];
+            % road_dataをRoadsMapに追加
+            RoadsMap(road_data.id) = road_data;
         end
+
+        % RoadsMapをroadsにプッシュ
+        roads.RoadsMap = RoadsMap;
+
+        % roadsをnetworkにプッシュ
+        obj.network.roads = roads;
+    elseif strcmp(property_name, 'controllers')
+        % Controllersクラス用の設定を作成
+        obj.controllers = struct();
+
+        % MPCの設定
+        obj.create('MPC');
+    elseif strcmp(property_name, 'MPC')
+
+        % MPCクラス用の設定を作成
+        mpc = struct();
+
+        % 設定ファイルを読み込む    
+        data = yaml.loadFile([pwd, '\layout\config.yaml']);
+
+        % 制御ホライゾン、予測ホライゾンを取得
+        mpc.N_p = data.mpc.N_p;
+        mpc.N_c = data.mpc.N_c;
+
+        % mpcをcontrollersにプッシュ
+        obj.controllers.MPC = mpc;
+
     else
         error('error: invalid property_name');
     end

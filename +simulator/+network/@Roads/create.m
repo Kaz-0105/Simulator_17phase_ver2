@@ -3,28 +3,41 @@ function create(obj, property_name, type)
         % Elementsを初期化
         obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
 
-        % 上位層のクラスがFieldかIntersectionかで分岐
-        if strcmp(type, 'Field')
+        % 上位層のクラスがNetworkかIntersectionかで分岐
+        if strcmp(type, 'Network')
             % Roadsクラス用の設定を取得
-            roads = obj.Config.get('roads');
+            network = obj.Config.get('network');
+            roads = network.roads;
 
-            for road = roads
+            % RoadsMapを取得
+            RoadsMap = roads.RoadsMap;
+
+            for road_id = cell2mat(RoadsMap.keys())
+                % road_structを取得
+                road_struct = RoadsMap(road_id);
+
                 % Roadクラスを作成
-                Road = simulator.field.Road(obj);
-                Road.set('id', road.id);
+                Road = simulator.network.Road(obj);
+                Road.set('id', road_struct.id);
+                Road.set('links', road_struct.links);
+                Road.create('links');
 
                 % Elementsにroadをプッシュ
-                obj.Elements(road.id) = Road;
+                obj.Elements(Road.get('id')) = Road;
             end
         elseif strcmp(type, 'Intersection')
             % IntersectionクラスのIDを取得
             intersection_id = obj.Intersection.get('id');
 
             % Intersectionクラス用の設定を取得
-            intersections = obj.Config.get('intersections');
+            network = obj.Config.get('network');
+            intersections = network.intersections;
+
+            % IntersectionsMapを取得
+            IntersectionsMap = intersections.IntersectionsMap;
 
             % 対象の交差点の構造体を取得
-            intersection = intersections(intersection_id);
+            intersection_struct = IntersectionsMap(intersection_id);
 
             % 全体のRoadsクラスを取得
             Intersections = obj.Intersection.get('Intersections');
@@ -32,7 +45,7 @@ function create(obj, property_name, type)
 
             if strcmp(obj.type, 'input')
                 % 流入道路を走査
-                for input_road = intersection.input_roads
+                for input_road = intersection_struct.input_roads
                     % Roadクラスを取得
                     Road = Roads.itemByKey(input_road.id);
 
@@ -41,7 +54,7 @@ function create(obj, property_name, type)
                 end
             elseif strcmp(obj.type, 'output')   
                 % 流出道路を走査
-                for output_road = intersection.output_roads
+                for output_road = intersection_struct.output_roads
                     % Roadクラスを取得
                     Road = Roads.itemByKey(output_road.id);
 

@@ -1,7 +1,7 @@
 classdef Intersections < utils.class.Container
     properties
         Config;
-        Field;
+        Network;
         Roads;
     end
 
@@ -10,12 +10,12 @@ classdef Intersections < utils.class.Container
     end
 
     methods
-        function obj = Intersections(Field)
+        function obj = Intersections(Network)
             % Configクラスを設定
-            obj.Config = Field.get('Config');
+            obj.Config = Network.get('Config');
 
-            % Fieldクラスを設定
-            obj.Field = Field;
+            % Networkクラスを設定
+            obj.Network = Network;
 
             % 要素クラスを作成
             obj.create('Elements');

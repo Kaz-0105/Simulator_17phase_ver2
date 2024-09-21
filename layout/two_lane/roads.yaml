@@ -1,17 +1,33 @@
 roads:
-  - id : 1
-    link_id : 1
-  - id : 2
-    link_id : 2
-  - id : 3
-    link_id : 3
-  - id : 4
-    link_id : 4
-  - id : 5
-    link_id : 5
-  - id : 6
-    link_id : 6
-  - id : 7  
-    link_id : 7
-  - id : 8
-    link_id : 8
+  - id: 1
+    links:
+      main: 1
+      branch: 
+        right: 9
+  - id: 2
+    links:
+      main: 2
+  - id: 3
+    links:
+      main: 3
+  - id: 4  
+    links:
+      main: 4
+      branch:
+        right: 10
+  - id: 5
+    links:
+      main: 5
+      branch:
+        right: 11
+  - id: 6  
+    links:
+      main: 6
+  - id: 7  
+    links:
+      main: 7
+  - id: 8
+    links:
+      main: 8
+      branch:
+        right: 12

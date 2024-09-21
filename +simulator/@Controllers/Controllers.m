@@ -3,7 +3,7 @@ classdef Controllers < utils.class.Container
         Config;
         Simulator;
 
-        Field;
+        Network;
     end
 
     properties
@@ -18,9 +18,9 @@ classdef Controllers < utils.class.Container
             % Simulatorクラスを設定
             obj.Simulator = Simulator;
 
-            % Fieldクラスを作成
-            obj.Field = obj.Simulator.get('Field');
-            obj.Field.set('Controllers', obj);
+            % Networkクラスを作成
+            obj.Network = obj.Simulator.get('Network');
+            obj.Network.set('Controllers', obj);
 
             % 要素クラスを作成
             obj.create('Elements');

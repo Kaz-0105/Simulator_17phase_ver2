@@ -6,6 +6,7 @@ classdef Road < utils.class.Common
 
     properties
         id;
+        links;
     end
 
     methods

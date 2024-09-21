@@ -2,12 +2,15 @@ classdef Intersection < utils.class.Common
     properties
         Config;
         Intersections;
+
+        Controller;
         InputRoads;
         OutputRoads;
     end
 
     properties
         id;
+        method;
     end
 
     methods
