@@ -1,7 +1,7 @@
 function create(obj, property_name)
     if strcmp(property_name, 'Elements')
         % Elementsを初期化
-        obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+        obj.Elements = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % Intersectionsクラスを取得
         Intersections = obj.Network.get('Intersections');

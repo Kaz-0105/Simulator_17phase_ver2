@@ -54,7 +54,7 @@ function create(obj, property_name)
         data = yaml.loadFile(path);
 
         % IntersectionsMapの初期化
-        IntersectionsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+        IntersectionsMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % 交差点を走査
         for intersection_data = data.intersections
@@ -138,7 +138,7 @@ function create(obj, property_name)
         data = yaml.loadFile(path);
 
         % RoadsMapの初期化
-        RoadsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+        RoadsMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % 道路を走査
         for road_data = data.roads

@@ -2,10 +2,10 @@ function run(obj)
     % シミュレーションを実行
     while (obj.current_time < obj.time)
         % Networkクラスを更新
-        obj.Network.update();
+        obj.Network.update('Vehicles');
 
         % Controllersクラスを更新
-        obj.Controllers.update();
+        obj.Controllers.update('Solver');
 
         % Vissimをステップ時間だけ進める
 

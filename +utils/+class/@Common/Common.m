@@ -11,6 +11,13 @@ classdef Common < handle & dynamicprops
         end
 
         function set(obj, property_name, value)
+
+            if ~isprop(obj, property_name)
+                prop = addprop(obj, property_name);
+                prop.SetAccess = 'public';
+                prop.GetAccess = 'public';
+            end
+
             obj.(property_name) = value;
         end
     end

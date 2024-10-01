@@ -29,5 +29,6 @@ classdef Controllers < utils.class.Container
 
     methods
         create(obj, property_name);
+        update(obj, property_name);
     end
 end

@@ -11,6 +11,8 @@ classdef Intersection < utils.class.Common
     properties
         id;
         method;
+
+        signal_controller;
     end
 
     methods

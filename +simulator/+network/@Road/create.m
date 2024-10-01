@@ -11,7 +11,10 @@ function create(obj, property_name)
             InputRoads = Intersection.get('InputRoads');
 
             for input_road_id = InputRoads.getKeys()
-                if input_road_id == obj.id
+                % Roadクラスを取得
+                Road = InputRoads.itemByKey(input_road_id);
+
+                if obj.id == Road.get('id')
                     % プロパティにOutputIntersectionクラスを追加
                     prop = addprop(obj, 'OutputIntersection');
                     prop.SetAccess = 'public';
@@ -26,7 +29,10 @@ function create(obj, property_name)
             OutputRoads = Intersection.get('OutputRoads');
 
             for output_road_id = OutputRoads.getKeys()
-                if output_road_id == obj.id
+                % Roadクラスを取得
+                Road = OutputRoads.itemByKey(output_road_id);
+
+                if obj.id == Road.get('id')
                     % プロパティにInputIntersectionクラスを追加
                     prop = addprop(obj, 'InputIntersection');
                     prop.SetAccess = 'public';
@@ -279,7 +285,109 @@ function create(obj, property_name)
                 end
             end
         end
- 
+    elseif strcmp(property_name, 'routes')
+        % Intersectionクラスを取得
+        Intersection = obj.OutputIntersection;
+
+        % Roadsクラスを取得
+        InputRoads = Intersection.get('InputRoads');
+        OutputRoads = Intersection.get('OutputRoads');
+
+        % num_roadsを取得
+        num_roads = OutputRoads.count();
+
+        % Roadクラスを走査
+        for road_id = OutputRoads.getKeys()
+            % Roadクラスを取得
+            Road = InputRoads.itemByKey(road_id);
+
+            if obj.id == Road.get('id')
+                % order_idを取得
+                order_id = road_id;
+                break;
+            end
+        end
+
+        % routing_decisionを取得
+        routing_decision = obj.routing_decision;
+
+        % routing_decisionのComオブジェクトを取得
+        RoutingDecision = routing_decision.Vissim;
+
+        % RoutesのComオブジェクトを取得
+        Routes = RoutingDecision.VehRoutSta;
+
+        % routesを初期化
+        routes = struct();
+
+        % RoutesMapを初期化
+        RoutesMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
+
+        % RouteOrderMapを初期化
+        RouteOrderMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
+
+        % Routeを走査
+        for Route = Routes.GetAll()'
+            % セルから取り出し
+            Route = Route{1};
+
+            % route構造体を初期化
+            route = struct();
+
+            % IDを設定
+            route.id = Route.get('AttValue', 'No');
+
+            % Comオブジェクトを設定
+            route.Vissim = Route;
+
+            % dest_link_idを取得
+            route.dest_link_id = Route.DestLink.ToLink.get('AttValue', 'No');
+
+            % Roadクラスを走査
+            for tmp_road_id = OutputRoads.getKeys()
+                % Roadクラスを取得
+                tmpRoad = OutputRoads.itemByKey(tmp_road_id);
+
+                % main_link_idを取得
+                main_link_id = tmpRoad.get('links').main.id;
+
+                if route.dest_link_id == main_link_id
+                    % dest_road_idを設定
+                    route.dest_road_id = tmpRoad.get('id');
+
+                    % tmp_order_idを設定
+                    tmp_order_id = tmp_road_id;
+                    break;
+                end
+            end
+
+            count = 0;
+
+            while true
+                count = count + 1;
+
+                if mod((order_id + count) - tmp_order_id, num_roads) == 0
+                    route.order_id = count;
+                    break;
+                end
+            end
+
+            % RoutesMapにrouteをプッシュ
+            RoutesMap(route.id) = route;
+
+            % RouteOrderMapにorder_idをプッシュ
+            RouteOrderMap(route.id) = route.order_id;
+        end
+
+        % routesにRoutesMapをプッシュ
+        routes.RoutesMap = RoutesMap;
+
+        % routesにRouteOrderMapをプッシュ
+        routes.RouteOrderMap = RouteOrderMap;
+
+        % routesをrouting_decisionにプッシュ
+        obj.routing_decision.routes = routes;
+        
     else
         error('error: Property name is invalid.');
     end
