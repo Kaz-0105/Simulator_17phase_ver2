@@ -20,7 +20,11 @@ function create(obj, property_name, type)
                 Road = simulator.network.Road(obj);
                 Road.set('id', road_struct.id);
                 Road.set('links', road_struct.links);
+
+                % links, speed, inflowsのプロパティの作成
                 Road.create('links');
+                Road.create('speed');
+                Road.create('inflows');
 
                 % Elementsにroadをプッシュ
                 obj.Elements(Road.get('id')) = Road;

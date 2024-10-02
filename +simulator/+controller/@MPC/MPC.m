@@ -6,10 +6,7 @@ classdef MPC < utils.class.Common
     end
 
     properties
-        RoadVehiclesMap;
-    end
-
-    properties
+        RoadParameterMap;
         MLDsMap;
         MILPsMap;
     end
@@ -25,6 +22,10 @@ classdef MPC < utils.class.Common
             % Roadsクラスを設定
             Intersection = Controller.get('Intersection');
             obj.Roads = Intersection.get('InputRoads');
+
+            % RoadParameterMapの作成
+            obj.create('RoadParameterMap');
+
         end
     end
 

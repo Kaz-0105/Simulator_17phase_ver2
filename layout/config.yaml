@@ -8,4 +8,5 @@ simulator :
 mpc :
   N_p : 10
   N_c : 3
+  D_o : 100
   

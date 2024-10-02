@@ -154,6 +154,41 @@ function create(obj, property_name)
 
         % roadsをnetworkにプッシュ
         obj.network.roads = roads;
+    elseif strcmp(property_name, 'parameters')
+        % パラメータのデータを取得
+        folder = obj.simulator.folder;
+        path = [pwd, '\layout\', folder, '\parameters.yaml'];
+        data = yaml.loadFile(path);
+
+        % 道路パラメータを取得
+        roads_data = data.parameters.roads;
+
+        % roads構造体を取得
+        roads = obj.network.roads;
+
+        % RoadsMapを取得
+        RoadsMap = roads.RoadsMap;
+
+        %　road_dataを走査
+        for road_data = roads_data
+            % セルから取り出し
+            road_data = road_data{1};
+
+            % RoadsMapからroad構造体を取得
+            road = RoadsMap(road_data.id);
+
+            % road_dataにspeedを追加
+            road.speed = road_data.speed;
+
+            % road_dataにinflowsを追加（あれば）
+            if isfield(road_data, 'inflows')
+                road.inflows = road_data.inflows;
+            end
+
+            % road構造体をRoadsMapにプッシュ
+            RoadsMap(road_data.id) = road;
+        end
+
     elseif strcmp(property_name, 'controllers')
         % Controllersクラス用の設定を作成
         obj.controllers = struct();
@@ -171,6 +206,9 @@ function create(obj, property_name)
         % 制御ホライゾン、予測ホライゾンを取得
         mpc.N_p = data.mpc.N_p;
         mpc.N_c = data.mpc.N_c;
+
+        % D_o（目的関数の見る範囲）を取得
+        mpc.D_o = data.mpc.D_o;
 
         % mpcをcontrollersにプッシュ
         obj.controllers.MPC = mpc;

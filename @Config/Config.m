@@ -20,6 +20,9 @@ classdef Config < utils.class.Common
             % Networkクラス用の設定を作成
             obj.create('network');
 
+            % Networkクラス用の設定にパラメータを追加
+            obj.create('parameters');
+
             % Controllersクラス用の設定を作成
             obj.create('controllers');
         end
