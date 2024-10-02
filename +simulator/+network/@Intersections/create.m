@@ -132,7 +132,6 @@ function create(obj, property_name)
         % Roadsクラスを取得
         Roads = obj.Network.get('Roads');
 
-
         % signal_controllerを走査
         for signal_controller_id = cell2mat(SignalControllersMap.keys())
             % signal_controllerを取得
@@ -238,6 +237,15 @@ function create(obj, property_name)
                     break;
                 end
             end
+        end
+
+        % Intersectionを走査
+        for intersection_id = obj.getKeys()
+            % Intersectionクラスを取得
+            Intersection = obj.itemByKey(intersection_id);
+
+            % MPCの変数のIDを設定
+            Intersection.create('signal_variable_id');
         end
         
     else
