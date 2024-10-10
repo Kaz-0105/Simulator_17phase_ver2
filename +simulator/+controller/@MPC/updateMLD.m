@@ -503,6 +503,30 @@ function updateMLD(obj, property_name)
         % B3行列をプッシュ
         obj.MLDsMap('B3') = B3;
     elseif strcmp(property_name, 'C')
+        % C行列を初期化
+        C = [];
+
+        % 道路を走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % 車線数を取得
+            links = Road.get('links');
+            num_lanes = links.main.lanes;
+
+            % 車線数で場合分け
+            if num_lanes == 1
+            else
+            end
+        end
+
+        % C行列をプッシュ
+        obj.MLDsMap('C') = C;
+
     elseif strcmp(property_name, 'D1')
     elseif strcmp(property_name, 'D2')
     elseif strcmp(property_name, 'D3')
