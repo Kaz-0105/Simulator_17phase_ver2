@@ -156,7 +156,7 @@ function update(obj, property_name)
         end
 
         % vehiclesをソート
-        obj.vehicles = sortrows(obj.vehicles, {'stop_lane', 'pos'}, [1, -1]);
+        obj.vehicles = sortrows(obj.vehicles, {'stop_lane', 'pos'}, {'ascend', 'descend'});
     else
         error('error: Property name is invalid.');
     end
