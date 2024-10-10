@@ -121,15 +121,15 @@ function updateMLD(obj, property_name)
             num_lanes = links.main.lanes;
 
             % road_prmを取得
-            road_prm = obj.RoadParameterMap(road_id);
+            road_prm = obj.RoadPrmMap(road_id);
 
-            % LaneParameterMapを取得
-            LaneParameterMap = road_prm.LaneParameterMap;
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
 
             % 車線の数で場合分け
             if num_lanes == 1
                 % lane_prmを取得
-                lane_prm = LaneParameterMap(1);
+                lane_prm = LanePrmMap(1);
 
                 % tmp_B2行列を初期化
                 tmp_B2 = [];
@@ -215,7 +215,7 @@ function updateMLD(obj, property_name)
                     tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
 
                     % lane_prmを取得
-                    lane_prm = LaneParameterMap(lane_id);
+                    lane_prm = LanePrmMap(lane_id);
 
                     % tmp_B2行列を初期化
                     tmp_B2 = [];
@@ -290,7 +290,218 @@ function updateMLD(obj, property_name)
 
         % B2行列にプッシュ
         obj.MLDsMap('B2') = B2;
+
     elseif strcmp(property_name, 'B3')
+        % B3行列を初期化
+        B3 = [];
+
+        % dtを取得
+        dt = obj.dt;
+
+        % 道路を走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % 車線数を取得
+            links = Road.get('links');
+            num_lanes = links.main.lanes;
+
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線の数で場合分け
+            if num_lanes == 1
+                % lane_prmを取得
+                lane_prm = LanePrmMap(1);
+
+                % tmp_B3行列を初期化
+                tmp_B3 = [];
+
+                % 車線分岐があるかどうかで場合分け
+                if isfield(lane_prm, 'branch')
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % branch_flagによって場合分け
+                        if vehicle.branch_flag == 1
+                            % メインの車線のパラメータを取得
+                            v = lane_prm.main.v;
+                            p_s = lane_prm.main.p_s;
+                            d_s = lane_prm.main.d_s;
+                            k_s = lane_prm.main.k_s;
+                            d_f = lane_prm.main.d_f;
+                            k_f = lane_prm.main.k_f;
+                        elseif vehicle.branch_flag == 2
+                            % 分岐車線のパラメータを取得
+                            v = lane_prm.branch.right.v;
+                            p_s = lane_prm.branch.right.p_s;
+                            d_s = lane_prm.branch.right.d_s;
+                            k_s = lane_prm.branch.right.k_s;
+                            d_f = lane_prm.branch.right.d_f;
+                            k_f = lane_prm.branch.right.k_f;
+                        elseif vehicle.branch_flag == 3
+                            % 分岐車線のパラメータを取得
+                            v = lane_prm.branch.left.v;
+                            p_s = lane_prm.branch.left.p_s;
+                            d_s = lane_prm.branch.left.d_s;
+                            k_s = lane_prm.branch.left.k_s;
+                            d_f = lane_prm.branch.left.d_f;
+                            k_f = lane_prm.branch.left.k_f;
+                        else
+                            error('branch_flag is invalid.');
+                        end
+
+                        % 先頭車かどうかで場合分け
+                        if vehicle.leader_flag == 1
+                            % b3を作成
+                            b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                        elseif vehicle.leader_flag == 2
+                            % b3を作成
+                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                        elseif vehicle.leader_flag == 3
+                            % b3を作成
+                            b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_B3行列にプッシュ
+                        tmp_B3 = blkdiag(tmp_B3, b3);
+                    end
+                else
+                    % メインの車線のパラメータを取得
+                    v = lane_prm.main.v;
+                    p_s = lane_prm.main.p_s;
+                    d_s = lane_prm.main.d_s;
+                    k_s = lane_prm.main.k_s;
+                    d_f = lane_prm.main.d_f;
+                    k_f = lane_prm.main.k_f;
+
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % 先頭車かどうかで場合分け
+                        if vehicle.leader_flag == 1
+                            % b3を作成
+                            b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                        elseif vehicle.leader_flag == 3
+                            % b3を作成
+                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_B3行列にプッシュ
+                        tmp_B3 = blkdiag(tmp_B3, b3);
+                    end
+                end
+
+                % B3行列にプッシュ
+                B3 = blkdiag(B3, tmp_B3);
+            else
+                % 車線を走査
+                for lane_id = 1: num_lanes
+                    % その車線の自動車のレコードを取得
+                    tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                    % lane_prmを取得
+                    lane_prm = LanePrmMap(lane_id);
+
+                    % tmp_B3行列を初期化
+                    tmp_B3 = [];
+
+                    % 車線分岐があるかどうかで場合分け
+                    if isfield(lane_prm, 'branch')
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % branch_flagによって場合分け
+                            if vehicle.branch_flag == 1
+                                % メインの車線のパラメータを取得
+                                v = lane_prm.main.v;
+                                p_s = lane_prm.main.p_s;
+                                d_s = lane_prm.main.d_s;
+                                k_s = lane_prm.main.k_s;
+                                d_f = lane_prm.main.d_f;
+                                k_f = lane_prm.main.k_f;
+                            else
+                                % 分岐車線のパラメータを取得
+                                v = lane_prm.branch.v;
+                                p_s = lane_prm.branch.p_s;
+                                d_s = lane_prm.branch.d_s;
+                                k_s = lane_prm.branch.k_s;
+                                d_f = lane_prm.branch.d_f;
+                                k_f = lane_prm.branch.k_f;
+                            end
+
+                            % 先頭車かどうかで場合分け
+                            if vehicle.leader_flag == 1
+                                % b3を作成
+                                b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                            elseif vehicle.leader_flag == 2
+                                % b3を作成
+                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                            elseif vehicle.leader_flag == 3
+                                % b3を作成
+                                b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_B3行列にプッシュ
+                            tmp_B3 = blkdiag(tmp_B3, b3);
+                        end
+                    else
+                        % メインの車線のパラメータを取得
+                        v = lane_prm.main.v;
+                        p_s = lane_prm.main.p_s;
+                        d_s = lane_prm.main.d_s;
+                        k_s = lane_prm.main.k_s;
+                        d_f = lane_prm.main.d_f;
+                        k_f = lane_prm.main.k_f;
+
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % 先頭車かどうかで場合分け
+                            if vehicle.leader_flag == 1
+                                % b3を作成
+                                b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                            elseif vehicle.leader_flag == 3
+                                % b3を作成
+                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_B3行列にプッシュ
+                            tmp_B3 = blkdiag(tmp_B3, b3);
+                        end
+                    end
+
+                    % B3行列にプッシュ
+                    B3 = blkdiag(B3, tmp_B3);
+                end
+            end
+        end
+
+        % B3行列をプッシュ
+        obj.MLDsMap('B3') = B3;
     elseif strcmp(property_name, 'C')
     elseif strcmp(property_name, 'D1')
     elseif strcmp(property_name, 'D2')

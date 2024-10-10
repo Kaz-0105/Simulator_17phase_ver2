@@ -37,6 +37,9 @@ function update(obj, property_name)
         % E行列の更新
         obj.updateMLD('E');
 
+        % validateを実行
+        obj.validate('MLD');
+
     elseif strcmp(property_name, 'MILP')
         % MILPsMapの初期化
         obj.MILPsMap = containers.Map('KeyType', 'char', 'ValueType', 'any');

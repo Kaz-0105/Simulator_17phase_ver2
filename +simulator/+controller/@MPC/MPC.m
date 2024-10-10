@@ -6,7 +6,7 @@ classdef MPC < utils.class.Common
     end
 
     properties
-        RoadParameterMap;
+        RoadPrmMap;
         MLDsMap;
         MILPsMap;
     end
@@ -27,8 +27,8 @@ classdef MPC < utils.class.Common
             Intersection = Controller.get('Intersection');
             obj.Roads = Intersection.get('InputRoads');
 
-            % RoadParameterMapの作成
-            obj.create('RoadParameterMap');
+            % RoadPrmMapの作成
+            obj.create('RoadPrmMap');
 
             % dtの設定
             simulator = obj.Config.get('simulator');
@@ -41,6 +41,7 @@ classdef MPC < utils.class.Common
     methods
         create(obj, property_name);
         update(obj, property_name);
+        validate(obj, property_name);
         run(obj);
     end
 end

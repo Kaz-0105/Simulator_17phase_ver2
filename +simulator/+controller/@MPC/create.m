@@ -1,7 +1,7 @@
 function create(obj, property_name)
-    if strcmp(property_name, 'RoadParameterMap')
-        % RoadParameterMapの初期化
-        obj.RoadParameterMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
+    if strcmp(property_name, 'RoadPrmMap')
+        % RoadPrmMapの初期化
+        obj.RoadPrmMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % Roadクラスを走査
         for road_id = 1: obj.Roads.count()
@@ -17,8 +17,8 @@ function create(obj, property_name)
             % road_prm構造体を初期化
             road_prm = struct();
 
-            % LaneParameterMapの初期化
-            LaneParameterMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
+            % LanePrmMapの初期化
+            LanePrmMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
             if num_lanes == 1
                 % lane_prm構造体を初期化
@@ -177,14 +177,14 @@ function create(obj, property_name)
                     lane_prm.main = main_prm;
                 end
 
-                % lane_prmをLaneParameterMapにプッシュ
-                LaneParameterMap(1) = lane_prm;
+                % lane_prmをLanePrmMapにプッシュ
+                LanePrmMap(1) = lane_prm;
 
-                % LaneParameterMapをroad_prmにプッシュ
-                road_prm.LaneParameterMap = LaneParameterMap;
+                % LanePrmMapをroad_prmにプッシュ
+                road_prm.LanePrmMap = LanePrmMap;
 
-                % road_prmをRoadParameterMapにプッシュ
-                obj.RoadParameterMap(road_id) = road_prm;
+                % road_prmをRoadPrmMapにプッシュ
+                obj.RoadPrmMap(road_id) = road_prm;
             else
                 % 車線を走査
                 for lane_id = 1: num_lanes
@@ -353,15 +353,15 @@ function create(obj, property_name)
                         lane_prm.main = main_prm;
                     end
 
-                    % lane_prmをLaneParameterMapにプッシュ
-                    LaneParameterMap(lane_id) = lane_prm;
+                    % lane_prmをLanePrmMapにプッシュ
+                    LanePrmMap(lane_id) = lane_prm;
                 end
 
-                % LaneParameterMapをroad_prmにプッシュ
-                road_prm.LaneParameterMap = LaneParameterMap;
+                % LanePrmMapをroad_prmにプッシュ
+                road_prm.LanePrmMap = LanePrmMap;
 
-                % road_prmをRoadParameterMapにプッシュ
-                obj.RoadParameterMap(road_id) = road_prm;
+                % road_prmをRoadPrmMapにプッシュ
+                obj.RoadPrmMap(road_id) = road_prm;
             end
         end
 
