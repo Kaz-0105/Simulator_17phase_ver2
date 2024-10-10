@@ -43,6 +43,9 @@ function create(obj, property_name)
                 % d_s（停止線の距離）を設定
                 main_prm.d_s = 0;
 
+                % k_s（モデルに登場するパラメータ）を設定
+                main_prm.k_s = 1/(main_prm.D_s - main_prm.d_s);
+
                 % D_f（先行車の影響圏）を設定
                 if main_prm.v >= 80
                     main_prm.D_f = main_prm.v;
@@ -52,6 +55,9 @@ function create(obj, property_name)
 
                 % d_f（先行車との距離の最小値）を設定
                 main_prm.d_f = 5;
+
+                % k_f（モデルに登場するパラメータ）を設定
+                main_prm.k_f = 1/(main_prm.D_f - main_prm.d_f);
 
                 if isfield(links, 'branch')
                     if isfield(links.branch, 'right')
@@ -80,6 +86,9 @@ function create(obj, property_name)
                         % d_s（停止線の距離）を設定
                         branch_prm.d_s = 0;
 
+                        % k_s（モデルに登場するパラメータ）を設定
+                        branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
+
                         % D_f（先行車の影響圏）を設定
                         if branch_prm.v >= 80
                             branch_prm.D_f = branch_prm.v;
@@ -89,6 +98,9 @@ function create(obj, property_name)
 
                         % d_f（先行車との距離の最小値）を設定
                         branch_prm.d_f = 5;
+
+                        % k_f（モデルに登場するパラメータ）を設定
+                        branch_prm.k_f = 1/(branch_prm.D_f - branch_prm.d_f);
 
                         % D_b（信号と分岐点の距離）を設定
                         main_prm.D_b = main_prm.p_s - connector.from_pos;
@@ -125,6 +137,9 @@ function create(obj, property_name)
                         % d_s（停止線の距離）を設定
                         branch_prm.d_s = 0;
 
+                        % k_s（モデルに登場するパラメータ）を設定
+                        branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
+
                         % D_f（先行車の影響圏）を設定
                         if branch_prm.v >= 80
                             branch_prm.D_f = branch_prm.v;
@@ -134,6 +149,9 @@ function create(obj, property_name)
 
                         % d_f（先行車との距離の最小値）を設定
                         branch_prm.d_f = 5;
+
+                        % k_f（モデルに登場するパラメータ）を設定
+                        branch_prm.k_f = 1/(branch_prm.D_f - branch_prm.d_f);
 
                         % D_b（信号と分岐点の距離）を設定
                         main_prm.D_b = main_prm.p_s - connector.from_pos;
@@ -192,6 +210,9 @@ function create(obj, property_name)
                     % d_s（停止線の距離）を設定
                     main_prm.d_s = 0;
 
+                    % k_s（モデルに登場するパラメータ）を設定
+                    main_prm.k_s = 1/(main_prm.D_s - main_prm.d_s);
+
                     % D_f（先行車の影響圏）を設定
                     if main_prm.v >= 80
                         main_prm.D_f = main_prm.v;
@@ -201,6 +222,9 @@ function create(obj, property_name)
 
                     % d_f（先行車との距離の最小値）を設定
                     main_prm.d_f = 5;
+
+                    % k_f（モデルに登場するパラメータ）を設定
+                    main_prm.k_f = 1/(main_prm.D_f - main_prm.d_f);
 
                     % 端の車線かどうかで場合分け
                     if lane_id == 1
@@ -232,6 +256,9 @@ function create(obj, property_name)
                                 % d_s（停止線の距離）を設定
                                 branch_prm.d_s = 0;
 
+                                % k_s（モデルに登場するパラメータ）を設定
+                                branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
+
                                 % D_f（先行車の影響圏）を設定
                                 if branch_prm.v >= 80
                                     branch_prm.D_f = branch_prm.v;
@@ -242,6 +269,9 @@ function create(obj, property_name)
                                 % d_f（先行車との距離の最小値）を設定
                                 branch_prm.d_f = 5;
 
+                                % k_f（モデルに登場するパラメータ）を設定
+                                branch_prm.k_f = 1/(branch_prm.D_f - branch_prm.d_f);
+
                                 % D_b（信号と分岐点の距離）を設定
                                 main_prm.D_b = main_prm.p_s - connector.from_pos;
                                 branch_prm.D_b = branch_prm.p_s - connector.from_pos;
@@ -249,7 +279,13 @@ function create(obj, property_name)
                                 % main_prmとbranch_prmをlane_prmにプッシュ
                                 lane_prm.main = main_prm;
                                 lane_prm.branch = branch_prm;
+                            else
+                                % main_prmをlane_prmにプッシュ
+                                lane_prm.main = main_prm;
                             end
+                        else
+                            % main_prmをlane_prmにプッシュ
+                            lane_prm.main = main_prm;
                         end
 
                     elseif lane_id == num_lanes
@@ -281,6 +317,9 @@ function create(obj, property_name)
                                 % d_s（停止線の距離）を設定
                                 branch_prm.d_s = 0;
 
+                                % k_s（モデルに登場するパラメータ）を設定
+                                branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
+
                                 % D_f（先行車の影響圏）を設定
                                 if branch_prm.v >= 80
                                     branch_prm.D_f = branch_prm.v;
@@ -291,6 +330,9 @@ function create(obj, property_name)
                                 % d_f（先行車との距離の最小値）を設定
                                 branch_prm.d_f = 5;
 
+                                % k_f（モデルに登場するパラメータ）を設定
+                                branch_prm.k_f = 1/(branch_prm.D_f - branch_prm.d_f);
+
                                 % D_b（信号と分岐点の距離）を設定
                                 main_prm.D_b = main_prm.p_s - connector.from_pos;
                                 branch_prm.D_b = branch_prm.p_s - connector.from_pos;
@@ -298,7 +340,13 @@ function create(obj, property_name)
                                 % main_prmとbranch_prmをlane_prmにプッシュ
                                 lane_prm.main = main_prm;
                                 lane_prm.branch = branch_prm;
+                            else
+                                % main_prmをlane_prmにプッシュ
+                                lane_prm.main = main_prm;
                             end
+                        else
+                            % main_prmをlane_prmにプッシュ
+                            lane_prm.main = main_prm;
                         end
                     else
                         % main_prmをlane_prmにプッシュ

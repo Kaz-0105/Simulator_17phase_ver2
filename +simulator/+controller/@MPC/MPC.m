@@ -11,6 +11,10 @@ classdef MPC < utils.class.Common
         MILPsMap;
     end
 
+    properties
+        dt;
+    end
+
     methods
         function obj = MPC(Controller)
             % Configクラスを設定
@@ -25,6 +29,11 @@ classdef MPC < utils.class.Common
 
             % RoadParameterMapの作成
             obj.create('RoadParameterMap');
+
+            % dtの設定
+            simulator = obj.Config.get('simulator');
+            obj.dt = simulator.dt;
+
 
         end
     end

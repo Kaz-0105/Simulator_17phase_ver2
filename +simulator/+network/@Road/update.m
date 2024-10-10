@@ -1,9 +1,9 @@
 function update(obj, property_name)
     if strcmp(property_name, 'Vehicles')
         % 車両情報のテーブルを初期化
-        size = [0, 5];
-        variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag'};
-        variable_types = {'double', 'double', 'double', 'double', 'double'};
+        size = [0, 6];
+        variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag'};
+        variable_types = {'double', 'double', 'double', 'double', 'double', 'double'};
 
         obj.vehicles = table('Size', size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
 
@@ -33,26 +33,26 @@ function update(obj, property_name)
                 % next_link_idを取得
                 next_link_id = NextLink.get('AttValue', 'No');
 
-                branch_flag = 0;
+                branch_flag = 1;
 
                 if isfield(obj.links, 'branch')
                     if isfield(obj.links.branch, 'left')
                         if next_link_id == obj.links.branch.left.connector.id
                             % branch_flagを取得
-                            branch_flag = 2;
+                            branch_flag = 3;
                         end
                     end
 
                     if isfield(obj.links.branch, 'right')
                         if next_link_id == obj.links.branch.right.connector.id
                             % branch_flagを取得
-                            branch_flag = 1;
+                            branch_flag = 2;
                         end
                     end
                 end
 
                 % 車両情報をテーブルにプッシュ
-                obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag};
+                obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag, NaN};
             end
 
         else
@@ -70,10 +70,10 @@ function update(obj, property_name)
                 stop_lane = Vehicle.Lane.get('AttValue', 'Index');
 
                 % branch_flagを取得
-                branch_flag = 0;
+                branch_flag = 1;
 
                 % 車両情報をテーブルにプッシュ
-                obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag};
+                obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag, NaN};
             end
         end
 
@@ -109,15 +109,15 @@ function update(obj, property_name)
 
                         % branch_flagを取得
                         if direction == "left"
-                            branch_flag = 2;
+                            branch_flag = 3;
                         elseif direction == "right"
-                            branch_flag = 1;
+                            branch_flag = 2;
                         else 
                             error('error: direction is invalid.');
                         end
 
                         % 車両情報をテーブルにプッシュ
-                        obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag};
+                        obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag, NaN};
                     end
 
                     % リンクのComオブジェクトを取得
@@ -141,15 +141,15 @@ function update(obj, property_name)
 
                         % branch_flagを取得
                         if direction == "left"
-                            branch_flag = 2;
+                            branch_flag = 3;
                         elseif direction == "right"
-                            branch_flag = 1;
+                            branch_flag = 2;
                         else 
                             error('error: direction is invalid.');
                         end
 
                         % 車両情報をテーブルにプッシュ
-                        obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag};
+                        obj.vehicles(end + 1, :) = {id, pos, route, stop_lane, branch_flag, NaN};
                     end
                 end
             end 
@@ -157,6 +157,62 @@ function update(obj, property_name)
 
         % vehiclesをソート
         obj.vehicles = sortrows(obj.vehicles, {'stop_lane', 'pos'}, {'ascend', 'descend'});
+
+        % leader_flagの設定ここから
+
+        % 車線数を取得
+        num_lanes = obj.links.main.lanes;
+
+        % 車線を走査
+        for lane_id = 1: num_lanes
+            % found_flagsを初期化
+            found_flags = false(1, 3);
+
+            % VehicleLeaderFlagMapを初期化
+            VehicleLeaderFlagMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
+
+            % その車線の自動車のレコードを取得
+            tmp_vehicles = obj.vehicles(obj.vehicles.stop_lane == lane_id, :);
+
+            % 自動車を走査
+            for record_id = 1: height(tmp_vehicles)
+                % レコードを取得
+                vehicle = tmp_vehicles(record_id, :);
+
+                % 一番先頭のレコードだった場合
+                if record_id == 1
+                    % VehicleLeaderFlagMapにプッシュ
+                    VehicleLeaderFlagMap(vehicle.id) = 1;
+
+                    % found_flagsにプッシュ
+                    found_flags(vehicle.branch_flag) = true;
+
+                else
+                    if found_flags(vehicle.branch_flag)
+                        % VehicleLeaderFlagMapにプッシュ
+                        VehicleLeaderFlagMap(vehicle.id) = 3;
+                    else
+                        % VehicleLeaderFlagMapにプッシュ
+                        VehicleLeaderFlagMap(vehicle.id) = 2;
+
+                        % found_flagsにプッシュ
+                        found_flags(vehicle.branch_flag) = true;
+                    end
+                end
+            end
+
+            % VehicleLeaderFlagMapをvehiclesに反映
+            for record_id = 1: height(tmp_vehicles)
+                % レコードを取得
+                vehicle = tmp_vehicles(record_id, :);
+
+                % leader_flagを取得
+                leader_flag = VehicleLeaderFlagMap(vehicle.id);
+
+                % vehiclesに反映
+                obj.vehicles(obj.vehicles.id == vehicle.id, 6) = {leader_flag};
+            end
+        end
     else
         error('error: Property name is invalid.');
     end
