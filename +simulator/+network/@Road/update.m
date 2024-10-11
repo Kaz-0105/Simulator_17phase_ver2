@@ -2,7 +2,7 @@ function update(obj, property_name)
     if strcmp(property_name, 'Vehicles')
         % 車両情報のテーブルを初期化
         size = [0, 7];
-        variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag', 'preceding_vehicle'};
+        variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag', 'preceding_record_id'};
         variable_types = {'double', 'double', 'double', 'double', 'double', 'double', 'double'};
 
         obj.vehicles = table('Size', size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
@@ -171,9 +171,9 @@ function update(obj, property_name)
             % last_record_idsを初期化   
             last_record_ids = zeros(1, 3);
 
-            % VehicleLeaderFlagMapとVehiclePrecedingVehicleMapを初期化
+            % VehicleLeaderFlagMapとVehiclePrecedingRecordMapを初期化
             VehicleLeaderFlagMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
-            VehiclePrecedingVehicleMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
+            VehiclePrecedingRecordMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
 
             % その車線の自動車のレコードを取得
             tmp_vehicles = obj.vehicles(obj.vehicles.stop_lane == lane_id, :);
@@ -188,8 +188,8 @@ function update(obj, property_name)
                     % VehicleLeaderFlagMapにプッシュ
                     VehicleLeaderFlagMap(vehicle.id) = 1;
 
-                    % VehiclePrecedingVehicleMapにプッシュ
-                    VehiclePrecedingVehicleMap(vehicle.id) = NaN;
+                    % VehiclePrecedingRecordMapにプッシュ
+                    VehiclePrecedingRecordMap(vehicle.id) = NaN;
 
                     % found_flagsにプッシュ
                     found_flags(vehicle.branch_flag) = true;
@@ -202,8 +202,8 @@ function update(obj, property_name)
                         % VehicleLeaderFlagMapにプッシュ
                         VehicleLeaderFlagMap(vehicle.id) = 3;
 
-                        % VehiclePrecedingVehicleMapにプッシュ
-                        VehiclePrecedingVehicleMap(vehicle.id) = last_record_ids(vehicle.branch_flag);
+                        % VehiclePrecedingRecordMapにプッシュ
+                        VehiclePrecedingRecordMap(vehicle.id) = last_record_ids(vehicle.branch_flag);
 
                         % last_record_idsにプッシュ
                         last_record_ids(vehicle.branch_flag) = record_id;
@@ -211,8 +211,8 @@ function update(obj, property_name)
                         % VehicleLeaderFlagMapにプッシュ
                         VehicleLeaderFlagMap(vehicle.id) = 2;
 
-                        % VehiclePrecedingVehicleMapにプッシュ
-                        VehiclePrecedingVehicleMap(vehicle.id) = NaN;
+                        % VehiclePrecedingRecordMapにプッシュ
+                        VehiclePrecedingRecordMap(vehicle.id) = NaN;
 
                         % found_flagsにプッシュ
                         found_flags(vehicle.branch_flag) = true;
@@ -231,11 +231,11 @@ function update(obj, property_name)
                 % leader_flagを取得
                 leader_flag = VehicleLeaderFlagMap(vehicle.id);
 
-                % preceding_vehicleを取得
-                preceding_vehicle = VehiclePrecedingVehicleMap(vehicle.id);
+                % preceding_record_idを取得
+                preceding_record_id = VehiclePrecedingRecordMap(vehicle.id);
 
                 % vehiclesに反映
-                obj.vehicles(obj.vehicles.id == vehicle.id, [6, 7]) = {leader_flag, preceding_vehicle};
+                obj.vehicles(obj.vehicles.id == vehicle.id, [6, 7]) = {leader_flag, preceding_record_id};
             end
         end
     else
