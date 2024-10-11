@@ -363,13 +363,13 @@ function updateMLD(obj, property_name)
                         % 先頭車かどうかで場合分け
                         if vehicle.leader_flag == 1
                             % b3を作成
-                            b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                            b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                         elseif vehicle.leader_flag == 2
                             % b3を作成
-                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                            b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
                         elseif vehicle.leader_flag == 3
                             % b3を作成
-                            b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                            b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
                         else
                             error('leader_flag is invalid.');
                         end
@@ -394,10 +394,10 @@ function updateMLD(obj, property_name)
                         % 先頭車かどうかで場合分け
                         if vehicle.leader_flag == 1
                             % b3を作成
-                            b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                            b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                         elseif vehicle.leader_flag == 3
                             % b3を作成
-                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 1];
                         else
                             error('leader_flag is invalid.');
                         end
@@ -450,13 +450,13 @@ function updateMLD(obj, property_name)
                             % 先頭車かどうかで場合分け
                             if vehicle.leader_flag == 1
                                 % b3を作成
-                                b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                                b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                             elseif vehicle.leader_flag == 2
                                 % b3を作成
-                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                                b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
                             elseif vehicle.leader_flag == 3
                                 % b3を作成
-                                b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                                b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -481,10 +481,10 @@ function updateMLD(obj, property_name)
                             % 先頭車かどうかで場合分け
                             if vehicle.leader_flag == 1
                                 % b3を作成
-                                b3 = dt *v *[0, 0, k_s*(p_s-d_s) - 1, 0, 1];
+                                b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                             elseif vehicle.leader_flag == 3
                                 % b3を作成
-                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
+                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 1];
                             else
                                 error('leader_flag is invalid.');
                             end
