@@ -980,18 +980,49 @@ function updateMLD(obj, property_name)
                         % レコードを取得
                         vehicle = vehicles(record_id, :);
 
+                        % signal_idを取得
+                        signal_id = (num_roads - 1) * (road_id - 1) + vehicle.route;
+
                         % leader_flagによって場合分け
                         if vehicle.leader_flag == 1
                             % d1行列を初期化
                             d1 = zeros(18, num_signals);
 
+                            % delta_1の定義
+                            d1(1, signal_id) = -1;
+                            d1(2, signal_id) = 1;
+
+                            % delta_t1の定義
+                            d1(5, signal_id) = -1;
+                            d1(6, signal_id) = 1;
+
                         elseif vehicle.leader_flag == 2
                             % d1行列を初期化
                             d1 = zeros(34, num_signals);
 
+                            % delta_1の定義
+                            d1(1, signal_id) = -1;
+                            d1(2, signal_id) = 1;
+
+                            % delta_t1の定義
+                            d1(9, signal_id) = -1;
+                            d1(10, signal_id) = 1;
+
                         elseif vehicle.leader_flag == 3
                             % d1行列を初期化
                             d1 = zeros(53, num_signals);
+
+                            % delta_1の定義
+                            d1(1, signal_id) = -1;
+                            d1(2, signal_id) = 1;
+
+                            % delta_t1の定義
+                            d1(13, signal_id) = -1;
+                            d1(14, signal_id) = 1;
+
+                            % delta_t2の定義
+                            d1(17, signal_id) = 1;
+                            d1(18, signal_id) = -1;
                             
                         else
                             error('leader_flag is invalid.');
@@ -1006,15 +1037,38 @@ function updateMLD(obj, property_name)
                         % レコードを取得
                         vehicle = vehicles(record_id, :);
 
+                        % signal_idを取得
+                        signal_id = (num_roads - 1) * (road_id - 1) + vehicle.route;
+
                         % leader_flagによって場合分け
                         if vehicle.leader_flag == 1
                             % d1行列を初期化
                             d1 = zeros(18, num_signals);
 
+                            % delta_1の定義
+                            d1(1, signal_id) = -1;
+                            d1(2, signal_id) = 1;
+
+                            % delta_t1の定義
+                            d1(5, signal_id) = -1;
+                            d1(6, signal_id) = 1;
+
                             
                         elseif vehicle.leader_flag == 3
                             % d1行列を初期化
                             d1 = zeros(36, num_signals);
+
+                            % delta_1の定義
+                            d1(1, signal_id) = -1;
+                            d1(2, signal_id) = 1;
+
+                            % delta_t1の定義
+                            d1(8, signal_id) = -1;
+                            d1(9, signal_id) = 1;
+
+                            % delta_t2の定義
+                            d1(12, signal_id) = 1;
+                            d1(13, signal_id) = -1;
 
                         else
                             error('leader_flag is invalid.');
@@ -1047,18 +1101,49 @@ function updateMLD(obj, property_name)
                             % レコードを取得
                             vehicle = tmp_vehicles(record_id, :);
 
+                            % signal_idを取得
+                            signal_id = (num_roads - 1) * (road_id - 1) + vehicle.route;
+
                             % leader_flagによって場合分け
                             if vehicle.leader_flag == 1
                                 % d1行列を初期化
                                 d1 = zeros(18, num_signals);
 
+                                % delta_1の定義
+                                d1(1, signal_id) = -1;
+                                d1(2, signal_id) = 1;
+
+                                % delta_t1の定義
+                                d1(5, signal_id) = -1;
+                                d1(6, signal_id) = 1;
+
                             elseif vehicle.leader_flag == 2
                                 % d1行列を初期化
                                 d1 = zeros(34, num_signals);
 
+                                % delta_1の定義
+                                d1(1, signal_id) = -1;
+                                d1(2, signal_id) = 1;
+
+                                % delta_t1の定義
+                                d1(9, signal_id) = -1;
+                                d1(10, signal_id) = 1;
+
                             elseif vehicle.leader_flag == 3
                                 % d1行列を初期化
                                 d1 = zeros(53, num_signals);
+
+                                % delta_1の定義
+                                d1(1, signal_id) = -1;
+                                d1(2, signal_id) = 1;
+
+                                % delta_t1の定義
+                                d1(13, signal_id) = -1;
+                                d1(14, signal_id) = 1;
+
+                                % delta_t2の定義
+                                d1(17, signal_id) = 1;
+                                d1(18, signal_id) = -1;
                                 
                             else
                                 error('leader_flag is invalid.');
@@ -1073,13 +1158,38 @@ function updateMLD(obj, property_name)
                             % レコードを取得
                             vehicle = tmp_vehicles(record_id, :);
 
+                            % signal_idを取得
+                            signal_id = (num_roads - 1) * (road_id - 1) + vehicle.route;
+
                             % leader_flagによって場合分け
                             if vehicle.leader_flag == 1
                                 % d1行列を初期化
                                 d1 = zeros(18, num_signals);
+
+                                % delta_1の定義
+                                d1(1, signal_id) = -1;
+                                d1(2, signal_id) = 1;
+
+                                % delta_t1の定義
+                                d1(5, signal_id) = -1;
+                                d1(6, signal_id) = 1;
+
                             elseif vehicle.leader_flag == 3
                                 % d1行列を初期化
                                 d1 = zeros(36, num_signals);
+
+                                % delta_1の定義
+                                d1(1, signal_id) = -1;
+                                d1(2, signal_id) = 1;
+
+                                % delta_t1の定義
+                                d1(8, signal_id) = -1;
+                                d1(9, signal_id) = 1;
+
+                                % delta_t2の定義
+                                d1(12, signal_id) = 1;
+                                d1(13, signal_id) = -1;
+                                
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -1098,7 +1208,7 @@ function updateMLD(obj, property_name)
 
         % D1行列をプッシュ
         obj.MLDsMap('D1') = D1;
-        
+
     elseif strcmp(property_name, 'D2')
     elseif strcmp(property_name, 'D3')
     elseif strcmp(property_name, 'E')
