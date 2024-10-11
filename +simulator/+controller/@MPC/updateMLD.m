@@ -518,9 +518,179 @@ function updateMLD(obj, property_name)
             links = Road.get('links');
             num_lanes = links.main.lanes;
 
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
             % 車線数で場合分け
             if num_lanes == 1
+                % レコードの数を取得
+                num_vehicles = height(vehicles);
+
+                % tmp_C行列を初期化
+                tmp_C = [];
+
+                % lane_prmを取得
+                lane_prm = LanePrmMap(1);
+
+                % 分岐があるかどうかで場合分け
+                if isfield(lane_prm, 'branch')
+                    % 自動者を走査
+                    for record_id = 1: num_vehicles
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % c行列を初期化
+                            c = zeros(18, num_vehicles);
+
+                            % delta_dの定義
+                            c(9, record_id) = 1;
+                            c(10, record_id) = -1;
+
+                            % delta_pの定義
+                            c(11, record_id) = -1;
+                            c(12, record_id) = 1;
+
+                            % delta_d^primeの定義
+                            c(13, record_id) = 1;
+                            c(14, record_id) = -1;
+
+                            % z_1の定義
+                            c(17, record_id) = 1;
+                            c(18, record_id) = -1;
+
+                        elseif vehicle.leader_flag == 2
+                            % c行列を初期化
+                            c = zeros(34, num_vehicles);
+
+                            % delta_dの定義
+                            c(13, record_id) = 1;
+                            c(14, record_id) = -1;
+
+                            % delta_pの定義
+                            c(15, record_id) = -1;
+                            c(16, record_id) = 1;
+
+                            % delta_f2の定義
+                            c(17, [record_id - 1, record_id]) = [1, -1];
+                            c(18, [record_id - 1, record_id]) = [-1, 1];
+
+                            % delta_bの定義
+                            c(19, record_id) = 1;
+                            c(20, record_id) = -1;
+
+                            % delta_d^primeの定義
+                            c(21, record_id) = 1;
+                            c(22, record_id) = -1;
+
+                            % z_1の定義
+                            c(25, record_id) = 1;
+                            c(26, record_id) = -1;
+
+                            % z_2の定義
+                            c(29, record_id - 1) = 1;
+                            c(30, record_id - 1) = -1;
+
+                            % z_3の定義
+                            c(33, record_id) = 1;
+                            c(34, record_id) = -1;
+
+                        elseif vehicle.leader_flag == 3
+                            % c行列を初期化
+                            c = zeros(53, num_vehicles);
+
+                            % delta_dの定義
+                            c(22, record_id) = 1;
+                            c(23, record_id) = -1;
+
+                            % delta_pの定義
+                            c(24, record_id) = -1;
+                            c(25, record_id) = 1;
+
+                            % delta_f2の定義
+                            c(26, [record_id - 1, record_id]) = [1, -1];
+                            c(27, [record_id - 1, record_id]) = [-1, 1];
+
+                            % delta_f3の定義
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_C行列にcをプッシュ
+                        tmp_C = [tmp_C; c];
+                    end
+                else
+                    % 自動車を走査
+                    for record_id = 1: num_vehicles
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % c行列を初期化
+                            c = zeros(18, num_vehicles);
+
+                            % delta_dの定義
+                            c(9, record_id) = 1;
+                            c(10, record_id) = -1;
+
+                            % delta_pの定義
+                            c(11, record_id) = -1;
+                            c(12, record_id) = 1;
+
+                            % delta_d^primeの定義
+                            c(13, record_id) = 1;
+                            c(14, record_id) = -1;
+
+                            % z_1の定義
+                            c(17, record_id) = 1;
+                            c(18, record_id) = -1;
+
+                        elseif vehicle.leader_flag == 3
+                            % c行列を初期化
+                            c = zeros(36, num_vehicles);
+
+                            % delta_dの定義
+                            c(17, record_id) = 1;
+                            c(18, record_id) = -1;
+
+                            % delta_pの定義
+                            c(19, record_id) = -1;
+                            c(20, record_id) = 1;
+
+                            % delta_fの定義
+                            c(21, [record_id - 1, record_id]) = [1, -1];
+                            c(22, [record_id - 1, record_id]) = [-1, 1];
+
+                            % delta_d^primeの定義
+                            c(23, record_id) = 1;
+                            c(24, record_id) = -1;
+
+                            % z_1の定義
+                            c(27, record_id) = 1;
+                            c(28, record_id) = -1;
+
+                            % z_2の定義
+                            c(31, record_id - 1) = 1;
+                            c(32, record_id - 1) = -1;
+
+                            % z_3の定義
+                            c(35, record_id) = 1;
+                            c(36, record_id) = -1;
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_C行列にcをプッシュ
+                        tmp_C = [tmp_C; c];
+                    end
+                end
             else
+                
             end
         end
 
