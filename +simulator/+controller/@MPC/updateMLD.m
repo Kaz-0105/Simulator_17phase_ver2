@@ -51,8 +51,11 @@ function updateMLD(obj, property_name)
         % B1行列を初期化
         B1 = [];
 
+        % num_roadsを取得
+        num_roads = obj.Roads.count();
+
         % 道路を走査
-        for road_id = 1: obj.Roads.count()
+        for road_id = 1: num_roads
             % Roadクラスを取得
             Road = obj.Roads.itemByKey(road_id);
 
@@ -60,15 +63,11 @@ function updateMLD(obj, property_name)
             vehicles = Road.get('vehicles');
 
             % 車線数を取得
-            links = Road.get('links');
-            num_lanes = links.main.lanes;
+            road_prm = obj.RoadPrmMap(road_id);
+            num_lanes = road_prm.LanePrmMap.Count();
 
-            % signal_groupの数を取得
-            Intersection = Road.get('OutputIntersection');
-            signal_controller = Intersection.get('signal_controller');
-            SignalGroupsMap = signal_controller.signal_groups.SignalGroupsMap;
-            num_signal_groups = SignalGroupsMap.Count();
-
+            % num_signalsを取得
+            num_signals = num_roads * (num_roads - 1);
 
             % 車線の数で場合分け
             if num_lanes == 1
@@ -76,7 +75,7 @@ function updateMLD(obj, property_name)
                 num_vehicles = height(vehicles);
 
                 % tmp_B1行列を作成
-                tmp_B1 = zeros(num_vehicles, num_signal_groups);
+                tmp_B1 = zeros(num_vehicles, num_signals);
 
                 % B1行列にプッシュ
                 B1 = blkdiag(B1, tmp_B1);
@@ -90,7 +89,7 @@ function updateMLD(obj, property_name)
                     num_vehicles = height(tmp_vehicles);
 
                     % tmp_B1行列の作成
-                    tmp_B1 = zeros(num_vehicles, num_signal_groups);
+                    tmp_B1 = zeros(num_vehicles, num_signals);
 
                     % B1行列にプッシュ
                     B1 = blkdiag(B1, tmp_B1);
@@ -116,15 +115,14 @@ function updateMLD(obj, property_name)
             % vehiclesを取得
             vehicles = Road.get('vehicles');
 
-            % 車線数を取得
-            links = Road.get('links');
-            num_lanes = links.main.lanes;
-
             % road_prmを取得
             road_prm = obj.RoadPrmMap(road_id);
 
             % LanePrmMapを取得
             LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
 
             % 車線の数で場合分け
             if num_lanes == 1
@@ -306,15 +304,14 @@ function updateMLD(obj, property_name)
             % vehiclesを取得
             vehicles = Road.get('vehicles');
 
-            % 車線数を取得
-            links = Road.get('links');
-            num_lanes = links.main.lanes;
-
             % road_prmを取得
             road_prm = obj.RoadPrmMap(road_id);
 
             % LanePrmMapを取得
             LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
 
             % 車線の数で場合分け
             if num_lanes == 1
@@ -369,7 +366,7 @@ function updateMLD(obj, property_name)
                             b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
                         elseif vehicle.leader_flag == 3
                             % b3を作成
-                            b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                            b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 0, 1];
                         else
                             error('leader_flag is invalid.');
                         end
@@ -397,7 +394,7 @@ function updateMLD(obj, property_name)
                             b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                         elseif vehicle.leader_flag == 3
                             % b3を作成
-                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 1];
+                            b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 0, 1];
                         else
                             error('leader_flag is invalid.');
                         end
@@ -456,7 +453,7 @@ function updateMLD(obj, property_name)
                                 b3 = dt *v *[0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 1];
                             elseif vehicle.leader_flag == 3
                                 % b3を作成
-                                b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 1];
+                                b3 = dt *v *[0, 0, 0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, -k_f*d_f - 1, 0, 0, 0, 1];
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -484,7 +481,7 @@ function updateMLD(obj, property_name)
                                 b3 = dt *v *[0, 0, 0, k_s*(p_s-d_s) - 1, 0, 1];
                             elseif vehicle.leader_flag == 3
                                 % b3を作成
-                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 1];
+                                b3 = dt *v *[0, 0, 0, 0, k_s*(p_s-d_s) - 1, -k_f*d_f - 1, 0, 0, 0, 1];
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -1500,7 +1497,7 @@ function updateMLD(obj, property_name)
                                 d2(34, 3) = 1;
                                 d2(35, 3) = -1;
                                 d2(36, 3) = 1;
-                                
+
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -1520,6 +1517,47 @@ function updateMLD(obj, property_name)
         obj.MLDsMap('D2') = D2;
 
     elseif strcmp(property_name, 'D3')
+        % D3行列を初期化
+        D3 = [];
+
+        % 道路を走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
+
+            % 車線数で場合分け
+            if num_lanes == 1
+                % lane_prmを取得
+                lane_prm = LanePrmMap(1);
+
+                % tmp_D3行列を初期化
+                tmp_D3 = [];
+
+                % 分岐があるかどうかで場合分け
+                if isfield(lane_prm, 'branch')
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                    end
+
+                    % D3行列にプッシュ
+                    D3 = blkdiag(D3, tmp_D3);
+                else
+                end
+            else
+            end
+        end
     elseif strcmp(property_name, 'E')
     else
         error('Property name is invalid.');
