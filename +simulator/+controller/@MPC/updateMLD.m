@@ -598,54 +598,54 @@ function updateMLD(obj, property_name)
 
                         elseif vehicle.leader_flag == 3
                             % c行列を初期化
-                            c = zeros(53, num_vehicles);
+                            c = zeros(56, num_vehicles);
 
                             % delta_dの定義
-                            c(22, record_id) = 1;
-                            c(23, record_id) = -1;
+                            c(25, record_id) = 1;
+                            c(26, record_id) = -1;
 
                             % delta_pの定義
-                            c(24, record_id) = -1;
-                            c(25, record_id) = 1;
+                            c(27, record_id) = -1;
+                            c(28, record_id) = 1;
 
                             % delta_f2の定義
-                            c(26, [record_id - 1, record_id]) = [1, -1];
-                            c(27, [record_id - 1, record_id]) = [-1, 1];
+                            c(29, [record_id - 1, record_id]) = [1, -1];
+                            c(30, [record_id - 1, record_id]) = [-1, 1];
 
                             % 先行車のIDを取得
                             preceding_record_id = vehicle.preceding_record_id;
 
                             % delta_f3の定義
-                            c(28, [preceding_record_id, record_id]) = [1, -1];
-                            c(29, [preceding_record_id, record_id]) = [-1, 1];
+                            c(31, [preceding_record_id, record_id]) = [1, -1];
+                            c(32, [preceding_record_id, record_id]) = [-1, 1];
 
                             % delta_bの定義
-                            c(30, record_id) = 1;
-                            c(31, record_id) = -1;
+                            c(33, record_id) = 1;
+                            c(34, record_id) = -1;
 
                             % delta_d^primeの定義
-                            c(32, record_id) = 1;
-                            c(33, record_id) = -1;
+                            c(35, record_id) = 1;
+                            c(36, record_id) = -1;
 
                             % z_1の定義
-                            c(36, record_id) = 1;
-                            c(37, record_id) = -1;
+                            c(39, record_id) = 1;
+                            c(40, record_id) = -1;
 
                             % z_2の定義
-                            c(40, record_id - 1) = 1;
-                            c(41, record_id - 1) = -1;
+                            c(43, record_id - 1) = 1;
+                            c(44, record_id - 1) = -1;
 
                             % z_3の定義
-                            c(44, record_id) = 1;
-                            c(45, record_id) = -1;
+                            c(47, record_id) = 1;
+                            c(48, record_id) = -1;
 
                             % z_4の定義
-                            c(48, preceding_record_id) = 1;
-                            c(49, preceding_record_id) = -1;
+                            c(51, preceding_record_id) = 1;
+                            c(52, preceding_record_id) = -1;
 
                             % z_5の定義
-                            c(52, record_id) = 1;
-                            c(53, record_id) = -1;
+                            c(55, record_id) = 1;
+                            c(56, record_id) = -1;
                         else
                             error('leader_flag is invalid.');
                         end
@@ -682,35 +682,35 @@ function updateMLD(obj, property_name)
 
                         elseif vehicle.leader_flag == 3
                             % c行列を初期化
-                            c = zeros(36, num_vehicles);
+                            c = zeros(39, num_vehicles);
 
                             % delta_dの定義
-                            c(17, record_id) = 1;
-                            c(18, record_id) = -1;
+                            c(20, record_id) = 1;
+                            c(21, record_id) = -1;
 
                             % delta_pの定義
-                            c(19, record_id) = -1;
-                            c(20, record_id) = 1;
+                            c(22, record_id) = -1;
+                            c(23, record_id) = 1;
 
                             % delta_fの定義
-                            c(21, [record_id - 1, record_id]) = [1, -1];
-                            c(22, [record_id - 1, record_id]) = [-1, 1];
+                            c(24, [record_id - 1, record_id]) = [1, -1];
+                            c(25, [record_id - 1, record_id]) = [-1, 1];
 
                             % delta_d^primeの定義
-                            c(23, record_id) = 1;
-                            c(24, record_id) = -1;
+                            c(26, record_id) = 1;
+                            c(27, record_id) = -1;
 
                             % z_1の定義
-                            c(27, record_id) = 1;
-                            c(28, record_id) = -1;
+                            c(30, record_id) = 1;
+                            c(31, record_id) = -1;
 
                             % z_2の定義
-                            c(31, record_id - 1) = 1;
-                            c(32, record_id - 1) = -1;
+                            c(34, record_id - 1) = 1;
+                            c(35, record_id - 1) = -1;
 
                             % z_3の定義
-                            c(35, record_id) = 1;
-                            c(36, record_id) = -1;
+                            c(38, record_id) = 1;
+                            c(39, record_id) = -1;
                         else
                             error('leader_flag is invalid.');
                         end
@@ -742,7 +742,7 @@ function updateMLD(obj, property_name)
                         % 自動車を走査
                         for record_id = 1: num_vehicles
                             % レコードを取得
-                            vehicle = tmp_vehicle(record_id, :);
+                            vehicle = tmp_vehicles(record_id, :);
 
                             % leader_flagによって場合分け
                             if vehicle.leader_flag == 1
@@ -803,54 +803,54 @@ function updateMLD(obj, property_name)
 
                             elseif vehicle.leader_flag == 3
                                 % c行列を初期化
-                                c = zeros(53, num_vehicles);
+                                c = zeros(56, num_vehicles);
 
                                 % delta_dの定義
-                                c(22, record_id) = 1;
-                                c(23, record_id) = -1;
+                                c(25, record_id) = 1;
+                                c(26, record_id) = -1;
 
                                 % delta_pの定義
-                                c(24, record_id) = -1;
-                                c(25, record_id) = 1;
+                                c(27, record_id) = -1;
+                                c(28, record_id) = 1;
 
                                 % delta_f2の定義
-                                c(26, [record_id - 1, record_id]) = [1, -1];
-                                c(27, [record_id - 1, record_id]) = [-1, 1];
+                                c(29, [record_id - 1, record_id]) = [1, -1];
+                                c(30, [record_id - 1, record_id]) = [-1, 1];
 
                                 % 先行車のIDを取得
                                 preceding_record_id = vehicle.preceding_record_id;
 
                                 % delta_f3の定義
-                                c(28, [preceding_record_id, record_id]) = [1, -1];
-                                c(29, [preceding_record_id, record_id]) = [-1, 1];
+                                c(31, [preceding_record_id, record_id]) = [1, -1];
+                                c(32, [preceding_record_id, record_id]) = [-1, 1];
 
                                 % delta_bの定義
-                                c(30, record_id) = 1;
-                                c(31, record_id) = -1;
+                                c(33, record_id) = 1;
+                                c(34, record_id) = -1;
 
                                 % delta_d^primeの定義
-                                c(32, record_id) = 1;
-                                c(33, record_id) = -1;
+                                c(35, record_id) = 1;
+                                c(36, record_id) = -1;
 
                                 % z_1の定義
-                                c(36, record_id) = 1;
-                                c(37, record_id) = -1;
+                                c(39, record_id) = 1;
+                                c(40, record_id) = -1;
 
                                 % z_2の定義
-                                c(40, record_id - 1) = 1;
-                                c(41, record_id - 1) = -1;
+                                c(43, record_id - 1) = 1;
+                                c(44, record_id - 1) = -1;
 
                                 % z_3の定義
-                                c(44, record_id) = 1;
-                                c(45, record_id) = -1;
+                                c(47, record_id) = 1;
+                                c(48, record_id) = -1;
 
                                 % z_4の定義
-                                c(48, preceding_record_id) = 1;
-                                c(49, preceding_record_id) = -1;
+                                c(51, preceding_record_id) = 1;
+                                c(52, preceding_record_id) = -1;
 
                                 % z_5の定義
-                                c(52, record_id) = 1;
-                                c(53, record_id) = -1;
+                                c(55, record_id) = 1;
+                                c(56, record_id) = -1;
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -887,35 +887,35 @@ function updateMLD(obj, property_name)
     
                             elseif vehicle.leader_flag == 3
                                 % c行列を初期化
-                                c = zeros(36, num_vehicles);
+                                c = zeros(39, num_vehicles);
     
                                 % delta_dの定義
-                                c(17, record_id) = 1;
-                                c(18, record_id) = -1;
+                                c(20, record_id) = 1;
+                                c(21, record_id) = -1;
     
                                 % delta_pの定義
-                                c(19, record_id) = -1;
-                                c(20, record_id) = 1;
+                                c(22, record_id) = -1;
+                                c(23, record_id) = 1;
     
                                 % delta_fの定義
-                                c(21, [record_id - 1, record_id]) = [1, -1];
-                                c(22, [record_id - 1, record_id]) = [-1, 1];
+                                c(24, [record_id - 1, record_id]) = [1, -1];
+                                c(25, [record_id - 1, record_id]) = [-1, 1];
     
                                 % delta_d^primeの定義
-                                c(23, record_id) = 1;
-                                c(24, record_id) = -1;
+                                c(26, record_id) = 1;
+                                c(27, record_id) = -1;
     
                                 % z_1の定義
-                                c(27, record_id) = 1;
-                                c(28, record_id) = -1;
+                                c(30, record_id) = 1;
+                                c(31, record_id) = -1;
     
                                 % z_2の定義
-                                c(31, record_id - 1) = 1;
-                                c(32, record_id - 1) = -1;
+                                c(34, record_id - 1) = 1;
+                                c(35, record_id - 1) = -1;
     
                                 % z_3の定義
-                                c(35, record_id) = 1;
-                                c(36, record_id) = -1;
+                                c(38, record_id) = 1;
+                                c(39, record_id) = -1;
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -1007,7 +1007,7 @@ function updateMLD(obj, property_name)
 
                         elseif vehicle.leader_flag == 3
                             % d1行列を初期化
-                            d1 = zeros(53, num_signals);
+                            d1 = zeros(56, num_signals);
 
                             % delta_1の定義
                             d1(1, signal_id) = -1;
@@ -1053,7 +1053,7 @@ function updateMLD(obj, property_name)
                             
                         elseif vehicle.leader_flag == 3
                             % d1行列を初期化
-                            d1 = zeros(36, num_signals);
+                            d1 = zeros(39, num_signals);
 
                             % delta_1の定義
                             d1(1, signal_id) = -1;
@@ -1128,7 +1128,7 @@ function updateMLD(obj, property_name)
 
                             elseif vehicle.leader_flag == 3
                                 % d1行列を初期化
-                                d1 = zeros(53, num_signals);
+                                d1 = zeros(56, num_signals);
 
                                 % delta_1の定義
                                 d1(1, signal_id) = -1;
@@ -1151,7 +1151,7 @@ function updateMLD(obj, property_name)
                         end
                     else
                         % 自動車を走査
-                        for record_id = 1: height(record_id)
+                        for record_id = 1: height(tmp_vehicles)
                             % レコードを取得
                             vehicle = tmp_vehicles(record_id, :);
 
@@ -1173,7 +1173,7 @@ function updateMLD(obj, property_name)
 
                             elseif vehicle.leader_flag == 3
                                 % d1行列を初期化
-                                d1 = zeros(36, num_signals);
+                                d1 = zeros(39, num_signals);
 
                                 % delta_1の定義
                                 d1(1, signal_id) = -1;
@@ -1197,8 +1197,7 @@ function updateMLD(obj, property_name)
                     end
 
                     % D1行列にプッシュ
-                    D1 = [D1, tmp_D1];
-
+                    D1 = [D1; tmp_D1];
                 end
             end
         end
@@ -1278,37 +1277,37 @@ function updateMLD(obj, property_name)
 
                         elseif vehicle.leader_flag == 3
                             % d2行列を初期化
-                            d2 = zeros(53, 5);
+                            d2 = zeros(56, 5);
 
                             % z_1の定義
-                            d2(34, 1) = -1;
-                            d2(35, 1) = 1;
-                            d2(36, 1) = -1;
-                            d2(37, 1) = 1;
+                            d2(37, 1) = -1;
+                            d2(38, 1) = 1;
+                            d2(39, 1) = -1;
+                            d2(40, 1) = 1;
 
                             % z_2の定義
-                            d2(38, 2) = -1;
-                            d2(39, 2) = 1;
-                            d2(40, 2) = -1;
-                            d2(41, 2) = 1;
+                            d2(41, 2) = -1;
+                            d2(42, 2) = 1;
+                            d2(43, 2) = -1;
+                            d2(44, 2) = 1;
 
                             % z_3の定義
-                            d2(42, 3) = -1;
-                            d2(43, 3) = 1;
-                            d2(44, 3) = -1;
-                            d2(45, 3) = 1;
+                            d2(45, 3) = -1;
+                            d2(46, 3) = 1;
+                            d2(47, 3) = -1;
+                            d2(48, 3) = 1;
 
                             % z_4の定義
-                            d2(46, 4) = -1;
-                            d2(47, 4) = 1;
-                            d2(48, 4) = -1;
-                            d2(49, 4) = 1;
+                            d2(49, 4) = -1;
+                            d2(50, 4) = 1;
+                            d2(51, 4) = -1;
+                            d2(52, 4) = 1;
 
                             % z_5の定義
-                            d2(50, 5) = -1;
-                            d2(51, 5) = 1;
-                            d2(52, 5) = -1;
-                            d2(53, 5) = 1;
+                            d2(53, 5) = -1;
+                            d2(54, 5) = 1;
+                            d2(55, 5) = -1;
+                            d2(56, 5) = 1;
 
                         else
                             error('leader_flag is invalid.');
@@ -1336,25 +1335,25 @@ function updateMLD(obj, property_name)
 
                         elseif vehicle.leader_flag == 3
                             % d2行列を初期化
-                            d2 = zeros(36, 3);
+                            d2 = zeros(39, 3);
 
                             % z_1の定義
-                            d2(25, 1) = -1;
-                            d2(26, 1) = 1;
-                            d2(27, 1) = -1;
-                            d2(28, 1) = 1;
+                            d2(28, 1) = -1;
+                            d2(29, 1) = 1;
+                            d2(30, 1) = -1;
+                            d2(31, 1) = 1;
 
                             % z_2の定義
-                            d2(29, 2) = -1;
-                            d2(30, 2) = 1;
-                            d2(31, 2) = -1;
-                            d2(32, 2) = 1;
+                            d2(32, 2) = -1;
+                            d2(33, 2) = 1;
+                            d2(34, 2) = -1;
+                            d2(35, 2) = 1;
 
                             % z_3の定義
-                            d2(33, 3) = -1;
-                            d2(34, 3) = 1;
-                            d2(35, 3) = -1;
-                            d2(36, 3) = 1;
+                            d2(36, 3) = -1;
+                            d2(37, 3) = 1;
+                            d2(38, 3) = -1;
+                            d2(39, 3) = 1;
 
                         else
                             error('leader_flag is invalid.');
@@ -1420,37 +1419,37 @@ function updateMLD(obj, property_name)
 
                             elseif vehicle.leader_flag == 3
                                 % d2行列を初期化
-                                d2 = zeros(53, 5);
+                                d2 = zeros(56, 5);
 
                                 % z_1の定義
-                                d2(34, 1) = -1;
-                                d2(35, 1) = 1;
-                                d2(36, 1) = -1;
-                                d2(37, 1) = 1;
+                                d2(37, 1) = -1;
+                                d2(38, 1) = 1;
+                                d2(39, 1) = -1;
+                                d2(40, 1) = 1;
 
                                 % z_2の定義
-                                d2(38, 2) = -1;
-                                d2(39, 2) = 1;
-                                d2(40, 2) = -1;
-                                d2(41, 2) = 1;
+                                d2(41, 2) = -1;
+                                d2(42, 2) = 1;
+                                d2(43, 2) = -1;
+                                d2(44, 2) = 1;
 
                                 % z_3の定義
-                                d2(42, 3) = -1;
-                                d2(43, 3) = 1;
-                                d2(44, 3) = -1;
-                                d2(45, 3) = 1;
+                                d2(45, 3) = -1;
+                                d2(46, 3) = 1;
+                                d2(47, 3) = -1;
+                                d2(48, 3) = 1;
 
                                 % z_4の定義
-                                d2(46, 4) = -1;
-                                d2(47, 4) = 1;
-                                d2(48, 4) = -1;
-                                d2(49, 4) = 1;
+                                d2(49, 4) = -1;
+                                d2(50, 4) = 1;
+                                d2(51, 4) = -1;
+                                d2(52, 4) = 1;
 
                                 % z_5の定義
-                                d2(50, 5) = -1;
-                                d2(51, 5) = 1;
-                                d2(52, 5) = -1;
-                                d2(53, 5) = 1;
+                                d2(53, 5) = -1;
+                                d2(54, 5) = 1;
+                                d2(55, 5) = -1;
+                                d2(56, 5) = 1;
 
                             else
                                 error('leader_flag is invalid.');
@@ -1478,25 +1477,25 @@ function updateMLD(obj, property_name)
 
                             elseif vehicle.leader_flag == 3
                                 % d2行列を初期化
-                                d2 = zeros(36, 3);
+                                d2 = zeros(39, 3);
 
                                 % z_1の定義
-                                d2(25, 1) = -1;
-                                d2(26, 1) = 1;
-                                d2(27, 1) = -1;
-                                d2(28, 1) = 1;
+                                d2(28, 1) = -1;
+                                d2(29, 1) = 1;
+                                d2(30, 1) = -1;
+                                d2(31, 1) = 1;
 
                                 % z_2の定義
-                                d2(29, 2) = -1;
-                                d2(30, 2) = 1;
-                                d2(31, 2) = -1;
-                                d2(32, 2) = 1;
+                                d2(32, 2) = -1;
+                                d2(33, 2) = 1;
+                                d2(34, 2) = -1;
+                                d2(35, 2) = 1;
 
                                 % z_3の定義
-                                d2(33, 3) = -1;
-                                d2(34, 3) = 1;
-                                d2(35, 3) = -1;
-                                d2(36, 3) = 1;
+                                d2(36, 3) = -1;
+                                d2(37, 3) = 1;
+                                d2(38, 3) = -1;
+                                d2(39, 3) = 1;
 
                             else
                                 error('leader_flag is invalid.');
