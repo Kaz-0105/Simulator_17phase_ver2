@@ -1210,6 +1210,315 @@ function updateMLD(obj, property_name)
         obj.MLDsMap('D1') = D1;
 
     elseif strcmp(property_name, 'D2')
+
+        % D2行列を初期化
+        D2 = [];
+
+        % 道路を走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
+
+            % 車線数で場合分け
+            if num_lanes == 1
+                % lane_prmを取得
+                lane_prm = LanePrmMap(1);
+
+                % tmp_D2行列を初期化
+                tmp_D2 = [];
+
+                % 分岐があるかどうかで場合分け
+                if isfield(lane_prm, 'branch')
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % d2行列を初期化
+                            d2 = zeros(18, 1);
+
+                            % z_1の定義
+                            d2(15, 1) = -1;
+                            d2(16, 1) = 1;
+                            d2(17, 1) = -1;
+                            d2(18, 1) = 1;
+
+                        elseif vehicle.leader_flag == 2
+                            % d2行列を初期化
+                            d2 = zeros(34, 3);
+
+                            % z_1の定義
+                            d2(23, 1) = -1;
+                            d2(24, 1) = 1;
+                            d2(25, 1) = -1;
+                            d2(26, 1) = 1;
+
+                            % z_2の定義
+                            d2(27, 2) = -1;
+                            d2(28, 2) = 1;
+                            d2(29, 2) = -1;
+                            d2(30, 2) = 1;
+
+                            % z_3の定義
+                            d2(31, 3) = -1;
+                            d2(32, 3) = 1;
+                            d2(33, 3) = -1;
+                            d2(34, 3) = 1;
+
+                        elseif vehicle.leader_flag == 3
+                            % d2行列を初期化
+                            d2 = zeros(53, 5);
+
+                            % z_1の定義
+                            d2(34, 1) = -1;
+                            d2(35, 1) = 1;
+                            d2(36, 1) = -1;
+                            d2(37, 1) = 1;
+
+                            % z_2の定義
+                            d2(38, 2) = -1;
+                            d2(39, 2) = 1;
+                            d2(40, 2) = -1;
+                            d2(41, 2) = 1;
+
+                            % z_3の定義
+                            d2(42, 3) = -1;
+                            d2(43, 3) = 1;
+                            d2(44, 3) = -1;
+                            d2(45, 3) = 1;
+
+                            % z_4の定義
+                            d2(46, 4) = -1;
+                            d2(47, 4) = 1;
+                            d2(48, 4) = -1;
+                            d2(49, 4) = 1;
+
+                            % z_5の定義
+                            d2(50, 5) = -1;
+                            d2(51, 5) = 1;
+                            d2(52, 5) = -1;
+                            d2(53, 5) = 1;
+
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_D2行列にd2をプッシュ
+                        tmp_D2 = blkdiag(tmp_D2, d2);
+                    end
+                else
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % d2行列を初期化
+                            d2 = zeros(18, 1);
+
+                            % z_1の定義
+                            d2(15, 1) = -1;
+                            d2(16, 1) = 1;  
+                            d2(17, 1) = -1;
+                            d2(18, 1) = 1;
+
+                        elseif vehicle.leader_flag == 3
+                            % d2行列を初期化
+                            d2 = zeros(36, 3);
+
+                            % z_1の定義
+                            d2(25, 1) = -1;
+                            d2(26, 1) = 1;
+                            d2(27, 1) = -1;
+                            d2(28, 1) = 1;
+
+                            % z_2の定義
+                            d2(29, 2) = -1;
+                            d2(30, 2) = 1;
+                            d2(31, 2) = -1;
+                            d2(32, 2) = 1;
+
+                            % z_3の定義
+                            d2(33, 3) = -1;
+                            d2(34, 3) = 1;
+                            d2(35, 3) = -1;
+                            d2(36, 3) = 1;
+
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_D2行列にd2をプッシュ
+                        tmp_D2 = blkdiag(tmp_D2, d2);   
+                    end
+                end
+
+                % D2行列にプッシュ
+                D2 = blkdiag(D2, tmp_D2);
+            else
+                % 車線を走査
+                for lane_id = 1: num_lanes
+                    % lane_prmを取得
+                    lane_prm = LanePrmMap(lane_id);
+
+                    % その車線の自動車のレコードを取得
+                    tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                    % tmp_D2行列を初期化
+                    tmp_D2 = [];
+
+                    % 分岐があるかどうかで場合分け
+                    if isfield(lane_prm, 'branch')
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 1
+                                % d2行列を初期化
+                                d2 = zeros(18, 1);
+
+                                % z_1の定義
+                                d2(15, 1) = -1;
+                                d2(16, 1) = 1;
+                                d2(17, 1) = -1;
+                                d2(18, 1) = 1;
+                            elseif vehicle.leader_flag == 2
+                                % d2行列を初期化
+                                d2 = zeros(34, 3);
+
+                                % z_1の定義
+                                d2(23, 1) = -1;
+                                d2(24, 1) = 1;
+                                d2(25, 1) = -1;
+                                d2(26, 1) = 1;
+
+                                % z_2の定義
+                                d2(27, 2) = -1;
+                                d2(28, 2) = 1;
+                                d2(29, 2) = -1;
+                                d2(30, 2) = 1;
+
+                                % z_3の定義
+                                d2(31, 3) = -1;
+                                d2(32, 3) = 1;
+                                d2(33, 3) = -1;
+                                d2(34, 3) = 1;
+
+                            elseif vehicle.leader_flag == 3
+                                % d2行列を初期化
+                                d2 = zeros(53, 5);
+
+                                % z_1の定義
+                                d2(34, 1) = -1;
+                                d2(35, 1) = 1;
+                                d2(36, 1) = -1;
+                                d2(37, 1) = 1;
+
+                                % z_2の定義
+                                d2(38, 2) = -1;
+                                d2(39, 2) = 1;
+                                d2(40, 2) = -1;
+                                d2(41, 2) = 1;
+
+                                % z_3の定義
+                                d2(42, 3) = -1;
+                                d2(43, 3) = 1;
+                                d2(44, 3) = -1;
+                                d2(45, 3) = 1;
+
+                                % z_4の定義
+                                d2(46, 4) = -1;
+                                d2(47, 4) = 1;
+                                d2(48, 4) = -1;
+                                d2(49, 4) = 1;
+
+                                % z_5の定義
+                                d2(50, 5) = -1;
+                                d2(51, 5) = 1;
+                                d2(52, 5) = -1;
+                                d2(53, 5) = 1;
+
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_D2行列にd2をプッシュ
+                            tmp_D2 = blkdiag(tmp_D2, d2);
+                        end
+                    else
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 1
+                                % d2行列を初期化
+                                d2 = zeros(18, 1);
+
+                                % z_1の定義
+                                d2(15, 1) = -1;
+                                d2(16, 1) = 1;
+                                d2(17, 1) = -1;
+                                d2(18, 1) = 1;
+
+                            elseif vehicle.leader_flag == 3
+                                % d2行列を初期化
+                                d2 = zeros(36, 3);
+
+                                % z_1の定義
+                                d2(25, 1) = -1;
+                                d2(26, 1) = 1;
+                                d2(27, 1) = -1;
+                                d2(28, 1) = 1;
+
+                                % z_2の定義
+                                d2(29, 2) = -1;
+                                d2(30, 2) = 1;
+                                d2(31, 2) = -1;
+                                d2(32, 2) = 1;
+
+                                % z_3の定義
+                                d2(33, 3) = -1;
+                                d2(34, 3) = 1;
+                                d2(35, 3) = -1;
+                                d2(36, 3) = 1;
+                                
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_D2行列にd2をプッシュ
+                            tmp_D2 = blkdiag(tmp_D2, d2);
+                        end
+                    end
+
+                    % D2行列にプッシュ
+                    D2 = blkdiag(D2, tmp_D2);
+                end
+            end
+        end
+
+        % D2行列をプッシュ
+        obj.MLDsMap('D2') = D2;
+
     elseif strcmp(property_name, 'D3')
     elseif strcmp(property_name, 'E')
     else
