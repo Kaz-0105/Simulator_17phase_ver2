@@ -59,6 +59,18 @@ function create(obj, property_name)
                 % k_f（モデルに登場するパラメータ）を設定
                 main_prm.k_f = 1/(main_prm.D_f - main_prm.d_f);
 
+                % h_dを設定
+                main_prm.h_d = @(p) (-p + main_prm.p_s - main_prm.D_s);
+
+                % h_oを設定
+                main_prm.h_o = @(p) (-p + main_prm.p_s - main_prm.D_o);
+
+                % h_pを設定
+                main_prm.h_p = @(p) (p - main_prm.p_s + main_prm.d_s);
+
+                % h_fを設定 
+                main_prm.h_f = @(p1, p2) (-p1 + p2 + main_prm.D_f);
+
                 if isfield(links, 'branch')
                     if isfield(links.branch, 'right')
                         % branch構造体を取得
@@ -102,9 +114,25 @@ function create(obj, property_name)
                         % k_f（モデルに登場するパラメータ）を設定
                         branch_prm.k_f = 1/(branch_prm.D_f - branch_prm.d_f);
 
+                        % h_dを設定
+                        branch_prm.h_d = @(p) (-p + branch_prm.p_s - branch_prm.D_s);
+
+                        % h_oを設定
+                        branch_prm.h_o = @(p) (-p + branch_prm.p_s - branch_prm.D_o);
+
+                        % h_pを設定
+                        branch_prm.h_p = @(p) (p - branch_prm.p_s + branch_prm.d_s);
+
+                        % h_fを設定
+                        branch_prm.h_f = @(p1, p2) (-p1 + p2 + branch_prm.D_f);
+
                         % D_b（信号と分岐点の距離）を設定
                         main_prm.D_b = main_prm.p_s - connector.from_pos;
-                        branch_prm.D_b = branch_prm.p_s - connector.from_pos;   
+                        branch_prm.D_b = branch_prm.p_s - connector.from_pos;
+                        
+                        % h_bを設定
+                        main_prm.h_b = @(p) (-p + main_prm.p_s - main_prm.D_b);
+                        branch_prm.h_b = @(p) (-p + branch_prm.p_s - branch_prm.D_b);
 
                         % main_prmとbranch_prmをlane_prmにプッシュ
                         lane_prm.main = main_prm;

@@ -1548,15 +1548,132 @@ function updateMLD(obj, property_name)
                 if isfield(lane_prm, 'branch')
                     % 自動車を走査
                     for record_id = 1: height(vehicles)
+                        %  レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % d3行列を初期化
+                            d3 = zeros(18, 6);
+
+                            % delta_1の定義
+                            d3(1, [1, 2, 4]) = [-1, -1, -1];
+                            d3(2, [1, 2, 4]) = [0, 0, 1];
+                            d3(3, [1, 2, 4]) = [1, 0, 1];
+                            d3(4, [1, 2, 4]) = [0, 1, 1];
+
+                            % delta_t1の定義
+                            d3(5, [2, 3, 5]) = [-1, -1, -1];
+                            d3(6, [2, 3, 5]) = [0, 0, 1];
+                            d3(7, [2, 3, 5]) = [1, 0, 1];
+                            d3(8, [2, 3, 5]) = [0, 1, 1];
+                            
+                            % delta_diの定義
+                            
+                        elseif vehicle.leader_flag == 2
+                            % d3行列を初期化
+                            d3 = zeros(34, 9);
+                        elseif vehicle.leader_flag == 3
+                            % d3行列を初期化
+                            d3 = zeros(56, 13);
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_D3行列にd3をプッシュ
+                        tmp_D3 = blkdiag(tmp_D3, d3);
+                    end
+                else
+                    % 自動車を走査
+                    for record_id = 1: height(record_id, :)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % d3行列を初期化
+                            d3 = zeros(18, 6);
+                        elseif vehicle.leader_flag == 3
+                            % d3行列を初期化
+                            d3 = zeros(39, 10);
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % tmp_D3行列にd3をプッシュ
+                        tmp_D3 = blkdiag(tmp_D3, d3);
+                    end
+                end
+
+                % D3行列にプッシュ
+                D3 = blkdiag(D3, tmp_D3);
+            else
+                % 車線を走査
+                for lane_id = 1: num_lanes
+                    % lane_prmを取得
+                    lane_prm = LanePrmMap(lane_id);
+
+                    % その車線の自動車のレコードを取得
+                    tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                    % tmp_D3行列を初期化
+                    tmp_D3 = [];
+
+                    % 分岐があるかどうかで場合分け
+                    if isfield(lane_prm, 'branch')
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 1
+                                % d3行列を初期化
+                                d3 = zeros(18, 6);
+                            elseif vehicle.leader_flag == 2
+                                % d3行列を初期化
+                                d3 = zeros(34, 9);
+                            elseif vehicle.leader_flag == 3
+                                % d3行列を初期化
+                                d3 = zeros(56, 13);
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+                        end
+                    else
+                        % 自動車を走査
+                        for record_id = 1: height(tmp_vehicles)
+                            % レコードを取得
+                            vehicle = tmp_vehicles(record_id, :);
+
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 1
+                                % d3行列を初期化
+                                d3 = zeros(18, 6);
+                            elseif vehicle.leader_flag == 3
+                                % d3行列を初期化
+                                d3 = zeros(39, 10);
+                            else
+                                error('leader_flag is invalid.');
+                            end
+
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+                        end
                     end
 
                     % D3行列にプッシュ
                     D3 = blkdiag(D3, tmp_D3);
-                else
                 end
-            else
             end
         end
+
+        % D3行列をプッシュ
+        obj.MLDsMap('D3') = D3;
+
     elseif strcmp(property_name, 'E')
     else
         error('Property name is invalid.');
