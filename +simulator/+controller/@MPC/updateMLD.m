@@ -1019,7 +1019,7 @@ function updateMLD(obj, property_name)
 
                             % delta_t2の定義
                             d1(17, signal_id) = 1;
-                            d1(18, signal_id) = -1;
+                            d1(19, signal_id) = -1;
                             
                         else
                             error('leader_flag is invalid.');
@@ -1065,7 +1065,7 @@ function updateMLD(obj, property_name)
 
                             % delta_t2の定義
                             d1(12, signal_id) = 1;
-                            d1(13, signal_id) = -1;
+                            d1(14, signal_id) = -1;
 
                         else
                             error('leader_flag is invalid.');
@@ -1140,7 +1140,7 @@ function updateMLD(obj, property_name)
 
                                 % delta_t2の定義
                                 d1(17, signal_id) = 1;
-                                d1(18, signal_id) = -1;
+                                d1(19, signal_id) = -1;
                                 
                             else
                                 error('leader_flag is invalid.');
@@ -1185,7 +1185,7 @@ function updateMLD(obj, property_name)
 
                                 % delta_t2の定義
                                 d1(12, signal_id) = 1;
-                                d1(13, signal_id) = -1;
+                                d1(14, signal_id) = -1;
                                 
                             else
                                 error('leader_flag is invalid.');
