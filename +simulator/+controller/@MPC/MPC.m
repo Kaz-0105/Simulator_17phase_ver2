@@ -13,6 +13,8 @@ classdef MPC < utils.class.Common
 
     properties
         dt;
+        N_p;
+        N_c;
     end
 
     methods
@@ -34,7 +36,10 @@ classdef MPC < utils.class.Common
             simulator = obj.Config.get('simulator');
             obj.dt = simulator.dt;
 
-
+            % N_pの設定
+            mpc = obj.Config.get('mpc');
+            obj.N_p = mpc.N_p;
+            obj.N_c = mpc.N_c;
         end
     end
 

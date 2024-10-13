@@ -552,7 +552,7 @@ function updateMLD(obj, property_name)
                             c(11, record_id) = -1;
                             c(12, record_id) = 1;
 
-                            % delta_d^primeの定義
+                            % delta_oの定義
                             c(13, record_id) = 1;
                             c(14, record_id) = -1;
 
@@ -580,7 +580,7 @@ function updateMLD(obj, property_name)
                             c(19, record_id) = 1;
                             c(20, record_id) = -1;
 
-                            % delta_d^primeの定義
+                            % delta_oの定義
                             c(21, record_id) = 1;
                             c(22, record_id) = -1;
 
@@ -623,7 +623,7 @@ function updateMLD(obj, property_name)
                             c(33, record_id) = 1;
                             c(34, record_id) = -1;
 
-                            % delta_d^primeの定義
+                            % delta_oの定義
                             c(35, record_id) = 1;
                             c(36, record_id) = -1;
 
@@ -672,7 +672,7 @@ function updateMLD(obj, property_name)
                             c(11, record_id) = -1;
                             c(12, record_id) = 1;
 
-                            % delta_d^primeの定義
+                            % delta_oの定義
                             c(13, record_id) = 1;
                             c(14, record_id) = -1;
 
@@ -696,7 +696,7 @@ function updateMLD(obj, property_name)
                             c(24, [record_id - 1, record_id]) = [1, -1];
                             c(25, [record_id - 1, record_id]) = [-1, 1];
 
-                            % delta_d^primeの定義
+                            % delta_oの定義
                             c(26, record_id) = 1;
                             c(27, record_id) = -1;
 
@@ -757,7 +757,7 @@ function updateMLD(obj, property_name)
                                 c(11, record_id) = -1;
                                 c(12, record_id) = 1;
 
-                                % delta_d^primeの定義
+                                % delta_oの定義
                                 c(13, record_id) = 1;
                                 c(14, record_id) = -1;
 
@@ -785,7 +785,7 @@ function updateMLD(obj, property_name)
                                 c(19, record_id) = 1;
                                 c(20, record_id) = -1;
 
-                                % delta_d^primeの定義
+                                % delta_oの定義
                                 c(21, record_id) = 1;
                                 c(22, record_id) = -1;
 
@@ -828,7 +828,7 @@ function updateMLD(obj, property_name)
                                 c(33, record_id) = 1;
                                 c(34, record_id) = -1;
 
-                                % delta_d^primeの定義
+                                % delta_oの定義
                                 c(35, record_id) = 1;
                                 c(36, record_id) = -1;
 
@@ -877,7 +877,7 @@ function updateMLD(obj, property_name)
                                 c(11, record_id) = -1;
                                 c(12, record_id) = 1;
     
-                                % delta_d^primeの定義
+                                % delta_oの定義
                                 c(13, record_id) = 1;
                                 c(14, record_id) = -1;
     
@@ -901,7 +901,7 @@ function updateMLD(obj, property_name)
                                 c(24, [record_id - 1, record_id]) = [1, -1];
                                 c(25, [record_id - 1, record_id]) = [-1, 1];
     
-                                % delta_d^primeの定義
+                                % delta_oの定義
                                 c(26, record_id) = 1;
                                 c(27, record_id) = -1;
     
@@ -1544,12 +1544,67 @@ function updateMLD(obj, property_name)
                 % tmp_D3行列を初期化
                 tmp_D3 = [];
 
+                % プロパティを取得
+                dt = obj.dt;
+                N_p = obj.N_p;
+
+                % 法定速度を取得
+                v = lane_prm.main.v;
+
+                % 位置の最大値と最小値を取得
+                p_max = vehicles(1, :).pos + dt * N_p * v;
+                p_min = vehicles(end, :).pos;
+
                 % 分岐があるかどうかで場合分け
                 if isfield(lane_prm, 'branch')
                     % 自動車を走査
                     for record_id = 1: height(vehicles)
                         %  レコードを取得
                         vehicle = vehicles(record_id, :);
+
+                        % branch_flagによって場合分け
+                        if branch_flag == 1
+                            % 必要なパラメータを取得
+                            h_d_min = lane_prm.main.h_d(p_max);
+                            h_d_max = lane_prm.main.h_d(p_min);
+                            h_p_min = lane_prm.main.h_p(p_min);
+                            h_p_max = lane_prm.main.h_p(p_max);
+                            h_f_min = lane_prm.main.h_f(p_max, p_min);
+                            h_f_max = lane_prm.main.h_f(p_min, p_max);
+                            h_b_min = lane_prm.main.h_b(p_max);
+                            h_b_max = lane_prm.main.h_b(p_min);
+                            h_o_min = lane_prm.main.h_o(p_max);
+                            h_o_max = lane_prm.main.h_o(p_min);
+
+                        elseif branch_flag == 2
+                            % 必要なパラメータを取得
+                            h_d_min = lane_prm.branch.right.h_d(p_max);
+                            h_d_max = lane_prm.branch.right.h_d(p_min);
+                            h_p_min = lane_prm.branch.right.h_p(p_min);
+                            h_p_max = lane_prm.branch.right.h_p(p_max);
+                            h_f_min = lane_prm.branch.right.h_f(p_max, p_min);
+                            h_f_max = lane_prm.branch.right.h_f(p_min, p_max);
+                            h_b_min = lane_prm.branch.right.h_b(p_max);
+                            h_b_max = lane_prm.branch.right.h_b(p_min);
+                            h_o_min = lane_prm.branch.right.h_o(p_max);
+                            h_o_max = lane_prm.branch.right.h_o(p_min);
+
+                        elseif branch_flag == 3
+                            % 必要なパラメータを取得
+                            h_d_min = lane_prm.branch.left.h_d(p_max);
+                            h_d_max = lane_prm.branch.left.h_d(p_min);
+                            h_p_min = lane_prm.branch.left.h_p(p_min);
+                            h_p_max = lane_prm.branch.left.h_p(p_max);
+                            h_f_min = lane_prm.branch.left.h_f(p_max, p_min);
+                            h_f_max = lane_prm.branch.left.h_f(p_min, p_max);
+                            h_b_min = lane_prm.branch.left.h_b(p_max);
+                            h_b_max = lane_prm.branch.left.h_b(p_min);
+                            h_o_min = lane_prm.branch.left.h_o(p_max);
+                            h_o_max = lane_prm.branch.left.h_o(p_min);
+
+                        else
+                            error('branch_flag is invalid.');
+                        end
 
                         % leader_flagによって場合分け
                         if vehicle.leader_flag == 1
@@ -1568,14 +1623,177 @@ function updateMLD(obj, property_name)
                             d3(7, [2, 3, 5]) = [1, 0, 1];
                             d3(8, [2, 3, 5]) = [0, 1, 1];
                             
-                            % delta_diの定義
-                            
+                            % delta_dの定義
+                            d3(9, 1) = -h_d_min;
+                            d3(10, 1) = -h_d_max;
+
+                            % delta_pの定義
+                            d3(11, 2) = -h_p_min;
+                            d3(12, 2) = -h_p_max;
+
+                            % delta_oの定義
+                            d3(13, 3) = -h_o_min;
+                            d3(14, 3) = -h_o_max;
+
+                            % z_1の定義
+                            d(15, 4) = p_min;
+                            d(16, 4) = -p_max;
+                            d(17, 4) = p_max;
+                            d(18, 4) = -p_min;
+
                         elseif vehicle.leader_flag == 2
                             % d3行列を初期化
                             d3 = zeros(34, 9);
+
+                            % delta_1の定義
+                            d3(1, [1, 2, 6]) = [-1, -1, -1];
+                            d3(2, [1, 2, 6]) = [0, 0, 1];
+                            d3(3, [1, 2, 6]) = [1, 0, 1];
+                            d3(4, [1, 2, 6]) = [0, 1, 1];
+
+                            % delta_2の定義
+                            d3(5, [3, 4, 6, 7]) = [1, 1, -1, -1];
+                            d3(6, [3, 4, 6, 7]) = [-1, 0, 0, 1];
+                            d3(7, [3, 4, 6, 7]) = [0, -1, 0, 1];
+                            d3(8, [3, 4, 6, 7]) = [0, 0, 1, 1];
+
+                            % delta_t1の定義
+                            d3(9, [2, 5, 8]) = [-1, -1, -1];
+                            d3(10, [2, 5, 8]) = [0, 0, 1];
+                            d3(11, [2, 5, 8]) = [1, 0, 1];
+                            d3(12, [2, 5, 8]) = [0, 1, 1];
+
+                            % delta_dの定義
+                            d3(13, 1) = -h_d_min;
+                            d3(14, 1) = -h_d_max;
+
+                            % delta_pの定義
+                            d3(15, 2) = -h_p_min;
+                            d3(16, 2) = -h_p_max;
+
+                            % delta_f2の定義
+                            d3(17, 3) = -h_f_min;
+                            d3(18, 3) = -h_f_max;
+
+                            % delta_bの定義
+                            d3(19, 4) = -h_b_min;
+                            d3(20, 4) = -h_b_max;
+
+                            % delta_oの定義
+                            d3(21, 5) = -h_o_min;
+                            d3(22, 5) = -h_o_max;
+
+                            % z_1の定義
+                            d3(23, 6) = p_min;
+                            d3(24, 6) = -p_max;
+                            d3(25, 6) = p_max;
+                            d3(26, 6) = -p_min;
+
+                            % z_2の定義
+                            d3(27, 7) = p_min;
+                            d3(28, 7) = -p_max;
+                            d3(29, 7) = p_max;
+                            d3(30, 7) = -p_min;
+
+                            % z_3の定義
+                            d3(31, 7) = p_min;
+                            d3(32, 7) = -p_max;
+                            d3(33, 7) = p_max;
+                            d3(34, 7) = -p_min;
+
                         elseif vehicle.leader_flag == 3
                             % d3行列を初期化
                             d3 = zeros(56, 13);
+
+                            % delta_1の定義
+                            d3(1, [1, 2, 7]) = [-1, -1, -1];
+                            d3(2, [1, 2, 7]) = [0, 0, 1];
+                            d3(3, [1, 2, 7]) = [1, 0, 1];
+                            d3(4, [1, 2, 7]) = [0, 1, 1];
+
+                            % delta_2の定義
+                            d3(5, [3, 5, 7, 8]) = [1, 1, -1, -1];
+                            d3(6, [3, 5, 7, 8]) = [-1, 0, 0, 1];
+                            d3(7, [3, 5, 7, 8]) = [0, -1, 0, 1];
+                            d3(8, [3, 5, 7, 8]) = [0, 0, 1, 1];
+
+                            % delta_3の定義
+                            d3(9, [4, 5, 7, 9]) = [1, -1, -1, -1];
+                            d3(10, [4, 5, 7, 9]) = [-1, 0, 0, 1];
+                            d3(11, [4, 5, 7, 9]) = [0, 1, 0, 1];
+                            d3(12, [4, 5, 7, 9]) = [0, 0, 1, 1];
+
+                            % delta_t1の定義
+                            d3(13, [2, 6, 10]) = [-1, -1, -1];
+                            d3(14, [2, 6, 10]) = [0, 0, 1];
+                            d3(15, [2, 6, 10]) = [1, 0, 1];
+                            d3(16, [2, 6, 10]) = [0, 1, 1];
+
+                            % delta_t2の定義（あとでdelta_t(j)の情報追加）
+                            d3(17, [2, 6, 11]) = [-1, -1, -1];
+                            d3(18, [2, 6, 11]) = [0, 0, 1];
+                            d3(19, [2, 6, 11]) = [0, 0, 1];
+                            d3(20, [2, 6, 11]) = [1, 0, 1];
+                            d3(21, [2, 6, 11]) = [0, 1, 1];
+                            
+                            % delta_t3の定義
+                            d3(22, [10, 11, 12]) = [1, 1, -1];
+                            d3(23, [10, 11, 12]) = [-1, 0, 1];
+                            d3(24, [10, 11, 12]) = [0, -1, 1];
+
+                            % delta_dの定義
+                            d3(25, 1) = -h_d_min;
+                            d3(26, 1) = -h_d_max;
+
+                            % delta_pの定義
+                            d3(27, 2) = -h_p_min;
+                            d3(28, 2) = -h_p_max;
+
+                            % delta_f2の定義
+                            d3(29, 3) = -h_f_min;
+                            d3(30, 3) = -h_f_max;
+
+                            % delta_f3の定義
+                            d3(31, 4) = -h_f_min;
+                            d3(32, 4) = -h_f_max;
+
+                            % delta_bの定義
+                            d3(33, 5) = -h_b_min;
+                            d3(34, 5) = -h_b_max;
+
+                            % delta_oの定義
+                            d3(35, 6) = -h_o_min;
+                            d3(36, 6) = -h_o_max;
+
+                            % z_1の定義
+                            d3(37, 7) = p_min;
+                            d3(38, 7) = -p_max;
+                            d3(39, 7) = p_max;
+                            d3(40, 7) = -p_min; 
+
+                            % z_2の定義
+                            d3(41, 8) = p_min;
+                            d3(42, 8) = -p_max;
+                            d3(43, 8) = p_max;
+                            d3(44, 8) = -p_min;
+
+                            % z_3の定義
+                            d3(45, 8) = p_min;
+                            d3(46, 8) = -p_max;
+                            d3(47, 8) = p_max;
+                            d3(48, 8) = -p_min;
+
+                            % z_4の定義
+                            d3(49, 9) = p_min;
+                            d3(50, 9) = -p_max;
+                            d3(51, 9) = p_max;
+                            d3(52, 9) = -p_min;
+
+                            % z_5の定義
+                            d3(53, 9) = p_min;
+                            d3(54, 9) = -p_max;
+                            d3(55, 9) = p_max;
+                            d3(56, 9) = -p_min;
                         else
                             error('leader_flag is invalid.');
                         end
@@ -1584,6 +1802,16 @@ function updateMLD(obj, property_name)
                         tmp_D3 = blkdiag(tmp_D3, d3);
                     end
                 else
+                    % 必要なパラメータを取得
+                    h_d_min = lane_prm.main.h_d(p_max);
+                    h_d_max = lane_prm.main.h_d(p_min);
+                    h_p_min = lane_prm.main.h_p(p_min);
+                    h_p_max = lane_prm.main.h_p(p_max);
+                    h_f_min = lane_prm.main.h_f(p_max, p_min);
+                    h_f_max = lane_prm.main.h_f(p_min, p_max);
+                    h_o_min = lane_prm.main.h_o(p_max);
+                    h_o_max = lane_prm.main.h_o(p_min);
+
                     % 自動車を走査
                     for record_id = 1: height(record_id, :)
                         % レコードを取得
@@ -1593,9 +1821,104 @@ function updateMLD(obj, property_name)
                         if vehicle.leader_flag == 1
                             % d3行列を初期化
                             d3 = zeros(18, 6);
+
+                            % delta_1の定義
+                            d3(1, [1, 2, 4]) = [-1, -1, -1];
+                            d3(2, [1, 2, 4]) = [0, 0, 1];
+                            d3(3, [1, 2, 4]) = [1, 0, 1];
+                            d3(4, [1, 2, 4]) = [0, 1, 1];
+
+                            % delta_t1の定義
+                            d3(5, [2, 3, 5]) = [-1, -1, -1];
+                            d3(6, [2, 3, 5]) = [0, 0, 1];
+                            d3(7, [2, 3, 5]) = [1, 0, 1];
+                            d3(8, [2, 3, 5]) = [0, 1, 1];
+
+                            % delta_dの定義
+                            d3(9, 1) = -h_d_min;
+                            d3(10, 1) = -h_d_max;
+
+                            % delta_pの定義
+                            d3(11, 2) = -h_p_min;
+                            d3(12, 2) = -h_p_max;
+
+                            % delta_oの定義
+                            d3(13, 3) = -h_o_min;
+                            d3(14, 3) = -h_o_max;
+
+                            % z_1の定義
+                            d3(15, 4) = p_min;
+                            d3(16, 4) = -p_max;
+                            d3(17, 4) = p_max;
+                            d3(18, 4) = -p_min;
+    
                         elseif vehicle.leader_flag == 3
                             % d3行列を初期化
                             d3 = zeros(39, 10);
+
+                            % delta_1の定義
+                            d3(1, [1, 2, 5]) = [-1, -1, -1];
+                            d3(2, [1, 2, 5]) = [0, 0, 1];
+                            d3(3, [1, 2, 5]) = [1, 0, 1];
+                            d3(4, [1, 2, 5]) = [0, 1, 1];
+
+                            % delta_2の定義
+                            d3(5, [3, 5, 6]) = [1, -1, -1];
+                            d3(6, [3, 5, 6]) = [-1, 0, 1];
+                            d3(7, [3, 5, 6]) = [0, 1, 1];
+
+                            % delta_t1の定義
+                            d3(8, [2, 4, 7]) = [-1, -1, -1];
+                            d3(9, [2, 4, 7]) = [0, 0, 1];
+                            d3(10, [2, 4, 7]) = [1, 0, 1];
+                            d3(11, [2, 4, 7]) = [0, 1, 1];
+
+                            % delta_t2の定義
+                            d3(12, [2, 4, 8]) = [-1, -1, -1];
+                            d3(13, [2, 4, 8]) = [0, 0, 1];
+                            d3(14, [2, 4, 8]) = [0, 0, 1];
+                            d3(15, [2, 4, 8]) = [1, 0, 1];
+                            d3(16, [2, 4, 8]) = [0, 1, 1];
+
+                            % delta_t3の定義
+                            d3(17, [7, 8, 9]) = [1, 1, -1];
+                            d3(18, [7, 8, 9]) = [-1, 0, 1];
+                            d3(19, [7, 8, 9]) = [0, -1, 1];
+
+                            % delta_dの定義
+                            d3(20, 1) = -h_d_min;
+                            d3(21, 1) = -h_d_max;
+
+                            % delta_pの定義
+                            d3(22, 2) = -h_p_min;
+                            d3(23, 2) = -h_p_max;
+
+                            % delta_f1の定義
+                            d3(24, 3) = -h_f_min;
+                            d3(25, 3) = -h_f_max;
+
+                            % delta_oの定義
+                            d3(26, 4) = -h_o_min;
+                            d3(27, 4) = -h_o_max;
+
+                            % z_1の定義
+                            d3(28, 5) = p_min;
+                            d3(29, 5) = -p_max;
+                            d3(30, 5) = p_max;
+                            d3(31, 5) = -p_min;
+
+                            % z_2の定義
+                            d3(32, 6) = p_min;
+                            d3(33, 6) = -p_max;
+                            d3(34, 6) = p_max;
+                            d3(35, 6) = -p_min;
+
+                            % z_3の定義
+                            d3(36, 6) = p_min;
+                            d3(37, 6) = -p_max;
+                            d3(38, 6) = p_max;
+                            d3(39, 6) = -p_min;
+
                         else
                             error('leader_flag is invalid.');
                         end
@@ -1626,16 +1949,226 @@ function updateMLD(obj, property_name)
                             % レコードを取得
                             vehicle = tmp_vehicles(record_id, :);
 
+                            % branch_flagによって場合分け
+                            if branch_flag == 1
+                                % 必要なパラメータを取得
+                                h_d_min = lane_prm.main.h_d(p_max);
+                                h_d_max = lane_prm.main.h_d(p_min);
+                                h_p_min = lane_prm.main.h_p(p_min);
+                                h_p_max = lane_prm.main.h_p(p_max);
+                                h_f_min = lane_prm.main.h_f(p_max, p_min);
+                                h_f_max = lane_prm.main.h_f(p_min, p_max);
+                                h_b_min = lane_prm.main.h_b(p_max);
+                                h_b_max = lane_prm.main.h_b(p_min);
+                                h_o_min = lane_prm.main.h_o(p_max);
+                                h_o_max = lane_prm.main.h_o(p_min);
+
+                            elseif branch_flag == 2 || branch_flag == 3
+                                % 必要なパラメータを取得
+                                h_d_min = lane_prm.branch.h_d(p_max);
+                                h_d_max = lane_prm.branch.h_d(p_min);
+                                h_p_min = lane_prm.branch.h_p(p_min);
+                                h_p_max = lane_prm.branch.h_p(p_max);
+                                h_f_min = lane_prm.branch.h_f(p_max, p_min);
+                                h_f_max = lane_prm.branch.h_f(p_min, p_max);
+                                h_b_min = lane_prm.branch.h_b(p_max);
+                                h_b_max = lane_prm.branch.h_b(p_min);
+                                h_o_min = lane_prm.branch.h_o(p_max);
+                                h_o_max = lane_prm.branch.h_o(p_min);
+
+                            else
+                                error('branch_flag is invalid.');
+                            end
+
                             % leader_flagによって場合分け
                             if vehicle.leader_flag == 1
                                 % d3行列を初期化
                                 d3 = zeros(18, 6);
+
+                                % delta_1の定義
+                                d3(1, [1, 2, 4]) = [-1, -1, -1];
+                                d3(2, [1, 2, 4]) = [0, 0, 1];
+                                d3(3, [1, 2, 4]) = [1, 0, 1];
+                                d3(4, [1, 2, 4]) = [0, 1, 1];
+
+                                % delta_t1の定義
+                                d3(5, [2, 3, 5]) = [-1, -1, -1];
+                                d3(6, [2, 3, 5]) = [0, 0, 1];
+                                d3(7, [2, 3, 5]) = [1, 0, 1];
+                                d3(8, [2, 3, 5]) = [0, 1, 1];
+
+                                % delta_dの定義
+                                d3(9, 1) = -h_d_min;
+                                d3(10, 1) = -h_d_max;
+
+                                % delta_pの定義
+                                d3(11, 2) = -h_p_min;
+                                d3(12, 2) = -h_p_max;
+
+                                % delta_oの定義
+                                d3(13, 3) = -h_o_min;
+                                d3(14, 3) = -h_o_max;
+
+                                % z_1の定義
+                                d3(15, 4) = p_min;
+                                d3(16, 4) = -p_max;
+                                d3(17, 4) = p_max;
+                                d3(18, 4) = -p_min;
+
                             elseif vehicle.leader_flag == 2
                                 % d3行列を初期化
                                 d3 = zeros(34, 9);
+
+                                % delta_1の定義
+                                d3(1, [1, 2, 6]) = [-1, -1, -1];
+                                d3(2, [1, 2, 6]) = [0, 0, 1];
+                                d3(3, [1, 2, 6]) = [1, 0, 1];
+                                d3(4, [1, 2, 6]) = [0, 1, 1];
+
+                                % delta_2の定義
+                                d3(5, [3, 4, 6, 7]) = [1, 1, -1, -1];
+                                d3(6, [3, 4, 6, 7]) = [-1, 0, 0, 1];
+                                d3(7, [3, 4, 6, 7]) = [0, -1, 0, 1];
+                                d3(8, [3, 4, 6, 7]) = [0, 0, 1, 1];
+
+                                % delta_t1の定義
+                                d3(9, [2, 5, 8]) = [-1, -1, -1];
+                                d3(10, [2, 5, 8]) = [0, 0, 1];
+                                d3(11, [2, 5, 8]) = [1, 0, 1];
+                                d3(12, [2, 5, 8]) = [0, 1, 1];
+
+                                % delta_dの定義
+                                d3(13, 1) = -h_d_min;
+                                d3(14, 1) = -h_d_max;
+                                
+                                % delta_pの定義
+                                d3(15, 2) = -h_p_min;
+                                d3(16, 2) = -h_p_max;
+
+                                % delta_f2の定義
+                                d3(17, 3) = -h_f_min;
+                                d3(18, 3) = -h_f_max;
+
+                                % delta_bの定義
+                                d3(19, 4) = -h_b_min;
+                                d3(20, 4) = -h_b_max;
+
+                                % delta_oの定義
+                                d3(21, 5) = -h_o_min;
+                                d3(22, 5) = -h_o_max;
+
+                                % z_1の定義
+                                d3(23, 6) = p_min;
+                                d3(24, 6) = -p_max;
+                                d3(25, 6) = p_max;
+                                d3(26, 6) = -p_min;
+
+                                % z_2の定義
+                                d3(27, 7) = p_min;
+                                d3(28, 7) = -p_max;
+                                d3(29, 7) = p_max;
+                                d3(30, 7) = -p_min;
+
+                                % z_3の定義
+                                d3(31, 7) = p_min;
+                                d3(32, 7) = -p_max;
+                                d3(33, 7) = p_max;
+                                d3(34, 7) = -p_min;
+
                             elseif vehicle.leader_flag == 3
                                 % d3行列を初期化
                                 d3 = zeros(56, 13);
+
+                                % delta_1の定義
+                                d3(1, [1, 2, 7]) = [-1, -1, -1];
+                                d3(2, [1, 2, 7]) = [0, 0, 1];
+                                d3(3, [1, 2, 7]) = [1, 0, 1];
+                                d3(4, [1, 2, 7]) = [0, 1, 1];
+
+                                % delta_2の定義
+                                d3(5, [3, 5, 7, 8]) = [1, 1, -1, -1];
+                                d3(6, [3, 5, 7, 8]) = [-1, 0, 0, 1];
+                                d3(7, [3, 5, 7, 8]) = [0, -1, 0, 1];
+                                d3(8, [3, 5, 7, 8]) = [0, 0, 1, 1];
+
+                                % delta_3の定義
+                                d3(9, [4, 5, 7, 9]) = [1, -1, -1, -1];
+                                d3(10, [4, 5, 7, 9]) = [-1, 0, 0, 1];
+                                d3(11, [4, 5, 7, 9]) = [0, 1, 0, 1];
+                                d3(12, [4, 5, 7, 9]) = [0, 0, 1, 1];
+
+                                % delta_t1の定義
+                                d3(13, [2, 6, 10]) = [-1, -1, -1];
+                                d3(14, [2, 6, 10]) = [0, 0, 1];
+                                d3(15, [2, 6, 10]) = [1, 0, 1];
+                                d3(16, [2, 6, 10]) = [0, 1, 1];
+
+                                % delta_t2の定義
+                                d3(17, [2, 6, 11]) = [-1, -1, -1];  
+                                d3(18, [2, 6, 11]) = [0, 0, 1];
+                                d3(19, [2, 6, 11]) = [0, 0, 1];
+                                d3(20, [2, 6, 11]) = [1, 0, 1];
+                                d3(21, [2, 6, 11]) = [0, 1, 1];
+
+                                % delta_t3の定義
+                                d3(22, [10, 11, 12]) = [1, 1, -1];
+                                d3(23, [10, 11, 12]) = [-1, 0, 1];
+                                d3(24, [10, 11, 12]) = [0, -1, 1];
+
+                                % delta_dの定義
+                                d3(25, 1) = -h_d_min;
+                                d3(26, 1) = -h_d_max;
+
+                                % delta_pの定義
+                                d3(27, 2) = -h_p_min;
+                                d3(28, 2) = -h_p_max;
+
+                                % delta_f2の定義
+                                d3(29, 3) = -h_f_min;
+                                d3(30, 3) = -h_f_max;
+
+                                % delta_f3の定義
+                                d3(31, 4) = -h_f_min;
+                                d3(32, 4) = -h_f_max;
+
+                                % delta_bの定義
+                                d3(33, 5) = -h_b_min;
+                                d3(34, 5) = -h_b_max;
+
+                                % delta_oの定義
+                                d3(35, 6) = -h_o_min;
+                                d3(36, 6) = -h_o_max;
+
+                                % z_1の定義
+                                d3(37, 7) = p_min;
+                                d3(38, 7) = -p_max;
+                                d3(39, 7) = p_max;
+                                d3(40, 7) = -p_min;
+
+                                % z_2の定義
+                                d3(41, 8) = p_min;
+                                d3(42, 8) = -p_max;
+                                d3(43, 8) = p_max;
+                                d3(44, 8) = -p_min;
+
+                                % z_3の定義
+                                d3(45, 8) = p_min;
+                                d3(46, 8) = -p_max;
+                                d3(47, 8) = p_max;
+                                d3(48, 8) = -p_min;
+
+                                % z_4の定義
+                                d3(49, 9) = p_min;
+                                d3(50, 9) = -p_max;
+                                d3(51, 9) = p_max;
+                                d3(52, 9) = -p_min;
+
+                                % z_5の定義
+                                d3(53, 9) = p_min;
+                                d3(54, 9) = -p_max;
+                                d3(55, 9) = p_max;
+                                d3(56, 9) = -p_min;
+
                             else
                                 error('leader_flag is invalid.');
                             end
@@ -1644,6 +2177,16 @@ function updateMLD(obj, property_name)
                             tmp_D3 = blkdiag(tmp_D3, d3);
                         end
                     else
+                        % 必要なパラメータを取得
+                        h_d_min = lane_prm.main.h_d(p_max);
+                        h_d_max = lane_prm.main.h_d(p_min);
+                        h_p_min = lane_prm.main.h_p(p_min);
+                        h_p_max = lane_prm.main.h_p(p_max);
+                        h_f_min = lane_prm.main.h_f(p_max, p_min);
+                        h_f_max = lane_prm.main.h_f(p_min, p_max);
+                        h_o_min = lane_prm.main.h_o(p_max);
+                        h_o_max = lane_prm.main.h_o(p_min);
+
                         % 自動車を走査
                         for record_id = 1: height(tmp_vehicles)
                             % レコードを取得
@@ -1653,9 +2196,104 @@ function updateMLD(obj, property_name)
                             if vehicle.leader_flag == 1
                                 % d3行列を初期化
                                 d3 = zeros(18, 6);
+
+                                % delta_1の定義
+                                d3(1, [1, 2, 4]) = [-1, -1, -1];
+                                d3(2, [1, 2, 4]) = [0, 0, 1];
+                                d3(3, [1, 2, 4]) = [1, 0, 1];
+                                d3(4, [1, 2, 4]) = [0, 1, 1];
+
+                                % delta_t1の定義
+                                d3(5, [2, 3, 5]) = [-1, -1, -1];
+                                d3(6, [2, 3, 5]) = [0, 0, 1];
+                                d3(7, [2, 3, 5]) = [1, 0, 1];
+                                d3(8, [2, 3, 5]) = [0, 1, 1];
+
+                                % delta_dの定義
+                                d3(9, 1) = -h_d_min;
+                                d3(10, 1) = -h_d_max;
+
+                                % delta_pの定義
+                                d3(11, 2) = -h_p_min;
+                                d3(12, 2) = -h_p_max;
+
+                                % delta_oの定義
+                                d3(13, 3) = -h_o_min;
+                                d3(14, 3) = -h_o_max;
+
+                                % z_1の定義
+                                d3(15, 4) = p_min;
+                                d3(16, 4) = -p_max;
+                                d3(17, 4) = p_max;
+                                d3(18, 4) = -p_min;
+
                             elseif vehicle.leader_flag == 3
                                 % d3行列を初期化
                                 d3 = zeros(39, 10);
+
+                                % delta_1の定義
+                                d3(1, [1, 2, 5]) = [-1, -1, -1];
+                                d3(2, [1, 2, 5]) = [0, 0, 1];
+                                d3(3, [1, 2, 5]) = [1, 0, 1];
+                                d3(4, [1, 2, 5]) = [0, 1, 1];
+
+                                % delta_2の定義
+                                d3(5, [3, 5, 6]) = [1, -1, -1];
+                                d3(6, [3, 5, 6]) = [-1, 0, 1];
+                                d3(7, [3, 5, 6]) = [0, 1, 1];
+
+                                % delta_t1の定義
+                                d3(8, [2, 4, 7]) = [-1, -1, -1];
+                                d3(9, [2, 4, 7]) = [0, 0, 1];
+                                d3(10, [2, 4, 7]) = [1, 0, 1];
+                                d3(11, [2, 4, 7]) = [0, 1, 1];
+
+                                % delta_t2の定義
+                                d3(12, [2, 4, 8]) = [-1, -1, -1];
+                                d3(13, [2, 4, 8]) = [0, 0, 1];
+                                d3(14, [2, 4, 8]) = [0, 0, 1];
+                                d3(15, [2, 4, 8]) = [1, 0, 1];
+                                d3(16, [2, 4, 8]) = [0, 1, 1];
+
+                                % delta_t3の定義
+                                d3(17, [7, 8, 9]) = [1, 1, -1];
+                                d3(18, [7, 8, 9]) = [-1, 0, 1];
+                                d3(19, [7, 8, 9]) = [0, -1, 1];
+
+                                % delta_dの定義
+                                d3(20, 1) = -h_d_min;
+                                d3(21, 1) = -h_d_max;
+
+                                % delta_pの定義
+                                d3(22, 2) = -h_p_min;
+                                d3(23, 2) = -h_p_max;
+
+                                % delta_f1の定義
+                                d3(24, 3) = -h_f_min;
+                                d3(25, 3) = -h_f_max;
+
+                                % delta_oの定義
+                                d3(26, 4) = -h_o_min;
+                                d3(27, 4) = -h_o_max;
+
+                                % z_1の定義
+                                d3(28, 5) = p_min;
+                                d3(29, 5) = -p_max;
+                                d3(30, 5) = p_max;
+                                d3(31, 5) = -p_min;
+
+                                % z_2の定義
+                                d3(32, 6) = p_min;
+                                d3(33, 6) = -p_max;
+                                d3(34, 6) = p_max;
+                                d3(35, 6) = -p_min;
+
+                                % z_3の定義
+                                d3(36, 6) = p_min;
+                                d3(37, 6) = -p_max;
+                                d3(38, 6) = p_max;
+                                d3(39, 6) = -p_min;
+                                
                             else
                                 error('leader_flag is invalid.');
                             end
