@@ -1552,8 +1552,13 @@ function updateMLD(obj, property_name)
                 v = lane_prm.main.v;
 
                 % 位置の最大値と最小値を取得
-                p_max = vehicles(1, :).pos + dt * N_p * v;
-                p_min = vehicles(end, :).pos;
+                if isempty(vehicles)
+                    p_max = 0;
+                    p_min = 0;
+                else
+                    p_max = vehicles(1, :).pos + dt * N_p * v;
+                    p_min = vehicles(end, :).pos;
+                end
 
                 % 分岐があるかどうかで場合分け
                 if isfield(lane_prm, 'branch')
@@ -1813,7 +1818,7 @@ function updateMLD(obj, property_name)
                     h_o_max = lane_prm.main.h_o(p_min);
 
                     % 自動車を走査
-                    for record_id = 1: height(record_id, :)
+                    for record_id = 1: height(vehicles)
                         % レコードを取得
                         vehicle = vehicles(record_id, :);
 
@@ -1942,6 +1947,22 @@ function updateMLD(obj, property_name)
                     % tmp_D3行列を初期化
                     tmp_D3 = [];
 
+                    % プロパティを取得
+                    dt = obj.dt;
+                    N_p = obj.N_p;
+
+                    % 法定速度を取得
+                    v = lane_prm.main.v;
+
+                    % 位置の最大値と最小値を取得
+                    if isempty(tmp_vehicles)
+                        p_max = dt * N_p * v;
+                        p_min = 0;
+                    else
+                        p_max = tmp_vehicles(1, :).pos + dt * N_p * v;
+                        p_min = tmp_vehicles(end, :).pos;
+                    end
+
                     % 分岐があるかどうかで場合分け
                     if isfield(lane_prm, 'branch')
                         % 自動車を走査
@@ -1950,7 +1971,7 @@ function updateMLD(obj, property_name)
                             vehicle = tmp_vehicles(record_id, :);
 
                             % branch_flagによって場合分け
-                            if branch_flag == 1
+                            if vehicle.branch_flag == 1
                                 % 必要なパラメータを取得
                                 h_d_min = lane_prm.main.h_d(p_max);
                                 h_d_max = lane_prm.main.h_d(p_min);
@@ -1963,7 +1984,7 @@ function updateMLD(obj, property_name)
                                 h_o_min = lane_prm.main.h_o(p_max);
                                 h_o_max = lane_prm.main.h_o(p_min);
 
-                            elseif branch_flag == 2 || branch_flag == 3
+                            elseif vehicle.branch_flag == 2 || vehicle.branch_flag == 3
                                 % 必要なパラメータを取得
                                 h_d_min = lane_prm.branch.h_d(p_max);
                                 h_d_max = lane_prm.branch.h_d(p_min);
@@ -2293,7 +2314,7 @@ function updateMLD(obj, property_name)
                                 d3(37, 6) = -p_max;
                                 d3(38, 6) = p_max;
                                 d3(39, 6) = -p_min;
-                                
+
                             else
                                 error('leader_flag is invalid.');
                             end

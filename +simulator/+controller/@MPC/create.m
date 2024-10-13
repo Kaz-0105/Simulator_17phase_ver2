@@ -197,6 +197,10 @@ function create(obj, property_name)
                         main_prm.D_b = main_prm.p_s - connector.from_pos;
                         branch_prm.D_b = branch_prm.p_s - connector.from_pos;
 
+                        % h_bを設定
+                        main_prm.h_b = @(p) (-p + main_prm.p_s - main_prm.D_b);
+                        branch_prm.h_b = @(p) (-p + branch_prm.p_s - branch_prm.D_b);
+
                         % mainのパラメータが既に存在するかで場合分け
                         if isfield(lane_prm, 'main')
                             % D_b（信号と分岐点の距離）が小さい方を選択
@@ -342,6 +346,7 @@ function create(obj, property_name)
 
                                 % h_bを設定
                                 main_prm.h_b = @(p) (-p + main_prm.p_s - main_prm.D_b);
+                                branch_prm.h_b = @(p) (-p + branch_prm.p_s - branch_prm.D_b);
 
                                 % main_prmとbranch_prmをlane_prmにプッシュ
                                 lane_prm.main = main_prm;
@@ -418,6 +423,7 @@ function create(obj, property_name)
 
                                 % h_bを設定
                                 main_prm.h_b = @(p) (-p + main_prm.p_s - main_prm.D_b);
+                                branch_prm.h_b = @(p) (-p + branch_prm.p_s - branch_prm.D_b);
 
                                 % main_prmとbranch_prmをlane_prmにプッシュ
                                 lane_prm.main = main_prm;
