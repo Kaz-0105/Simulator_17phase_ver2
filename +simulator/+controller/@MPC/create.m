@@ -20,6 +20,9 @@ function create(obj, property_name)
             % LanePrmMapの初期化
             LanePrmMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
+            % 速度を取得
+            v_kmh = Road.get('speed');
+
             if num_lanes == 1
                 % lane_prm構造体を初期化
                 lane_prm = struct();
@@ -31,14 +34,14 @@ function create(obj, property_name)
                 main_prm.p_s = links.main.length;
 
                 % v（速度）を設定
-                main_prm.v = Road.get('speed');
+                main_prm.v = v_kmh/3.6;
 
                 % D_o（評価範囲）を設定
                 controllers = obj.Config.get('controllers');
                 main_prm.D_o = controllers.MPC.D_o;
 
                 % D_s（信号の影響圏）を設定
-                main_prm.D_s = main_prm.v / 2;
+                main_prm.D_s = v_kmh / 2;
 
                 % d_s（停止線の距離）を設定
                 main_prm.d_s = 0;
@@ -47,10 +50,10 @@ function create(obj, property_name)
                 main_prm.k_s = 1/(main_prm.D_s - main_prm.d_s);
 
                 % D_f（先行車の影響圏）を設定
-                if main_prm.v >= 80
-                    main_prm.D_f = main_prm.v;
+                if v_kmh >= 80
+                    main_prm.D_f = v_kmh;
                 else
-                    main_prm.D_f = main_prm.v/2;
+                    main_prm.D_f = v_kmh/2;
                 end
 
                 % d_f（先行車との距離の最小値）を設定
@@ -87,13 +90,13 @@ function create(obj, property_name)
                         branch_prm.p_s = connector.from_pos + connector.length + link.length;
 
                         % v（速度）を設定
-                        branch_prm.v = Road.get('speed');
+                        branch_prm.v = v_kmh/3.6;
 
                         % D_o（評価範囲）を設定
                         branch_prm.D_o = controllers.MPC.D_o;
 
                         % D_s（信号の影響圏）を設定
-                        branch_prm.D_s = branch_prm.v / 2;
+                        branch_prm.D_s = v_kmh / 2;
 
                         % d_s（停止線の距離）を設定
                         branch_prm.d_s = 0;
@@ -102,10 +105,10 @@ function create(obj, property_name)
                         branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
 
                         % D_f（先行車の影響圏）を設定
-                        if branch_prm.v >= 80
-                            branch_prm.D_f = branch_prm.v;
+                        if v_kmh >= 80
+                            branch_prm.D_f = v_kmh;
                         else
-                            branch_prm.D_f = branch_prm.v/2;
+                            branch_prm.D_f = v_kmh/2;
                         end
 
                         % d_f（先行車との距離の最小値）を設定
@@ -154,13 +157,13 @@ function create(obj, property_name)
                         branch_prm.p_s = connector.from_pos + connector.length + link.length;
 
                         % v（速度）を設定
-                        branch_prm.v = Road.get('speed');
+                        branch_prm.v = v_kmh/3.6;
 
                         % D_o（評価範囲）を設定
                         branch_prm.D_o = controllers.MPC.D_o;
 
                         % D_s（信号の影響圏）を設定
-                        branch_prm.D_s = branch_prm.v / 2;
+                        branch_prm.D_s = v_kmh / 2;
 
                         % d_s（停止線の距離）を設定
                         branch_prm.d_s = 0;
@@ -169,10 +172,10 @@ function create(obj, property_name)
                         branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
 
                         % D_f（先行車の影響圏）を設定
-                        if branch_prm.v >= 80
-                            branch_prm.D_f = branch_prm.v;
+                        if v_kmh >= 80
+                            branch_prm.D_f = v_kmh;
                         else
-                            branch_prm.D_f = branch_prm.v/2;
+                            branch_prm.D_f = v_kmh/2;
                         end
 
                         % d_f（先行車との距離の最小値）を設定
@@ -242,14 +245,14 @@ function create(obj, property_name)
                     main_prm.p_s = links.main.length;
 
                     % v（速度）を設定
-                    main_prm.v = Road.get('speed');
+                    main_prm.v = v_kmh/3.6;
 
                     % D_o（評価範囲）を設定
                     controllers = obj.Config.get('controllers');
                     main_prm.D_o = controllers.MPC.D_o;
 
                     % D_s（信号の影響圏）を設定
-                    main_prm.D_s = main_prm.v / 2;
+                    main_prm.D_s = v_kmh / 2;
 
                     % d_s（停止線の距離）を設定
                     main_prm.d_s = 0;
@@ -258,10 +261,10 @@ function create(obj, property_name)
                     main_prm.k_s = 1/(main_prm.D_s - main_prm.d_s);
 
                     % D_f（先行車の影響圏）を設定
-                    if main_prm.v >= 80
-                        main_prm.D_f = main_prm.v;
+                    if v_kmh >= 80
+                        main_prm.D_f = v_kmh;
                     else
-                        main_prm.D_f = main_prm.v/2;
+                        main_prm.D_f = v_kmh/2;
                     end
 
                     % d_f（先行車との距離の最小値）を設定
@@ -301,13 +304,13 @@ function create(obj, property_name)
                                 branch_prm.p_s = connector.from_pos + connector.length + link.length;
 
                                 % v（速度）を設定
-                                branch_prm.v = Road.get('speed');
+                                branch_prm.v = v_kmh/3.6;
 
                                 % D_o（評価範囲）を設定
                                 branch_prm.D_o = controllers.MPC.D_o;
 
                                 % D_s（信号の影響圏）を設定
-                                branch_prm.D_s = branch_prm.v / 2;
+                                branch_prm.D_s = v_kmh / 2;
 
                                 % d_s（停止線の距離）を設定
                                 branch_prm.d_s = 0;
@@ -316,10 +319,10 @@ function create(obj, property_name)
                                 branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
 
                                 % D_f（先行車の影響圏）を設定
-                                if branch_prm.v >= 80
-                                    branch_prm.D_f = branch_prm.v;
+                                if v_kmh >= 80
+                                    branch_prm.D_f = v_kmh;
                                 else
-                                    branch_prm.D_f = branch_prm.v/2;
+                                    branch_prm.D_f = v_kmh/2;
                                 end
 
                                 % d_f（先行車との距離の最小値）を設定
@@ -378,13 +381,13 @@ function create(obj, property_name)
                                 branch_prm.p_s = connector.from_pos + connector.length + link.length;
 
                                 % v（速度）を設定
-                                branch_prm.v = Road.get('speed');
+                                branch_prm.v = v_kmh/3.6;
 
                                 % D_o（評価範囲）を設定
                                 branch_prm.D_o = controllers.MPC.D_o;
 
                                 % D_s（信号の影響圏）を設定
-                                branch_prm.D_s = branch_prm.v / 2;
+                                branch_prm.D_s = v_kmh / 2;
 
                                 % d_s（停止線の距離）を設定
                                 branch_prm.d_s = 0;
@@ -393,10 +396,10 @@ function create(obj, property_name)
                                 branch_prm.k_s = 1/(branch_prm.D_s - branch_prm.d_s);
 
                                 % D_f（先行車の影響圏）を設定
-                                if branch_prm.v >= 80
-                                    branch_prm.D_f = branch_prm.v;
+                                if v_kmh >= 80
+                                    branch_prm.D_f = v_kmh;
                                 else
-                                    branch_prm.D_f = branch_prm.v/2;
+                                    branch_prm.D_f = v_kmh/2;
                                 end
 
                                 % d_f（先行車との距離の最小値）を設定

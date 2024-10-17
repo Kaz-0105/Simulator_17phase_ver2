@@ -2404,7 +2404,43 @@ function updateMLD(obj, property_name)
         obj.MLDsMap('D3') = D3;
 
     elseif strcmp(property_name, 'E')
-        % 
+        % E行列を初期化
+        E = [];
+
+        % 道路を走査
+        for road_id = 1:obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
+
+            % 車線数で場合分け
+            if num_lanes == 1
+                % lane_prmを取得
+                lane_prm = LanePrmMap(1);
+
+                % tmp_E行列を初期化
+                tmp_E = [];
+
+                % プロパティを取得
+                dt = obj.dt;
+                N_p = obj.N_p;
+
+                % 法定速度を取得
+                v = lane_prm.main.v;
+            else
+            end
+        end
     else
         error('Property name is invalid.');
     end
