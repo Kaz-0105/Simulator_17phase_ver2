@@ -2438,7 +2438,93 @@ function updateMLD(obj, property_name)
 
                 % 法定速度を取得
                 v = lane_prm.main.v;
+
+                % 位置の最大値と最小値を取得
+                if isempty(vehicles)
+                    p_max = dt * N_p * v;
+                    p_min = 0;
+                else
+                    p_max = vehicles(1, :).pos + dt * N_p * v;
+                    p_min = vehicles(end, :).pos;
+                end
+                
+                % 分岐があるかどうかで場合分け
+                if isfield(lane_prm, 'branch')
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % e行列を初期化
+                            e = zeros(18, 1);
+                        elseif vehicle.leader_flag == 2
+                            % e行列を初期化
+                            e = zeros(34, 1);
+                        elseif vehicle.leader_flag == 3
+                            % e行列を初期化
+                            e = zeros(56, 1);
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % e行列をtmp_E行列にプッシュ
+                        tmp_E = [tmp_E; e];
+                    end
+                else
+                    % 自動車を走査
+                    for record_id = 1: height(vehicles)
+                        % レコードを取得
+                        vehicle = vehicles(record_id, :);
+
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 1
+                            % e行列を初期化
+                            e = zeros(18, 1);
+                        elseif vehicle.leader_flag == 3
+                            % e行列を初期化
+                            e = zeros(39, 1);
+                        else
+                            error('leader_flag is invalid.');
+                        end
+
+                        % e行列をtmp_E行列にプッシュ
+                        tmp_E = [tmp_E; e];
+                    end
+                end
+
+                % E行列にプッシュ
+                E = [E, tmp_E];
+
             else
+                % 車線を走査
+                for lane_id = 1: num_lanes
+                    % lane_prmを取得
+                    lane_prm = LanePrmMap(lane_id);
+
+                    % その車線の自動車のレコードを取得
+                    tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                    % tmp_E行列を初期化
+                    tmp_E = [];
+
+                    % プロパティを取得
+                    dt = obj.dt;
+                    N_p = obj.N_p;
+
+                    % 法定速度を取得
+                    v = lane_prm.main.v;
+
+                    % 位置の最大値と最小値を取得
+                    if isempty(tmp_vehicles)
+                        p_max = dt * N_p * v;
+                        p_min = 0;
+                    else
+                        p_max = tmp_vehicles(1, :).pos + dt * N_p * v;
+                        p_min = tmp_vehicles(end, :).pos;
+                    end
+                end
             end
         end
     else
