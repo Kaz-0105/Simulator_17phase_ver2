@@ -78,6 +78,8 @@ function update(obj, property_name)
         delta_t3s = [];
         delta_cs = [];
 
+        % RoadDeltaTMapの初期化
+        obj.RoadDeltaTMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % 変数のカウンターを初期化
         counter = 0;
@@ -99,6 +101,12 @@ function update(obj, property_name)
             % vehiclesを取得
             vehicles = Road.get('vehicles');
 
+            % delta_t_tableを初期化
+            size = [0, 3];
+            variable_names = {'id', 'stop_lane', 'delta_t'};
+            variable_types = {'double', 'double', 'double'};
+            delta_t_table = table('Size', size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
+
             % 車線を走査
             for lane_id = 1: num_lanes
                 % tmp_vehiclesを取得
@@ -106,6 +114,12 @@ function update(obj, property_name)
 
                 % lane_prmを取得
                 lane_prm = LanePrmMap(lane_id);
+
+                % counter_per_laneを初期化
+                counter_per_lane = 0;
+
+                % last_delta_t_listを初期化
+                last_delta_t_list = zeros(1, 3);
 
                 % 分岐があるかどうかで場合分け
                 if isfield(lane_prm, 'branch')
@@ -127,6 +141,15 @@ function update(obj, property_name)
                             % カウンターを更新
                             counter = counter + 6;
 
+                            % delta_t_tableに追加
+                            delta_t_table(end + 1, :) = {vehicle.id, lane_id, NaN};
+
+                            % last_delta_t_listを更新
+                            last_delta_t_list(vehicle.branch_flag) = counter_per_lane + 5;
+
+                            % counter_per_laneを更新
+                            counter_per_lane = counter_per_lane + 6;
+
                         elseif vehicle.leader_flag == 2
                             % 変数を追加
                             delta_ds(1, end + 1) = counter + 1;
@@ -141,6 +164,15 @@ function update(obj, property_name)
 
                             % カウンターを更新
                             counter = counter + 9;
+
+                            % delta_t_tableに追加
+                            delta_t_table(end + 1, :) = {vehicle.id, lane_id, NaN};
+
+                            % last_delta_t_listを更新
+                            last_delta_t_list(vehicle.branch_flag) = counter_per_lane + 8;
+
+                            % counter_per_laneを更新
+                            counter_per_lane = counter_per_lane + 9;
 
                         elseif vehicle.leader_flag == 3
                             % 変数を追加
@@ -160,6 +192,15 @@ function update(obj, property_name)
 
                             % カウンターを更新
                             counter = counter + 13;
+
+                            % delta_t_tableに追加
+                            delta_t_table(end + 1, :) = {vehicle.id, lane_id, last_delta_t_list(vehicle.branch_flag)};
+
+                            % last_delta_t_listを更新
+                            last_delta_t_list(vehicle.branch_flag) = counter_per_lane + 12;
+
+                            % counter_per_laneを更新
+                            counter_per_lane = counter_per_lane + 13;
                         else
                             error('Error: leader_flag is invalid.');
                         end
@@ -183,6 +224,15 @@ function update(obj, property_name)
                             % カウンターを更新
                             counter = counter + 6;
 
+                            % delta_t_tableに追加
+                            delta_t_table(end + 1, :) = {vehicle.id, lane_id, NaN};
+
+                            % last_delta_t_listを更新
+                            last_delta_t_list(vehicle.branch_flag) = counter_per_lane + 5;
+                            
+                            % counter_per_laneを更新
+                            counter_per_lane = counter_per_lane + 6;
+
                         elseif vehicle.leader_flag == 3
                             % 変数を追加
                             delta_ds(1, end + 1) = counter + 1;
@@ -198,12 +248,25 @@ function update(obj, property_name)
                             
                             % カウンターを更新
                             counter = counter + 10;
+
+                            % delta_t_tableに追加
+                            delta_t_table(end + 1, :) = {vehicle.id, lane_id, last_delta_t_list(vehicle.branch_flag)};
+
+                            % last_delta_t_listを更新
+                            last_delta_t_list(vehicle.branch_flag) = counter_per_lane + 9;
+
+                            % counter_per_laneを更新
+                            counter_per_lane = counter_per_lane + 10;
+
                         else
                             error('Error: leader_flag is invalid.');
                         end
                     end
                 end
             end
+
+            % RoadDeltaTMapに追加
+            obj.RoadDeltaTMap(road_id) = delta_t_table;
         end
 
         % 変数リストを更新

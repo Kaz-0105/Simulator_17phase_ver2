@@ -1536,6 +1536,9 @@ function updateMLD(obj, property_name)
             % 車線数を取得
             num_lanes = LanePrmMap.Count();
 
+            % delta_t_tableを取得
+            delta_t_table = obj.RoadDeltaTMap(road_id);
+
             % 車線数で場合分け
             if num_lanes == 1
                 % lane_prmを取得
@@ -1803,8 +1806,24 @@ function updateMLD(obj, property_name)
                             error('leader_flag is invalid.');
                         end
 
-                        % tmp_D3行列にd3をプッシュ
-                        tmp_D3 = blkdiag(tmp_D3, d3);
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 3
+                            % tmp_D3の行数を取得
+                            num_rows = size(tmp_D3, 1);
+
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+
+                            % delta_tの変数の場所を取得
+                            delta_t_row_id = delta_t_table(record_id, :).delta_t;
+
+                            % delta_tの情報を追加
+                            tmp_D3(num_rows + 17, delta_t_row_id) = 1;
+                            tmp_D3(num_rows + 18, delta_t_row_id) = -1;
+                        else
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+                        end
                     end
                 else
                     % 必要なパラメータを取得
@@ -1928,8 +1947,24 @@ function updateMLD(obj, property_name)
                             error('leader_flag is invalid.');
                         end
 
-                        % tmp_D3行列にd3をプッシュ
-                        tmp_D3 = blkdiag(tmp_D3, d3);
+                        % leader_flagによって場合分け
+                        if vehicle.leader_flag == 3
+                            % tmp_D3の行数を取得
+                            num_rows = size(tmp_D3, 1);
+
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+
+                            % delta_tの変数の場所を取得
+                            delta_t_row_id = delta_t_table(record_id, :).delta_t;
+
+                            % delta_tの情報を追加
+                            tmp_D3(num_rows + 12, delta_t_row_id) = 1;
+                            tmp_D3(num_rows + 13, delta_t_row_id) = -1;
+                        else
+                            % tmp_D3行列にd3をプッシュ
+                            tmp_D3 = blkdiag(tmp_D3, d3);
+                        end
                     end
                 end
 
@@ -1943,6 +1978,9 @@ function updateMLD(obj, property_name)
 
                     % その車線の自動車のレコードを取得
                     tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                    % その車線のdelta_t_tableを取得
+                    tmp_delta_t_table = delta_t_table(delta_t_table.stop_lane == lane_id, :);
 
                     % tmp_D3行列を初期化
                     tmp_D3 = [];
@@ -2193,9 +2231,25 @@ function updateMLD(obj, property_name)
                             else
                                 error('leader_flag is invalid.');
                             end
+                            
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 3
+                                % tmp_D3の行数を取得
+                                num_rows = size(tmp_D3, 1);
 
-                            % tmp_D3行列にd3をプッシュ
-                            tmp_D3 = blkdiag(tmp_D3, d3);
+                                % tmp_D3行列にd3をプッシュ
+                                tmp_D3 = blkdiag(tmp_D3, d3);
+
+                                % delta_tの変数の場所を取得
+                                delta_t_row_id = tmp_delta_t_table(record_id, :).delta_t;
+
+                                % delta_tの情報を追加
+                                tmp_D3(num_rows + 17, delta_t_row_id) = 1;
+                                tmp_D3(num_rows + 18, delta_t_row_id) = -1;
+                            else
+                                % tmp_D3行列にd3をプッシュ
+                                tmp_D3 = blkdiag(tmp_D3, d3);
+                            end
                         end
                     else
                         % 必要なパラメータを取得
@@ -2319,8 +2373,24 @@ function updateMLD(obj, property_name)
                                 error('leader_flag is invalid.');
                             end
 
-                            % tmp_D3行列にd3をプッシュ
-                            tmp_D3 = blkdiag(tmp_D3, d3);
+                            % leader_flagによって場合分け
+                            if vehicle.leader_flag == 3
+                                % tmp_D3の行数を取得
+                                num_rows = size(tmp_D3, 1);
+
+                                % tmp_D3行列にd3をプッシュ
+                                tmp_D3 = blkdiag(tmp_D3, d3);
+
+                                % delta_tの変数の場所を取得
+                                delta_t_row_id = tmp_delta_t_table(record_id, :).delta_t;
+
+                                % delta_tの情報を追加
+                                tmp_D3(num_rows + 12, delta_t_row_id) = 1;
+                                tmp_D3(num_rows + 13, delta_t_row_id) = -1;
+                            else
+                                % tmp_D3行列にd3をプッシュ
+                                tmp_D3 = blkdiag(tmp_D3, d3);
+                            end
                         end
                     end
 
@@ -2334,6 +2404,7 @@ function updateMLD(obj, property_name)
         obj.MLDsMap('D3') = D3;
 
     elseif strcmp(property_name, 'E')
+        % 
     else
         error('Property name is invalid.');
     end

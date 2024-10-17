@@ -10,6 +10,7 @@ classdef MPC < utils.class.Common
         MLDsMap;
         MILPsMap;
         VariableListMap;
+        RoadDeltaTMap;
     end
 
     properties
