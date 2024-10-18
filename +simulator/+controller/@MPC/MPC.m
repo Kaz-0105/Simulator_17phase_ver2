@@ -6,8 +6,6 @@ classdef MPC < utils.class.Common
     end
 
     properties
-        pos_vehs;
-        
         RoadPrmMap;
         MLDsMap;
         MILPsMap;
@@ -19,6 +17,12 @@ classdef MPC < utils.class.Common
         dt;
         N_p;
         N_c;
+
+        pos_vehs;
+        
+        u_length;
+        z_length;
+        delta_length;
     end
 
     methods

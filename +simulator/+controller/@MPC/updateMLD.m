@@ -3229,6 +3229,64 @@ function updateMLD(obj, property_name)
 
         % E行列をプッシュ
         obj.MLDsMap('E') = E;
+
+    elseif strcmp(property_name, 'F1')
+        % num_roadsを取得
+        num_roads = obj.Roads.count();
+
+        % num_signalsを取得
+        num_signals = num_roads * (num_roads - 1);
+
+        % delta_cの変数のリストを取得
+        delta_c_list = obj.VariableListMap('delta_c');
+
+        % F1行列を作成
+        F1 = zeros(length(delta_c_list), num_signals);
+
+        % F1行列をプッシュ
+        obj.MLDsMap('F1') = F1;
+
+    elseif strcmp(property_name, 'F2')
+        % delta_cの変数のリストを取得
+        delta_c_list = obj.VariableListMap('delta_c');
+
+        % F2行列を作成
+        F2 = zeros(length(delta_c_list), obj.z_length);
+
+        % F2行列をプッシュ
+        obj.MLDsMap('F2') = F2;
+
+    elseif strcmp(property_name, 'F3')
+        % F3行列を初期化
+        F3 = [];
+
+        % delta_cの変数のリストを取得
+        delta_c_list = obj.VariableListMap('delta_c');
+
+        for delta_c_id = delta_c_list
+            % f3を初期化
+            f3 = zeros(1, obj.delta_length);
+
+            % 該当するdelta_cの変数の場所に1を代入
+            f3(1, delta_c_id) = 1;
+
+            % f3をF3行列にプッシュ
+            F3 = [F3; f3];
+        end
+
+        % F行列をプッシュ
+        obj.MLDsMap('F3') = F3;
+
+    elseif strcmp(property_name, 'G')
+        % delta_cの変数のリストを取得
+        delta_c_list = obj.VariableListMap('delta_c');
+
+        % H行列を作成
+        G = ones(length(delta_c_list), 1);
+
+        % G行列をプッシュ
+        obj.MLDsMap('G') = G;
+
     elseif strcmp(property_name, 'B')
         % B1, B2, B3行列を取得
         B1 = obj.MLDsMap('B1');
@@ -3251,10 +3309,20 @@ function updateMLD(obj, property_name)
         D = [D1, D2, D3];
 
         % D行列をプッシュ
-        obj.MLDsMap('D') = D;
+        obj.MLDsMap('D') = D;        
+
     elseif strcmp(property_name, 'F')
+        % F1, F2, F3行列を取得
+        F1 = obj.MLDsMap('F1');
+        F2 = obj.MLDsMap('F2');
+        F3 = obj.MLDsMap('F3');
+
+        % F1, F2, F3行列を結合
+        F = [F1, F2, F3];
+
+        % G行列をプッシュ
+        obj.MLDsMap('F') = F;
         
-    elseif strcmp(property_name, 'G')
     else
         error('Property name is invalid.');
     end
