@@ -4,7 +4,7 @@ function validate(obj, property_name)
         MLDHeightMap = containers.Map('KeyType', 'char', 'ValueType', 'int32');
 
         % 行列を走査
-        for matrix_name = ["A", "B1", "B2", "B3"]
+        for matrix_name = ["A", "B1", "B2", "B3", "C", "D1", "D2", "D3", "E"]
             % 行列のサイズを取得
             MLDHeightMap(char(matrix_name)) = size(obj.MLDsMap(char(matrix_name)), 1);
         end
@@ -16,6 +16,13 @@ function validate(obj, property_name)
             end
         end
 
+        % C, D1, D2, D3, Eの行数が全て等しいか確認
+        for matrix_name = ["C", "D1", "D2", "D3", "E"]
+            if MLDHeightMap(char(matrix_name)) ~= MLDHeightMap('C')
+                error('Error: the number of rows of C, D1, D2, D3, and E must be equal.');
+            end
+        end
+        
     elseif strcmp(property_name, 'MILP')
         
     else

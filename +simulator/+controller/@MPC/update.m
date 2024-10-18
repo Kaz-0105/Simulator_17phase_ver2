@@ -1,5 +1,8 @@
 function update(obj, property_name)
     if strcmp(property_name, 'model')
+        % 自動車の位置をまとめる
+        obj.update('pos_vehs');
+
         % 変数のリストを作成
         obj.update('VariableListMap');
 
@@ -43,6 +46,12 @@ function update(obj, property_name)
         % validateを実行
         obj.validate('MLD');
 
+        % B1, B2, B3行列を結合
+        obj.updateMLD('B');
+
+        % D1, D2, D3行列を結合
+        obj.updateMLD('D');
+
     elseif strcmp(property_name, 'MILP')
         % MILPsMapの初期化
         obj.MILPsMap = containers.Map('KeyType', 'char', 'ValueType', 'any');
@@ -76,6 +85,7 @@ function update(obj, property_name)
         delta_t1s = [];
         delta_t2s = [];
         delta_t3s = [];
+        delta_ts = [];
         delta_cs = [];
 
         % RoadDeltaTMapの初期化
@@ -136,6 +146,7 @@ function update(obj, property_name)
                             delta_os(1, end + 1) = counter + 3;
                             delta_1s(1, end + 1) = counter + 4;
                             delta_t1s(1, end + 1) = counter + 5;
+                            delta_ts(1, end + 1) = counter + 5;
                             delta_cs(1, end + 1) = counter + 6;
 
                             % カウンターを更新
@@ -160,6 +171,7 @@ function update(obj, property_name)
                             delta_1s(1, end + 1) = counter + 6;
                             delta_2s(1, end + 1) = counter + 7;
                             delta_t1s(1, end + 1) = counter + 8;
+                            delta_ts(1, end + 1) = counter + 8;
                             delta_cs(1, end + 1) = counter + 9;
 
                             % カウンターを更新
@@ -188,6 +200,7 @@ function update(obj, property_name)
                             delta_t1s(1, end + 1) = counter + 10;
                             delta_t2s(1, end + 1) = counter + 11;
                             delta_t3s(1, end + 1) = counter + 12;
+                            delta_ts(1, end + 1) = counter + 12;
                             delta_cs(1, end + 1) = counter + 13;
 
                             % カウンターを更新
@@ -219,6 +232,7 @@ function update(obj, property_name)
                             delta_os(1, end + 1) = counter + 3;
                             delta_1s(1, end + 1) = counter + 4;
                             delta_t1s(1, end + 1) = counter + 5;
+                            delta_ts(1, end + 1) = counter + 5;
                             delta_cs(1, end + 1) = counter + 6;
 
                             % カウンターを更新
@@ -244,6 +258,7 @@ function update(obj, property_name)
                             delta_t1s(1, end + 1) = counter + 7;
                             delta_t2s(1, end + 1) = counter + 8;
                             delta_t3s(1, end + 1) = counter + 9;
+                            delta_ts(1, end + 1) = counter + 9;
                             delta_cs(1, end + 1) = counter + 10;
                             
                             % カウンターを更新
@@ -283,8 +298,42 @@ function update(obj, property_name)
         obj.VariableListMap('delta_t1') = delta_t1s;
         obj.VariableListMap('delta_t2') = delta_t2s;
         obj.VariableListMap('delta_t3') = delta_t3s;
+        obj.VariableListMap('delta_t') = delta_ts;
         obj.VariableListMap('delta_c') = delta_cs;
 
+    elseif strcmp(property_name, 'pos_vehs')
+        % pos_vehsを初期化
+        pos_vehs = [];
+
+        % 道路を走査
+        for road_id = 1: obj.Roads.count()
+            % Roadクラスを取得
+            Road = obj.Roads.itemByKey(road_id);
+
+            % vehiclesを取得
+            vehicles = Road.get('vehicles');
+
+            % road_prmを取得
+            road_prm = obj.RoadPrmMap(road_id);
+
+            % LanePrmMapを取得
+            LanePrmMap = road_prm.LanePrmMap;
+
+            % 車線数を取得
+            num_lanes = LanePrmMap.Count();
+
+            % 車線を走査
+            for lane_id = 1: num_lanes
+                % tmp_vehiclesを取得
+                tmp_vehicles = vehicles(vehicles.stop_lane == lane_id, :);
+
+                % pos_vehsに追加
+                pos_vehs = [pos_vehs; tmp_vehicles.pos];
+            end
+        end
+
+        % pos_vehsをプッシュ
+        obj.pos_vehs = pos_vehs;
     else
         error('Error: property name is invalid.');  
     end

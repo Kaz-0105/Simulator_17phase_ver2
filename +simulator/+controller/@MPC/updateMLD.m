@@ -3229,6 +3229,32 @@ function updateMLD(obj, property_name)
 
         % E行列をプッシュ
         obj.MLDsMap('E') = E;
+    elseif strcmp(property_name, 'B')
+        % B1, B2, B3行列を取得
+        B1 = obj.MLDsMap('B1');
+        B2 = obj.MLDsMap('B2');
+        B3 = obj.MLDsMap('B3');
+
+        % B1, B2, B3行列を結合
+        B = [B1, B2, B3];
+
+        % B行列をプッシュ
+        obj.MLDsMap('B') = B;
+
+    elseif strcmp(property_name, 'D')
+        % D1, D2, D3行列を取得
+        D1 = obj.MLDsMap('D1');
+        D2 = obj.MLDsMap('D2');
+        D3 = obj.MLDsMap('D3');
+
+        % D1, D2, D3行列を結合
+        D = [D1, D2, D3];
+
+        % D行列をプッシュ
+        obj.MLDsMap('D') = D;
+    elseif strcmp(property_name, 'F')
+        
+    elseif strcmp(property_name, 'G')
     else
         error('Property name is invalid.');
     end

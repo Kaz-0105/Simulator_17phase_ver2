@@ -6,6 +6,8 @@ classdef MPC < utils.class.Common
     end
 
     properties
+        pos_vehs;
+        
         RoadPrmMap;
         MLDsMap;
         MILPsMap;
