@@ -195,8 +195,10 @@ function create(obj, property_name)
 
         % MPCの設定
         obj.create('MPC');
-    elseif strcmp(property_name, 'MPC')
 
+        % SCOOTの設定
+        obj.create('SCOOT');
+    elseif strcmp(property_name, 'MPC')
         % MPCクラス用の設定を作成
         mpc = struct();
 
@@ -213,6 +215,22 @@ function create(obj, property_name)
         % mpcをcontrollersにプッシュ
         obj.controllers.MPC = mpc;
 
+    elseif strcmp(property_name, 'SCOOT')
+        % SCOOTクラス用の設定を作成
+        scoot = struct();
+
+        % 設定ファイルを読み込む
+        data = yaml.loadFile([pwd, '\layout\config.yaml']);
+
+        % スプリットとサイクルの変動幅を取得
+        scoot.ds = data.scoot.ds;
+        scoot.dc = data.scoot.dc;
+
+        % スタートの周期を取得
+        scoot.cycle = data.scoot.cycle;
+
+        % SCOOTの設定をcontrollersにプッシュ
+        obj.controllers.SCOOT = scoot;
     else
         error('error: invalid property_name');
     end

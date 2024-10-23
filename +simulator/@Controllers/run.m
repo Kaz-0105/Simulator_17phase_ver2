@@ -4,6 +4,6 @@ function run(obj)
         Controller = obj.itemByKey(controller_id);
 
         % Controllerのupdateメソッドを起動
-        Controller.update('Solver');
+        Controller.run();
     end
 end

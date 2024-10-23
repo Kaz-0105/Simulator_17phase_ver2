@@ -13,5 +13,6 @@ mpc :
 scoot : 
   ds : 4
   dc : 4
+  cycle : 60
 
   
