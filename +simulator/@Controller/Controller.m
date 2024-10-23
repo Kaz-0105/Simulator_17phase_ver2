@@ -25,6 +25,6 @@ classdef Controller < utils.class.Common
 
     methods
         create(obj, property_name);
-        update(obj, property_name);
+        run(obj);
     end
 end

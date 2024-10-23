@@ -78,7 +78,7 @@ function updateMLD(obj, property_name)
                 tmp_B1 = zeros(num_vehicles, num_signals);
 
                 % B1行列にプッシュ
-                B1 = blkdiag(B1, tmp_B1);
+                B1 = [B1; tmp_B1];
             else
                 % 車線を走査
                 for lane_id = 1: num_lanes
@@ -92,7 +92,7 @@ function updateMLD(obj, property_name)
                     tmp_B1 = zeros(num_vehicles, num_signals);
 
                     % B1行列にプッシュ
-                    B1 = blkdiag(B1, tmp_B1);
+                    B1 = [B1; tmp_B1];
                 end
             end
         end

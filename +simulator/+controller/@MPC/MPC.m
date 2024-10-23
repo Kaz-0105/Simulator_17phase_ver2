@@ -23,6 +23,7 @@ classdef MPC < utils.class.Common
         u_length;
         z_length;
         delta_length;
+        v_length;
     end
 
     methods
@@ -36,6 +37,9 @@ classdef MPC < utils.class.Common
             % Roadsクラスを設定
             Intersection = Controller.get('Intersection');
             obj.Roads = Intersection.get('InputRoads');
+
+            % u_lengthの設定
+            obj.u_length = obj.Roads.count() * (obj.Roads.count() - 1);
 
             % RoadPrmMapの作成
             obj.create('RoadPrmMap');

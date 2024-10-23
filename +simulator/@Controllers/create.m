@@ -25,6 +25,8 @@ function create(obj, property_name)
                 Controller.create('MPC');
             elseif strcmp(method, 'Fix')
                 Controller.create('Fix');
+            elseif strcmp(method, 'SCOOT')
+                Controller.create('SCOOT');
             else
                 error('Error: method is invalid.');
             end

@@ -1,12 +1,17 @@
 simulator : 
   folder : "two_lane"
-  dt : 1 
+  dt : 2 
   time : 1000
   seed : 1
   quick_mode : 1
 
 mpc :
-  N_p : 10
-  N_c : 3
+  N_p : 4
+  N_c : 2
   D_o : 100
+
+scoot : 
+  ds : 4
+  dc : 4
+
   

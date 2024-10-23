@@ -1,18 +1,5 @@
 function update(obj, property_name)
-    if strcmp(property_name, 'model')
-        % 自動車の位置をまとめる
-        obj.update('pos_vehs');
-
-        % 変数のリストを作成
-        obj.update('VariableListMap');
-
-        % MLDの行列の更新
-        obj.update('MLD');
-
-        % MILPの行列の更新
-        obj.update('MILP');
-
-    elseif strcmp(property_name, 'MLD')
+    if strcmp(property_name, 'MLD')
         % MLDsMapの初期化
         obj.MLDsMap = containers.Map('KeyType', 'char', 'ValueType', 'any');
 
@@ -434,6 +421,9 @@ function update(obj, property_name)
 
         % delta_length（１ステップ分のdeltaの変数の数）を更新
         obj.delta_length = counter;
+
+        % v_length(１ステップ分の変数の数)を更新
+        obj.v_length = obj.u_length + obj.z_length + obj.delta_length;
 
     elseif strcmp(property_name, 'pos_vehs')
         % pos_vehsを初期化

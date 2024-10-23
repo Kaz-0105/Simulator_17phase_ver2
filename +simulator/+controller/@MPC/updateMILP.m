@@ -33,19 +33,32 @@ function updateMILP(obj, property_name)
         Peq = F_bar;
         Qeq = G_bar;
 
-        
-    elseif strcmp(property_name, 'pos_vehs')
-
-
-
-
-
-
-
-
+        % MILPsMapにプッシュ
+        obj.MILPsMap('P') = P;
+        obj.MILPsMap('Q') = Q;
+        obj.MILPsMap('Peq') = Peq;
+        obj.MILPsMap('Qeq') = Qeq;
         
     elseif strcmp(property_name, 'Objective')
-        
+        % 目的関数を初期化
+        F = zeros(1, obj.v_length * obj.N_p);
+
+        % delta_tsを取得
+        delta_ts = obj.VariableListMap('delta_t');
+
+        % delta_tsを１ステップ全体での場所に変換
+        delta_ts = delta_ts + (obj.u_length + obj.z_length);
+
+        % 各ステップを走査
+        for step = 1: obj.N_p
+            for delta_t_id = delta_ts
+                F(delta_t_id) = 1;
+            end
+
+            % delta_tsを更新
+            delta_ts = delta_ts + obj.v_length;
+        end
+
     elseif strcmp(property_name, 'Intcon')
         
     else

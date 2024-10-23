@@ -16,6 +16,15 @@ function create(obj, property_name)
 
         % Fixクラスを作成
         obj.Fix = simulator.controller.Fix(obj);
+
+    elseif strcmp(property_name, 'SCOOT')
+        % プロパティとしてSCOOTを追加
+        prop = addprop(obj, 'SCOOT');
+        prop.SetAccess = 'public';
+        prop.GetAccess = 'public';
+
+        % SCOOTクラスを作成
+        obj.SCOOT = simulator.controller.SCOOT(obj);
         
     else
         error('Error: property name is invalid.');

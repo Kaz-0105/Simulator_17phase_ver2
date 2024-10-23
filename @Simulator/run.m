@@ -5,7 +5,7 @@ function run(obj)
         obj.Network.update('Vehicles');
 
         % Controllersクラスを更新
-        obj.Controllers.update('Solver');
+        obj.Controllers.run();
 
         % Vissimをステップ時間だけ進める
 
