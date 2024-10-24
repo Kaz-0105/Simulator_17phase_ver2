@@ -8,7 +8,6 @@ classdef Road < utils.class.Common
         id;
         links;
         speed;
-        vehicles;
     end
 
     methods

@@ -2,12 +2,14 @@ classdef SCOOT < utils.class.Common
     properties
         Config;
         Controller;
+        Intersection;
         Roads;
     end
 
     properties
         delta_s;
         delta_c;
+        alpha;
         cycle_time;
         num_phases;
         PhaseSplitStartMap;
@@ -29,13 +31,25 @@ classdef SCOOT < utils.class.Common
             scoot = obj.Config.get('controllers').SCOOT;
             obj.delta_s = scoot.ds;
             obj.delta_c = scoot.dc;
+            obj.alpha = scoot.alpha;
 
             % Controllerクラスを取得
             obj.Controller = Controller;
 
+            % Intersectionクラスを取得
+            obj.Intersection = Controller.get('Intersection');
+
+            % IntersectionクラスにSCOOTクラスを設定
+            obj.Intersection.set('SCOOT', obj);
+
             % Roadsクラスを取得
-            Intersection = Controller.get('Intersection');
             obj.Roads = Intersection.get('InputRoads');
+
+            % RoadクラスにSCOOTクラスを設定
+            for road_id = 1: obj.Roads.count()
+                Road = obj.Roads.itemByKey(road_id);
+                Road.set('SCOOT', obj);
+            end
 
             % cycle_timeの初期化
             obj.cycle_time = scoot.cycle;

@@ -2,6 +2,7 @@ classdef MPC < utils.class.Common
     properties
         Config;
         Controller;
+        Intersection;
         Roads;
     end
 
@@ -34,9 +35,20 @@ classdef MPC < utils.class.Common
             % Controllerクラスを設定
             obj.Controller = Controller;
 
+            % Intersectionクラスを設定
+            obj.Intersection = Controller.get('Intersection');
+
+            % IntersectionクラスにMPCクラスを設定
+            obj.Intersection.set('MPC', obj);
+
             % Roadsクラスを設定
-            Intersection = Controller.get('Intersection');
-            obj.Roads = Intersection.get('InputRoads');
+            obj.Roads = obj.Intersection.get('InputRoads');
+            
+            % RoadクラスにMPCクラスを設定
+            for road_id = 1: obj.Roads.count()
+                Road = obj.Roads.itemByKey(road_id);
+                Road.set('MPC', obj);
+            end
 
             % u_lengthの設定
             obj.u_length = obj.Roads.count() * (obj.Roads.count() - 1);

@@ -34,6 +34,26 @@ function create(obj, property_name)
         % VissimにQuickModeを設定
         obj.Vissim.Graphics.set('AttValue', 'QuickMode', obj.simulator.quick_mode);
 
+        % Vissimにデータの更新間隔を設定
+
+        % DataCollectionについての設定
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollCollectData', true);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollFromTime', 0);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollToTime', obj.simulator.time);
+
+        % DelayTimeについての設定
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysCollectData', true);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysFromTime', 0);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysToTime', obj.simulator.time);
+
+        % QueueLengthについての設定
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesCollectData', true);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesFromTime', 0);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesToTime', obj.simulator.time);
+
     elseif strcmp(property_name, 'network')
         % 構造体を初期化
         obj.network = struct();
@@ -231,6 +251,9 @@ function create(obj, property_name)
 
         % スタートの周期を取得
         scoot.cycle = data.scoot.cycle;
+
+        % 指数移動平均の係数を取得
+        scoot.alpha = data.scoot.alpha;
 
         % SCOOTの設定をcontrollersにプッシュ
         obj.controllers.SCOOT = scoot;
