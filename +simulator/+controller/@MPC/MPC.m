@@ -44,12 +44,9 @@ classdef MPC < utils.class.Common
             % RoadPrmMapの作成
             obj.create('RoadPrmMap');
 
-            % タイムステップの設定
-            simulator = obj.Config.get('simulator');
-            obj.dt = simulator.dt;
-
             % ホライゾンの設定
             controllers = obj.Config.get('controllers');
+            obj.dt = controllers.MPC.dt;
             obj.N_p = controllers.MPC.N_p;
             obj.N_c = controllers.MPC.N_c;
         end

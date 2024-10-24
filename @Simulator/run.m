@@ -7,9 +7,13 @@ function run(obj)
         % Controllersクラスを更新
         obj.Controllers.run();
 
-        % Vissimをステップ時間だけ進める
+        % break_pointを更新
+        obj.update('break_point');
+
+        % シミュレーションを実行
+        obj.Vissim.RunContinuous();
 
         % 現在の時間を更新
-        obj.current_time = obj.current_time + obj.dt;
+        obj.current_time = obj.break_point;
     end
 end

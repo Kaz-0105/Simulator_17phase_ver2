@@ -14,7 +14,7 @@ function update(obj, property_name)
             next_split_start = obj.PhaseSplitStartMap(1);
         end
 
-        if mod(obj.current_time + obj.delta_s, obj.cycle_time) == next_split_start
+        if mod(obj.current_time + obj.delta_s + 1, obj.cycle_time) == next_split_start
             obj.skip_flag = false;
         elseif obj.current_time == obj.cycle_start_time + obj.cycle_time
             obj.skip_flag = false;

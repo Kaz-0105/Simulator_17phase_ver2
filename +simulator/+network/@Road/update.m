@@ -22,7 +22,12 @@ function update(obj, property_name)
                 % 車両情報を取得（id, pos, route）
                 id = Vehicle.get('AttValue', 'No');
                 pos = Vehicle.get('AttValue', 'Pos');
-                route = RouteOrderMap(Vehicle.get('AttValue', 'RouteNo'));
+                try 
+                    route = RouteOrderMap(Vehicle.get('AttValue', 'RouteNo'));
+                catch
+                    % ギリギリ道路に入ってきていてルートがまだ確定していないときの例外処理
+                    route = RouteOrderMap(1);
+                end
 
                 % NextLinkを取得
                 NextLink = Vehicle.NextLink;

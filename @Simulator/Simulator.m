@@ -14,6 +14,7 @@ classdef Simulator < utils.class.Common
         time;
         seed;
 
+        break_point;
         current_time;
     end
 
@@ -28,6 +29,9 @@ classdef Simulator < utils.class.Common
             % ステップ時間とシミュレーション時間を設定
             obj.create('dt');
             obj.create('time');
+
+            % ブレークポイントの初期化
+            obj.break_point = 0;
 
             % 現在の時間の初期化
             obj.current_time = 0;

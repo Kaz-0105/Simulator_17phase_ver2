@@ -205,6 +205,9 @@ function create(obj, property_name)
         % 設定ファイルを読み込む    
         data = yaml.loadFile([pwd, '\layout\config.yaml']);
 
+        % タイムステップを取得
+        mpc.dt = data.mpc.dt;
+
         % 制御ホライゾン、予測ホライゾンを取得
         mpc.N_p = data.mpc.N_p;
         mpc.N_c = data.mpc.N_c;
