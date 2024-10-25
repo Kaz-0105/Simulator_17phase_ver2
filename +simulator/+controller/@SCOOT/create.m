@@ -69,7 +69,7 @@ function create(obj, property_name)
         % フェーズを走査
         for phase_id = 1: obj.num_phases
             % フェーズの流出率を初期化
-            obj.PhaseOutflowRateMap(phase_id) = 0;
+            obj.PhaseOutflowRateMap(phase_id) = 0.125;
         end
     else
         error('Property name is invalid.');

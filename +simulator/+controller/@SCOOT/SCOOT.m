@@ -40,6 +40,7 @@ classdef SCOOT < utils.class.Common
             obj.delta_s = scoot.ds;
             obj.delta_c = scoot.dc;
             obj.alpha = scoot.alpha;
+            obj.beta = scoot.beta;
 
             % Controllerクラスを取得
             obj.Controller = Controller;
