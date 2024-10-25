@@ -25,7 +25,9 @@ classdef SCOOT < utils.class.Common
     end
 
     properties
-        PhaseSaturationRateMap;
+        PhaseInflowRateMap;
+        PhaseOutflowRateMap;
+        PhaseSaturationMap;
     end
 
     methods 
@@ -72,8 +74,10 @@ classdef SCOOT < utils.class.Common
             % current_phase_idの初期化
             obj.current_phase_id = 1;
 
-            % PhaseSaturationRateMapの初期化
-            obj.create('PhaseSaturationRateMap');
+            % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
+            obj.create('PhaseSaturationMap');
+            obj.create('PhaseInflowRateMap');
+            obj.create('PhaseOutflowRateMap');
         end
     end
 

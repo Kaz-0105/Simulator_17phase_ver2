@@ -22,6 +22,24 @@ function create(obj, property_name)
 
                     % OutputIntersectionクラスを設定
                     obj.OutputIntersection = Intersection;
+
+                    % Intersectionクラスの設定を取得
+                    intersections = obj.Config.get('network').intersections;
+
+                    % IntersectionsMapを取得
+                    IntersectionsMap = intersections.IntersectionsMap;
+
+                    % intersection構造体を取得
+                    intersection = IntersectionsMap(Intersection.get('id'));
+
+                    % roadsを取得
+                    roads = intersection.input_roads;
+
+                    % road構造体を取得
+                    road = roads(input_road_id);
+
+                    % routind_decisionにrel_flowsを設定
+                    obj.routing_decision.rel_flows = road.rel_flows;
                 end
             end
 
@@ -379,6 +397,44 @@ function create(obj, property_name)
             RouteOrderMap(route.id) = route.order_id;
         end
 
+        % ここからrel_flowの設定
+
+        for rel_flow = routing_decision.rel_flows
+            % rel_flow_idを取得
+            rel_flow_id = rel_flow.id;
+
+            % tmp_route_idsを初期化
+            tmp_route_ids = [];
+
+            % RoutesMapを走査
+            for route_id = 1: RouteOrderMap.Count()
+                % order_idを取得
+                order_id = RouteOrderMap(route_id);
+
+                if order_id == rel_flow_id
+                    tmp_route_ids(1, end + 1) = route_id;
+                end
+            end
+
+            % tmp_num_routesを取得
+            tmp_num_routes = length(tmp_route_ids);
+
+            % tmp_route_idsを走査
+            for route_id = tmp_route_ids
+                % route構造体を取得
+                route = RoutesMap(route_id);
+
+                % rel_flowを設定
+                route.rel_flow = rel_flow.value / tmp_num_routes;
+
+                % Vissimに設定
+                route.Vissim.set('AttValue', 'RelFlow(1)', route.rel_flow);
+
+                % RoutesMapにプッシュ
+                RoutesMap(route_id) = route;
+            end
+        end
+
         % routesにRoutesMapをプッシュ
         routes.RoutesMap = RoutesMap;
 
@@ -387,6 +443,9 @@ function create(obj, property_name)
 
         % routesをrouting_decisionにプッシュ
         obj.routing_decision.routes = routes;
+
+        % rel_flowsを削除
+        obj.routing_decision = rmfield(obj.routing_decision, 'rel_flows');
         
     elseif strcmp(property_name, 'speed')
         % Networkクラス用の設定を取得

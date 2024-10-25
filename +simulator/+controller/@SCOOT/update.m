@@ -29,7 +29,8 @@ function update(obj, property_name)
             obj.skip_flag = true;
         end
 
-    elseif strcmp(property_name, 'PhaseSaturationRateMap')
+    elseif strcmp(property_name, 'PhaseSaturationMap')
+
 
     else
         error('Property name is invalid.');

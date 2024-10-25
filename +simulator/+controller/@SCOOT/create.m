@@ -44,14 +44,32 @@ function create(obj, property_name)
         obj.current_time = Simulator.get('current_time');
         obj.cycle_start_time = obj.current_time;
 
-    elseif strcmp(property_name, 'PhaseSaturationRateMap')
+    elseif strcmp(property_name, 'PhaseSaturationMap')
         % PhaseSaturationRateMapの初期化
-        obj.PhaseSaturationRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+        obj.PhaseSaturationMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
 
         % フェーズを走査
         for phase_id = 1: obj.num_phases
             % フェーズの飽和率を初期化
-            obj.PhaseSaturationRateMap(phase_id) = 0;
+            obj.PhaseSaturationMap(phase_id) = 0;
+        end
+    elseif strcmp(property_name, 'PhaseInflowRateMap')
+        % PhaseInflowRateMapの初期化
+        obj.PhaseInflowRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+
+        % フェーズを走査
+        for phase_id = 1: obj.num_phases
+            % フェーズの流入率を初期化
+            obj.PhaseInflowRateMap(phase_id) = 0;
+        end
+    elseif strcmp(property_name, 'PhaseOutflowRateMap')
+        % PhaseOutflowRateMapの初期化
+        obj.PhaseOutflowRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+
+        % フェーズを走査
+        for phase_id = 1: obj.num_phases
+            % フェーズの流出率を初期化
+            obj.PhaseOutflowRateMap(phase_id) = 0;
         end
     else
         error('Property name is invalid.');
