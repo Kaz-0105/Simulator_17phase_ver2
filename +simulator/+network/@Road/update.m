@@ -1,6 +1,24 @@
 function update(obj, property_name)
     if strcmp(property_name, 'Vehicles')
-        if isprop(obj, 'MPC')
+        if isprop(obj, 'InputIntersection')
+            if isprop(obj.InputIntersection, 'MPC')
+                controller = 'MPC';
+            elseif isprop(obj.InputIntersection, 'SCOOT')
+                controller = 'SCOOT';
+            else
+                error('Not defined controller.');
+            end
+        else
+            if isprop(obj, 'MPC')
+                controller = 'MPC';
+            elseif isprop(obj, 'SCOOT')
+                controller = 'SCOOT';
+            else
+                error('Not defined controller.');
+            end
+        end
+
+        if strcmp(controller, 'MPC')
             % 車両情報のテーブルを初期化
             size = [0, 7];
             variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag', 'preceding_record_id'};
@@ -248,53 +266,111 @@ function update(obj, property_name)
             % vehiclesをRoadにプッシュ
             obj.set('vehicles', vehicles);
 
-        elseif isprop(obj, 'SCOOT')
-            % 現在のフェーズを取得
-            current_phase_id = obj.SCOOT.get('current_phase_id');
+        elseif strcmp(controller, 'SCOOT')
+            % 現在のフェーズIDとフェーズの数を取得
+            try
+                current_phase_id = obj.SCOOT.get('current_phase_id');
+                num_phases = obj.SCOOT.get('num_phases');
+            catch
+                SCOOT = obj.InputIntersection.get('SCOOT');
+                current_phase_id = SCOOT.get('current_phase_id');
+                num_phases = SCOOT.get('num_phases');
+            end
 
             % inflowを取得
-            if isprop(obj, 'PhaseInflowMap')
-                % inflowを取得
-                inflow = obj.PhaseInflowMap(current_phase_id);
+            if isprop(obj, 'InputDataCollectionsMap')
+                if isprop(obj, 'PhaseInflowMap')
+                    if obj.former_phase_id == current_phase_id
+                        % inflowを取得
+                        inflow = obj.PhaseInflowMap(current_phase_id);
+                    else
+                        % inflowを初期化
+                        inflow = 0;
+                    end
+                else
+                    % inflowを初期化
+                    inflow = 0;
+                    
+                    % PhaseInflowMapを初期化
+                    PhaseInflowMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+
+                    % phase_idを走査
+                    for phase_id = 1: num_phases
+                        PhaseInflowMap(phase_id) = 0;
+                    end
+
+                    % PhaseInflowMapをRoadにプッシュ
+                    obj.set('PhaseInflowMap', PhaseInflowMap);
+
+                    % former_phase_idを初期化
+                    obj.set('former_phase_id', current_phase_id);
+                end
+            end
+
+            % outflowを取得
+            if isprop(obj, 'PhaseOutflowMap')
+                if obj.former_phase_id == current_phase_id
+                    % outflowを取得
+                    outflow = obj.PhaseOutflowMap(current_phase_id);
+                else
+                    % outflowを初期化
+                    outflow = 0;
+                end
             else
-                % inflowを初期化
-                inflow = 0;
-                
-                % PhaseInflowMapを初期化
-                PhaseInflowMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+                % outflowを初期化
+                outflow = 0;
+
+                % PhaseOutflowMapを初期化
+                PhaseOutflowMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
 
                 % phase_idを走査
-                for phase_id = 1: obj.SCOOT.get('num_phases')
-                    PhaseInflowMap(phase_id) = 0;
+                for phase_id = 1: num_phases
+                    PhaseOutflowMap(phase_id) = 0;
                 end
 
-                % PhaseInflowMapをRoadにプッシュ
-                obj.set('PhaseInflowMap', containers.Map('KeyType', 'int32', 'ValueType', 'double'));
-            end
-            
-            % outflowを取得
-            if isprop(obj, 'outflow')
-                outflow = obj.outflow;
-            else
-                outflow = 0;
+                % PhaseOutflowMapをRoadにプッシュ
+                obj.set('PhaseOutflowMap', PhaseOutflowMap);
+
+                % former_phase_idを初期化
+                obj.set('former_phase_id', current_phase_id);
             end
 
             % InputDataCollectionを走査
-            for data_collection_id = cell2mat(obj.InputDataCollections.keys())
-                % InputDataCollectionのComオブジェクトを取得
-                InputDataCollection = obj.InputDataCollections(data_collection_id);
+            if isprop(obj, 'InputDataCollectionsMap')
+                for data_collection_id = cell2mat(obj.InputDataCollectionsMap.keys())
+                    % InputDataCollectionのComオブジェクトを取得
+                    InputDataCollection = obj.InputDataCollectionsMap(data_collection_id);
+
+                    % このステップで通過した自動車台数を取得
+                    num_vehs = InputDataCollection.get('AttValue', 'Vehs(Current, Last, All)');
+
+                    % inflowにプッシュ
+                    inflow = inflow + num_vehs;
+                end
+
+                % inflowをPhaseInflowMapにプッシュ
+                obj.PhaseInflowMap(current_phase_id) = inflow;
+            end
+
+            % OutputDataCollectionを走査
+            for data_collection_id = cell2mat(obj.OutputDataCollectionsMap.keys())
+                % OutputDataCollectionのComオブジェクトを取得
+                OutputDataCollection = obj.OutputDataCollectionsMap(data_collection_id);
 
                 % このステップで通過した自動車台数を取得
-                num_vehs = InputDataCollection.get('AttValue', 'Vehs(Current, Last, All)');
+                num_vehs = OutputDataCollection.get('AttValue', 'Vehs(Current, Last, All)');
 
-                % inflowにプッシュ
-                inflow = inflow + num_vehs;
-
-
+                % outflowにプッシュ
+                outflow = outflow + num_vehs;
             end
-            
+
+            % outflowをPhaseOutflowMapにプッシュ
+            obj.PhaseOutflowMap(current_phase_id) = outflow;
+
+            % former_phase_idを更新
+            obj.former_phase_id = current_phase_id;
         else
-            error('controller_method is invalid.');
+            error('error: Property name is invalid.');
         end
     else
         error('error: Property name is invalid.');

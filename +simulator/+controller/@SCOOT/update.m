@@ -14,13 +14,23 @@ function update(obj, property_name)
             next_split_start = obj.PhaseSplitStartMap(1);
         end
 
-        if mod(obj.current_time + obj.delta_s + 1, obj.cycle_time) == next_split_start
+        if obj.current_time + obj.delta_s + 1 == next_split_start
             obj.skip_flag = false;
-        elseif obj.current_time == obj.cycle_start_time + obj.cycle_time
+
+            if obj.current_time + 1 == obj.cycle_start_time + obj.cycle_time
+                obj.objective = 'both';
+            else
+                obj.objective = 'split';
+            end
+        elseif obj.current_time + 1 == obj.cycle_start_time + obj.cycle_time
             obj.skip_flag = false;
+            obj.objective = 'cycle';
         else
             obj.skip_flag = true;
         end
+
+    elseif strcmp(property_name, 'PhaseSaturationRateMap')
+
     else
         error('Property name is invalid.');
     end

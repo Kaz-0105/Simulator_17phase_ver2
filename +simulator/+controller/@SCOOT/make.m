@@ -23,15 +23,15 @@ function make(obj, property_name)
         % 道路の数で場合分け
         if obj.num_phases == 3
             % PhaseSplitStartMapの要素を追加
-            obj.PhaseSplitStartMap(2) = obj.cycle_time / 3;
-            obj.PhaseSplitStartMap(3) = obj.cycle_time / 3 * 2;
-            obj.PhaseSplitStartMap(1) = obj.cycle_time;
+            obj.PhaseSplitStartMap(2) = obj.current_time + obj.cycle_time / 3;
+            obj.PhaseSplitStartMap(3) = obj.current_time + obj.cycle_time / 3 * 2;
+            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
         elseif obj.num_phases == 4
             % PhaseSplitStartMapの要素を追加
-            obj.PhaseSplitStartMap(2) = obj.cycle_time / 4;
-            obj.PhaseSplitStartMap(3) = obj.cycle_time / 4 * 2;
-            obj.PhaseSplitStartMap(4) = obj.cycle_time / 4 * 3;
-            obj.PhaseSplitStartMap(1) = obj.cycle_time;
+            obj.PhaseSplitStartMap(2) = obj.current_time + obj.cycle_time / 4;
+            obj.PhaseSplitStartMap(3) = obj.current_time + obj.cycle_time / 4 * 2;
+            obj.PhaseSplitStartMap(4) = obj.current_time + obj.cycle_time / 4 * 3;
+            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
         else
             error('num_phases is invalid.');
         end
@@ -43,6 +43,16 @@ function make(obj, property_name)
         % current_timeを取得
         obj.current_time = Simulator.get('current_time');
         obj.cycle_start_time = obj.current_time;
+
+    elseif strcmp(property_name, 'PhaseSaturationRateMap')
+        % PhaseSaturationRateMapの初期化
+        obj.PhaseSaturationRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+
+        % フェーズを走査
+        for phase_id = 1: obj.num_phases
+            % フェーズの飽和率を初期化
+            obj.PhaseSaturationRateMap(phase_id) = 0;
+        end
     else
         error('Property name is invalid.');
     end

@@ -10,6 +10,7 @@ classdef SCOOT < utils.class.Common
         delta_s;
         delta_c;
         alpha;
+        beta;
         cycle_time;
         num_phases;
         PhaseSplitStartMap;
@@ -17,9 +18,14 @@ classdef SCOOT < utils.class.Common
 
     properties
         skip_flag;
+        objective;
         cycle_start_time;
         current_time;
         current_phase_id;
+    end
+
+    properties
+        PhaseSaturationRateMap;
     end
 
     methods 
@@ -43,7 +49,7 @@ classdef SCOOT < utils.class.Common
             obj.Intersection.set('SCOOT', obj);
 
             % Roadsクラスを取得
-            obj.Roads = Intersection.get('InputRoads');
+            obj.Roads = obj.Intersection.get('InputRoads');
 
             % RoadクラスにSCOOTクラスを設定
             for road_id = 1: obj.Roads.count()
@@ -57,14 +63,17 @@ classdef SCOOT < utils.class.Common
             % num_phaseを作成
             obj.make('num_phases');
 
-            % PhaseSplitMapの初期化
-            obj.make('PhaseSplitStartMap');
-
             % cycle_start_timeの初期化
             obj.make('cycle_start_time');
 
+            % PhaseSplitMapの初期化
+            obj.make('PhaseSplitStartMap');
+
             % current_phase_idの初期化
             obj.current_phase_id = 1;
+
+            % PhaseSaturationRateMapの初期化
+            obj.make('PhaseSaturationRateMap');
         end
     end
 

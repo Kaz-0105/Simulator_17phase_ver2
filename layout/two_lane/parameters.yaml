@@ -20,3 +20,38 @@ parameters:
     - id : 8
       speed : 60
       inflows : 700
+  intersections:
+    - id : 1
+      roads :
+        - id : 1
+          rel_flows :
+            - id : 1
+              rate : 1
+            - id : 2
+              rate : 1
+            - id : 3
+              rate : 1
+        - id : 2
+          rel_flows :
+            - id : 1
+              rate : 1
+            - id : 2
+              rate : 1
+            - id : 3
+              rate : 1
+        - id : 3
+          rel_flows :
+            - id : 1
+              rate : 1
+            - id : 2
+              rate : 1
+            - id : 3
+              rate : 1
+        - id : 4
+          rel_flows :
+            - id : 1
+              rate : 1
+            - id : 2
+              rate : 1
+            - id : 3
+              rate : 1

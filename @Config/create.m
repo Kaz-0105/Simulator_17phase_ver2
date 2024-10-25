@@ -254,6 +254,7 @@ function create(obj, property_name)
 
         % 指数移動平均の係数を取得
         scoot.alpha = data.scoot.alpha;
+        scoot.beta = data.scoot.beta;
 
         % SCOOTの設定をcontrollersにプッシュ
         obj.controllers.SCOOT = scoot;
