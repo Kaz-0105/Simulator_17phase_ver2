@@ -209,6 +209,55 @@ function create(obj, property_name)
             RoadsMap(road_data.id) = road;
         end
 
+        % 交差点パラメータを取得
+        intersections_data = data.parameters.intersections;
+
+        % intersections構造体を取得
+        intersections = obj.network.intersections;
+
+        % IntersectionsMapを取得
+        IntersectionsMap = intersections.IntersectionsMap;
+
+        % intersections_dataを走査
+        for intersection_data = intersections_data
+            % セルから取り出し  
+            intersection_data = intersection_data{1};
+
+            % IntersectionsMapからintersection構造体を取得
+            intersection = IntersectionsMap(intersection_data.id);
+
+            % input_roadsを初期化
+            input_roads = [];
+
+            % road構造体を走査
+            for road = intersection.input_roads
+                % road_dataを取得
+                road_data = intersection_data.roads{road.id};
+
+                % rel_flowsを初期化
+                rel_flows = [];
+
+                % rel_flow_dataを走査
+                for rel_flow_data = road_data.rel_flows
+                    % セルから取り出してrel_flowsにプッシュ
+                    rel_flows = [rel_flows, rel_flow_data{1}];
+                end
+
+                % roadにrel_flowsをプッシュ
+                road.rel_flows = rel_flows;
+
+                % roadをinput_roadsにプッシュ
+                input_roads = [input_roads, road];
+            end
+
+            % input_roadsをintersectionにプッシュ
+            intersection.input_roads = input_roads;
+
+            % intersection構造体をIntersectionsMapにプッシュ
+            IntersectionsMap(intersection.id) = intersection;
+        end
+
+
     elseif strcmp(property_name, 'controllers')
         % Controllersクラス用の設定を作成
         obj.controllers = struct();

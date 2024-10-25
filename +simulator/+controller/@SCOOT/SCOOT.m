@@ -61,24 +61,24 @@ classdef SCOOT < utils.class.Common
             obj.cycle_time = scoot.cycle;
 
             % num_phaseを作成
-            obj.make('num_phases');
+            obj.create('num_phases');
 
             % cycle_start_timeの初期化
-            obj.make('cycle_start_time');
+            obj.create('cycle_start_time');
 
             % PhaseSplitMapの初期化
-            obj.make('PhaseSplitStartMap');
+            obj.create('PhaseSplitStartMap');
 
             % current_phase_idの初期化
             obj.current_phase_id = 1;
 
             % PhaseSaturationRateMapの初期化
-            obj.make('PhaseSaturationRateMap');
+            obj.create('PhaseSaturationRateMap');
         end
     end
 
     methods
-        make(obj, property_name);
+        create(obj, property_name);
         update(obj, property_name);
         run(obj);
     end

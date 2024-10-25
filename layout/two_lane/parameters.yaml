@@ -26,32 +26,32 @@ parameters:
         - id : 1
           rel_flows :
             - id : 1
-              rate : 1
+              value : 1
             - id : 2
-              rate : 1
+              value : 1
             - id : 3
-              rate : 1
+              value : 1
         - id : 2
           rel_flows :
             - id : 1
-              rate : 1
+              value : 1
             - id : 2
-              rate : 1
+              value : 1
             - id : 3
-              rate : 1
+              value : 1
         - id : 3
           rel_flows :
             - id : 1
-              rate : 1
+              value : 1
             - id : 2
-              rate : 1
+              value : 1
             - id : 3
-              rate : 1
+              value : 1
         - id : 4
           rel_flows :
             - id : 1
-              rate : 1
+              value : 1
             - id : 2
-              rate : 1
+              value : 1
             - id : 3
-              rate : 1
+              value : 1

@@ -1,4 +1,4 @@
-function make(obj, property_name)
+function create(obj, property_name)
     if  strcmp(property_name, 'num_phases')
         % 道路の数を取得
         num_roads = obj.Roads.count();
