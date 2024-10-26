@@ -13,7 +13,6 @@ mpc :
 
 scoot : 
   ds : 4
-  dc : 4
   cycle : 60
   alpha : 0.7
   beta : 0.1

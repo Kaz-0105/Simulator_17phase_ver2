@@ -11,7 +11,6 @@ classdef Intersection < utils.class.Common
     properties
         id;
         method;
-
         signal_controller;
     end
 
@@ -27,5 +26,6 @@ classdef Intersection < utils.class.Common
 
     methods
         create(obj, property_name);
+        run(obj, phase_id, type);
     end
 end

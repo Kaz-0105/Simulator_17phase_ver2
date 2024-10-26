@@ -296,7 +296,6 @@ function create(obj, property_name)
 
         % スプリットとサイクルの変動幅を取得
         scoot.ds = data.scoot.ds;
-        scoot.dc = data.scoot.dc;
 
         % スタートの周期を取得
         scoot.cycle = data.scoot.cycle;

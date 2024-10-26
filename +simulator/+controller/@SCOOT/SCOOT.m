@@ -18,10 +18,13 @@ classdef SCOOT < utils.class.Common
 
     properties
         skip_flag;
-        objective;
-        cycle_start_time;
+        objectives;
         current_time;
+        current_cycle_start;
         current_phase_id;
+        next_phase_id;
+        next_cycle_start;
+        next_split_start;
     end
 
     properties
@@ -38,7 +41,6 @@ classdef SCOOT < utils.class.Common
             % SCOOTのパラメータを取得
             scoot = obj.Config.get('controllers').SCOOT;
             obj.delta_s = scoot.ds;
-            obj.delta_c = scoot.dc;
             obj.alpha = scoot.alpha;
             obj.beta = scoot.beta;
 
@@ -50,6 +52,9 @@ classdef SCOOT < utils.class.Common
 
             % IntersectionクラスにSCOOTクラスを設定
             obj.Intersection.set('SCOOT', obj);
+
+            % IntersectionクラスにPhaseSignalGroupsMapを作成
+            obj.create('PhaseSignalGroupsMap');
 
             % Roadsクラスを取得
             obj.Roads = obj.Intersection.get('InputRoads');
@@ -66,14 +71,19 @@ classdef SCOOT < utils.class.Common
             % num_phaseを作成
             obj.create('num_phases');
 
-            % cycle_start_timeの初期化
-            obj.create('cycle_start_time');
+            % current_cycle_start、next_cycle_startの初期化
+            obj.create('current_cycle_start');
+            obj.create('next_cycle_start');
 
-            % PhaseSplitMapの初期化
+            % PhaseSplitStartMapの初期化
             obj.create('PhaseSplitStartMap');
 
-            % current_phase_idの初期化
+            % current_phase_idとnext_phase_idの初期化
             obj.current_phase_id = 1;
+            obj.next_phase_id = 2;
+
+            % next_split_startの初期化
+            obj.create('next_split_start');
 
             % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
             obj.create('PhaseSaturationMap');

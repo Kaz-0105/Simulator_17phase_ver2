@@ -11,6 +11,10 @@ function create(obj, property_name)
         else
             error('Not defined number of roads.');
         end
+
+        % delta_cの初期化
+        obj.delta_c = obj.num_phases;
+
     elseif strcmp(property_name, 'PhaseSplitStartMap')
         % PhaseSplitMapの初期化
         obj.PhaseSplitStartMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
@@ -23,26 +27,41 @@ function create(obj, property_name)
         % 道路の数で場合分け
         if obj.num_phases == 3
             % PhaseSplitStartMapの要素を追加
+            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
             obj.PhaseSplitStartMap(2) = obj.current_time + obj.cycle_time / 3;
             obj.PhaseSplitStartMap(3) = obj.current_time + obj.cycle_time / 3 * 2;
-            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
         elseif obj.num_phases == 4
             % PhaseSplitStartMapの要素を追加
+            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
             obj.PhaseSplitStartMap(2) = obj.current_time + obj.cycle_time / 4;
             obj.PhaseSplitStartMap(3) = obj.current_time + obj.cycle_time / 4 * 2;
             obj.PhaseSplitStartMap(4) = obj.current_time + obj.cycle_time / 4 * 3;
-            obj.PhaseSplitStartMap(1) = obj.current_time + obj.cycle_time;
         else
             error('num_phases is invalid.');
         end
-    elseif strcmp(property_name, 'cycle_start_time')
+    elseif strcmp(property_name, 'current_cycle_start')
         % Simulatorクラスからcurrent_timeを取得
         Controllers = obj.Controller.get('Controllers');
         Simulator = Controllers.get('Simulator');
 
         % current_timeを取得
         obj.current_time = Simulator.get('current_time');
-        obj.cycle_start_time = obj.current_time;
+        obj.current_cycle_start = obj.current_time;
+
+    elseif strcmp(property_name, 'next_cycle_start')
+        % next_cycle_startを更新
+        obj.next_cycle_start = obj.current_cycle_start + obj.cycle_time;
+
+    elseif strcmp(property_name, 'next_split_start')
+        % next_phase_idを取得
+        if obj.current_phase_id == obj.num_phases
+            next_phase_id = 1;
+        else
+            next_phase_id = obj.current_phase_id + 1;
+        end
+
+        % next_split_startを更新
+        obj.next_split_start = obj.PhaseSplitStartMap(obj.current_phase_id);
 
     elseif strcmp(property_name, 'PhaseSaturationMap')
         % PhaseSaturationRateMapの初期化
@@ -71,6 +90,61 @@ function create(obj, property_name)
             % フェーズの流出率を初期化
             obj.PhaseOutflowRateMap(phase_id) = 0.125;
         end
+    elseif strcmp(property_name, 'PhaseSignalGroupsMap')
+        % PhaseSignalGroupsMapを初期化
+        PhaseSignalGroupsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+
+        % SignalGroupsMapを取得
+        SignalGroupsMap = obj.Intersection.get('signal_controller').signal_groups.SignalGroupsMap;
+
+        % InputRoadsを取得
+        InputRoads = obj.Intersection.get('InputRoads');
+
+        if InputRoads.count() == 4
+            % PhaseSignalGroupsMapを設定
+            PhaseSignalGroupsMap(1) = [1, 2, 7, 8];
+            PhaseSignalGroupsMap(2) = [3, 9];
+            PhaseSignalGroupsMap(3) = [4, 5, 10, 11];
+            PhaseSignalGroupsMap(4) = [6, 12];
+
+        elseif InputRoads.count() == 3
+            % PhaseSignalGroupsMapを設定
+            obj.PhaseSignalGroupsMap(1) = [1, 2, 5];
+            obj.PhaseSignalGroupsMap(2) = [3, 4];
+            obj.PhaseSignalGroupsMap(3) = 6;
+
+        else
+            error('error: Not defined number of roads.');
+        end
+
+        for phase_id = 1: PhaseSignalGroupsMap.Count()
+            % order_idsを取得
+            order_ids = PhaseSignalGroupsMap(phase_id);
+
+            % tmpSignalGroupsMapを初期化
+            tmpSignalGroupsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+
+            % order_idを走査
+            for order_id = order_ids
+                % signal_groupを走査
+                for signal_group_id = cell2mat(SignalGroupsMap.keys())
+                    % signal_groupを取得
+                    signal_group = SignalGroupsMap(signal_group_id);
+
+                    if signal_group.order_id == order_id
+                        % signal_groupをtmpSignalGroupsMapにプッシュ
+                        tmpSignalGroupsMap(order_id) = signal_group;
+                        break;
+                    end
+                end
+            end
+
+            % tmpSignalGroupsMapをPhaseSignalGroupsMapにプッシュ
+            PhaseSignalGroupsMap(phase_id) = tmpSignalGroupsMap;
+        end
+
+        % IntersectionクラスにPhaseSignalGroupsMapを設定
+        obj.Intersection.set('PhaseSignalGroupsMap', PhaseSignalGroupsMap);
     else
         error('Property name is invalid.');
     end

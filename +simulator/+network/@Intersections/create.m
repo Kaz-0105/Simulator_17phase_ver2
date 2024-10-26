@@ -245,7 +245,7 @@ function create(obj, property_name)
             Intersection = obj.itemByKey(intersection_id);
 
             % MPCの変数のIDを設定
-            Intersection.create('signal_variable_id');
+            Intersection.create('order_id');
         end
         
     else

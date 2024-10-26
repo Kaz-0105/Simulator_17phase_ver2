@@ -3,7 +3,7 @@ function create(obj, property_name)
         % Roadsクラスを作成
         obj.InputRoads = simulator.network.Roads(obj, 'input');
         obj.OutputRoads = simulator.network.Roads(obj, 'output');
-    elseif strcmp(property_name, 'signal_variable_id')
+    elseif strcmp(property_name, 'order_id')
         % SignalGroupsMapを取得
         SignalGroupsMap = obj.signal_controller.signal_groups.SignalGroupsMap;
 
@@ -123,11 +123,11 @@ function create(obj, property_name)
 
                 % 条件を満たすとき
                 if mod(signal_group.from_road_id + count - signal_group.to_road_id, obj.InputRoads.count()) == 0
-                    % signal_variable_idを設定
-                    signal_variable_id = (signal_group.from_road_id -1) * (obj.InputRoads.count() - 1) + count;
+                    % order_idを設定
+                    order_id = (signal_group.from_road_id -1) * (obj.InputRoads.count() - 1) + count;
 
-                    % signal_variable_idをsignal_groupにプッシュ
-                    signal_group.signal_variable_id = signal_variable_id;
+                    % order_idをsignal_groupにプッシュ
+                    signal_group.order_id = order_id;
                     break;
                 end
             end
@@ -138,7 +138,6 @@ function create(obj, property_name)
 
         % SignalGroupsMapをsignal_controllerにプッシュ
         obj.signal_controller.signal_groups.SignalGroupsMap = SignalGroupsMap;
-        
     else
         error('error: Property name is invalid.');
     end
