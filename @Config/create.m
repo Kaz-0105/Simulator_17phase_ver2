@@ -13,13 +13,36 @@ function create(obj, property_name)
         obj.simulator.dt = data.simulator.dt;
 
         % シミュレーション時間を設定
-        obj.simulator.time = data.simulator.time;
+        obj.simulator.total_time = data.simulator.total_time;
 
         % Vissimのシード値を設定
         obj.simulator.seed = data.simulator.seed;
 
         % VissimのシミュレーションのモードをQuickModeにするか設定
         obj.simulator.quick_mode = logical(data.simulator.quick_mode);
+
+        % evaluation構造体を初期化
+        evaluation = struct();
+
+        % データの測定間隔を設定
+        evaluation.dt = data.simulator.evaluation.dt;
+
+        % queue_lengthの測定の有無を設定
+        if strcmp(char(data.simulator.evaluation.queue_length), 'on')
+            evaluation.queue_length = true;
+        else
+            evaluation.queue_length = false;
+        end
+
+        % delay_timeの測定の有無を設定
+        if strcmp(char(data.simulator.evaluation.delay_time), 'on')
+            evaluation.delay_time = true;
+        else
+            evaluation.delay_time = false;
+        end
+
+        % evaluationをsimulatorにプッシュ
+        obj.simulator.evaluation = evaluation;
 
     elseif strcmp(property_name, 'Vissim')
         % VissimのCOMオブジェクトを取得
@@ -40,19 +63,19 @@ function create(obj, property_name)
         obj.Vissim.Evaluation.set('AttValue', 'DataCollCollectData', true);
         obj.Vissim.Evaluation.set('AttValue', 'DataCollInterval', obj.simulator.dt);
         obj.Vissim.Evaluation.set('AttValue', 'DataCollFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'DataCollToTime', obj.simulator.time);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollToTime', obj.simulator.total_time);
 
         % DelayTimeについての設定
-        obj.Vissim.Evaluation.set('AttValue', 'DelaysCollectData', true);
-        obj.Vissim.Evaluation.set('AttValue', 'DelaysInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysCollectData', obj.simulator.evaluation.delay_time);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysInterval', obj.simulator.evaluation.dt);
         obj.Vissim.Evaluation.set('AttValue', 'DelaysFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'DelaysToTime', obj.simulator.time);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysToTime', obj.simulator.total_time);
 
         % QueueLengthについての設定
-        obj.Vissim.Evaluation.set('AttValue', 'QueuesCollectData', true);
-        obj.Vissim.Evaluation.set('AttValue', 'QueuesInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesCollectData', obj.simulator.evaluation.queue_length);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesInterval', obj.simulator.evaluation.dt);
         obj.Vissim.Evaluation.set('AttValue', 'QueuesFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'QueuesToTime', obj.simulator.time);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesToTime', obj.simulator.total_time);
 
     elseif strcmp(property_name, 'network')
         % 構造体を初期化

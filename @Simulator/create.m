@@ -21,15 +21,22 @@ function create(obj, property_name)
 
         % ステップ時間を設定
         obj.dt = simulator.dt;
-    elseif strcmp(property_name, 'time')
+    elseif strcmp(property_name, 'total_time')
         % Simulatorクラス用の設定を取得
         simulator = obj.Config.get('simulator');
 
         % シミュレーション時間を設定
-        obj.time = simulator.time;
+        obj.total_time = simulator.total_time;
 
         % Vissimにシミュレーション時間を設定
-        obj.Vissim.set('AttValue', 'SimPeriod', simulator.time);
+        obj.Vissim.set('AttValue', 'SimPeriod', simulator.total_time);
+    elseif strcmp(property_name, 'eval_interval')
+        % Simulatorクラス用の設定を取得
+        simulator = obj.Config.get('simulator');
+
+        % 評価指標の測定間隔を設定
+        obj.eval_interval = simulator.evaluation.dt;
+        
     else
         error('error: invalid property_name');
     end

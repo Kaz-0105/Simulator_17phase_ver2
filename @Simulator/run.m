@@ -1,10 +1,14 @@
 function run(obj)
     % シミュレーションを実行
-    while (obj.current_time < obj.time)
+    while (obj.current_time < obj.total_time)
         % Networkクラスを更新
         obj.Network.update('current_time');
         obj.Network.update('Vehicles');
-        obj.Network.update('Evaluation');
+
+        % 評価指標の測定（eval_intervalごとに実施）
+        if mod(obj.current_time, obj.eval_interval) == 0
+            obj.Network.update('Evaluation');
+        end
 
         % Controllersクラスを更新
         obj.Controllers.update('current_time');

@@ -11,9 +11,11 @@ classdef Simulator < utils.class.Common
 
     properties
         dt;
-        time;
+        total_time;
         seed;
 
+        eval_interval;
+        
         running_flag;
 
         break_point;
@@ -30,7 +32,10 @@ classdef Simulator < utils.class.Common
 
             % ステップ時間とシミュレーション時間を設定
             obj.create('dt');
-            obj.create('time');
+            obj.create('total_time');
+
+            % 評価指標の測定間隔を設定
+            obj.create('eval_interval');
 
             % シミュレーションが動いているかどうかのフラグ
             obj.running_flag = false;
