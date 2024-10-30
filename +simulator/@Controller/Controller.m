@@ -8,6 +8,7 @@ classdef Controller < utils.class.Common
 
     properties
         id;
+        current_time;
     end
 
     methods 
@@ -20,6 +21,9 @@ classdef Controller < utils.class.Common
 
             % idを設定
             obj.id = Controllers.count() + 1;
+
+            % current_timeの初期化
+            obj.create('current_time');
         end
     end
 

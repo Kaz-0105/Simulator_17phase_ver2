@@ -169,8 +169,21 @@ function create(obj, property_name, type)
                 end
             end
 
-            % Roadクラスにqueue_countersをセット
-            Road.set('queue_counters', queue_counters);
+            % queue_countersが空でないとき
+            if ~isempty(fieldnames(queue_counters))
+                % Roadクラスにqueue_countersをセット
+                Road.set('queue_counters', queue_counters);
+
+                % queue_tableを初期化
+                names = {'time', 'average', 'max'};
+                types = {'double', 'double', 'double'};
+                size = [0, 3];
+                queue_table = table('Size', size, 'VariableTypes', types, 'VariableNames', names);
+
+
+                % Roadクラスにqueue_tableをセット
+                Road.set('queue_table', queue_table);
+            end
         end
 
     elseif strcmp(property_name, 'Intersections')

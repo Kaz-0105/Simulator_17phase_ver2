@@ -1,13 +1,5 @@
 function update(obj, property_name , varargin)
-    if strcmp(property_name, 'current_time')
-        % Simulatorクラスを取得
-        Controllers = obj.Controller.get('Controllers');
-        Simulator = Controllers.get('Simulator');
-
-        % current_timeを取得
-        obj.current_time = Simulator.get('current_time');
-
-    elseif strcmp(property_name, 'skip_flag')
+    if strcmp(property_name, 'skip_flag')
         obj.skip_flag = true;
         obj.objectives = [];
 

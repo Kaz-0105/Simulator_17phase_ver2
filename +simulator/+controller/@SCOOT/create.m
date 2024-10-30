@@ -40,14 +40,6 @@ function create(obj, property_name)
             error('num_phases is invalid.');
         end
         
-    elseif strcmp(property_name, 'current_time')
-        % Simulatorクラスからcurrent_timeを取得
-        Controllers = obj.Controller.get('Controllers');
-        Simulator = Controllers.get('Simulator');
-
-        % current_timeを取得
-        obj.current_time = Simulator.get('current_time');
-
     elseif strcmp(property_name, 'PhaseSaturationMap')
         % PhaseSaturationRateMapの初期化
         obj.PhaseSaturationMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');

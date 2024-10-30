@@ -12,6 +12,8 @@ classdef Intersection < utils.class.Common
         id;
         method;
         signal_controller;
+
+        current_time;
     end
 
     methods
@@ -21,6 +23,9 @@ classdef Intersection < utils.class.Common
 
             % Intersectionsクラスを設定
             obj.Intersections = Intersections;
+
+            % current_timeの初期化
+            obj.create('current_time');
         end
     end
 

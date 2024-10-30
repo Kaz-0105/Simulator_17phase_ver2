@@ -1,8 +1,16 @@
 function create(obj, property_name)
-    if strcmp(property_name, 'Roads')
+    if strcmp(property_name, 'current_time')
+        % Networkクラスを取得
+        Network = obj.Intersections.get('Network');
+
+        % current_timeを取得
+        obj.current_time = Network.get('current_time');
+
+    elseif strcmp(property_name, 'Roads')
         % Roadsクラスを作成
         obj.InputRoads = simulator.network.Roads(obj, 'input');
         obj.OutputRoads = simulator.network.Roads(obj, 'output');
+
     elseif strcmp(property_name, 'order_id')
         % SignalGroupsMapを取得
         SignalGroupsMap = obj.signal_controller.signal_groups.SignalGroupsMap;

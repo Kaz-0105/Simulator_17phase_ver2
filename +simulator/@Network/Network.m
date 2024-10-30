@@ -11,6 +11,10 @@ classdef Network < utils.class.Common
         Vissim;
     end
 
+    properties
+        current_time;
+    end
+
     methods
         function obj = Network(Simulator)
             % Configクラスを設定
@@ -31,6 +35,9 @@ classdef Network < utils.class.Common
             % IntersectionクラスとRoadクラスの接続関係を定義
             obj.update('Intersections');
             obj.update('Roads');
+
+            % current_timeの初期化
+            obj.current_time = obj.Simulator.get('current_time');
         end
     end
 

@@ -1,8 +1,5 @@
 function run(obj)
     if isprop(obj, 'MPC')
-        % current_timeの更新
-        obj.MPC.update('current_time');
-
         % skip_flagの更新
         obj.MPC.update('skip_flag');
         
@@ -14,9 +11,6 @@ function run(obj)
         end
 
     elseif isprop(obj, 'Fix')
-        % current_timeの更新
-        obj.Fix.update('current_time');
-
         % skip_flagの更新
         obj.Fix.update('skip_flag');
 
@@ -28,9 +22,6 @@ function run(obj)
         end
 
     elseif isprop(obj, 'SCOOT')
-        % current_timeの更新
-        obj.SCOOT.update('current_time');
-        
         % skip_flagの更新
         obj.SCOOT.update('skip_flag');
 

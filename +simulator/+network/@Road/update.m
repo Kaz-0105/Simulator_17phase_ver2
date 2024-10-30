@@ -1,5 +1,12 @@
 function update(obj, property_name)
-    if strcmp(property_name, 'Vehicles')
+    if strcmp(property_name, 'current_time')
+        % Networkクラスを取得
+        Network = obj.Roads.get('Network');
+
+        % current_timeを更新
+        obj.current_time = Network.get('current_time');
+
+    elseif strcmp(property_name, 'Vehicles')
         if isprop(obj, 'InputIntersection')
             if isprop(obj.InputIntersection, 'MPC')
                 controller = 'MPC';
@@ -369,9 +376,70 @@ function update(obj, property_name)
 
             % former_phase_idを更新
             obj.former_phase_id = current_phase_id;
+
         else
-            error('error: Property name is invalid.');
+            error('Method is invalid.');
         end
+    elseif strcmp(property_name, 'Evaluation')
+        % queue_tableが存在するとき
+        if isprop(obj, 'queue_table')
+            % queue_tableの更新
+            obj.update('queue_table');
+        end
+
+    elseif strcmp(property_name, 'queue_table')
+        % メインリンクのQueueCounterのComオブジェクトを取得
+        QueueCounter = obj.queue_counters.main.Vissim;
+
+        % queue_lengthを取得
+        queue_length = QueueCounter.get('AttValue', 'QLen(Current, Last)');
+
+        % NaNの場合は0に変換
+        if isnan(queue_length)
+            queue_length = 0;
+        end
+
+        % average_queue_lengthとmax_queue_lengthを初期化
+        average_queue_length = queue_length;
+        max_queue_length = queue_length;
+
+        % 分岐車線があるとき
+        if isfield(obj.queue_counters, 'branch')
+            % 分岐の数を初期化
+            num_branch = 0;
+
+            for direction = ["left", "right"]
+                % char型に変換
+                direction = char(direction);
+
+                % direcitionに対応する分岐が存在する場合
+                if isfield(obj.queue_counters.branch, direction)
+                    % branch構造体を取得
+                    branch = obj.queue_counters.branch.(direction);
+
+                    % QueueCounterのComオブジェクトを取得
+                    QueueCounter = branch.Vissim;
+
+                    % queue_lengthを取得
+                    queue_length = QueueCounter.get('AttValue', 'QLen(Current, Last)');
+
+                    % NaNの場合は0に変換
+                    if isnan(queue_length)
+                        queue_length = 0;
+                    end
+
+                    % num_branchを更新
+                    num_branch = num_branch + 1;
+
+                    % average_queue_lengthとmax_queue_lengthを更新
+                    average_queue_length = average_queue_length + 1/(1 + num_branch) * (queue_length - average_queue_length);
+                    max_queue_length = max(max_queue_length, queue_length);
+                end
+            end
+        end
+
+        % queue_tableにプッシュ
+        obj.queue_table(end + 1, :) = {obj.current_time, average_queue_length, max_queue_length};
     else
         error('error: Property name is invalid.');
     end

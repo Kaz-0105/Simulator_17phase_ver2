@@ -2,9 +2,12 @@ function run(obj)
     % シミュレーションを実行
     while (obj.current_time < obj.time)
         % Networkクラスを更新
+        obj.Network.update('current_time');
         obj.Network.update('Vehicles');
+        obj.Network.update('Evaluation');
 
         % Controllersクラスを更新
+        obj.Controllers.update('current_time');
         obj.Controllers.run();
 
         % break_pointを更新

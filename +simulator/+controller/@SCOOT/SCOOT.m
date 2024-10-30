@@ -76,7 +76,7 @@ classdef SCOOT < utils.class.Common
             obj.create('num_phases');
 
             % current_timeの初期化
-            obj.create('current_time');
+            obj.current_time = obj.Controller.get('current_time');
 
             % current_phase_idとnext_phase_idの初期化
             obj.current_phase_id = 1;

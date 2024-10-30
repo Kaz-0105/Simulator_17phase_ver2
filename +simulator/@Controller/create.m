@@ -1,5 +1,12 @@
 function create(obj, property_name)
-    if strcmp(property_name, 'MPC')
+    if strcmp(property_name, 'current_time')
+        % Simulatorクラスを取得
+        Simulator = obj.Controllers.get('Simulator');
+
+        % current_timeを取得
+        obj.current_time = Simulator.get('current_time');
+        
+    elseif strcmp(property_name, 'MPC')
         % プロパティとしてMPCを追加
         prop = addprop(obj, 'MPC');
         prop.SetAccess = 'public';
