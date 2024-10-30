@@ -392,7 +392,7 @@ function update(obj, property_name)
         QueueCounter = obj.queue_counters.main.Vissim;
 
         % queue_lengthを取得
-        queue_length = QueueCounter.get('AttValue', 'QLen(Current, Last)');
+        queue_length = round(QueueCounter.get('AttValue', 'QLen(Current, Last)'), 1);
 
         % NaNの場合は0に変換
         if isnan(queue_length)
@@ -414,6 +414,9 @@ function update(obj, property_name)
 
                 % direcitionに対応する分岐が存在する場合
                 if isfield(obj.queue_counters.branch, direction)
+                    % メインリンクの車線数を取得
+                    main_num_lanes = obj.links.main.lanes;
+
                     % branch構造体を取得
                     branch = obj.queue_counters.branch.(direction);
 
@@ -421,7 +424,7 @@ function update(obj, property_name)
                     QueueCounter = branch.Vissim;
 
                     % queue_lengthを取得
-                    queue_length = QueueCounter.get('AttValue', 'QLen(Current, Last)');
+                    queue_length = round(QueueCounter.get('AttValue', 'QLen(Current, Last)'), 1);
 
                     % NaNの場合は0に変換
                     if isnan(queue_length)
@@ -432,7 +435,7 @@ function update(obj, property_name)
                     num_branch = num_branch + 1;
 
                     % average_queue_lengthとmax_queue_lengthを更新
-                    average_queue_length = average_queue_length + 1/(1 + num_branch) * (queue_length - average_queue_length);
+                    average_queue_length = average_queue_length + 1/(main_num_lanes + num_branch) * (queue_length - average_queue_length);
                     max_queue_length = max(max_queue_length, queue_length);
                 end
             end

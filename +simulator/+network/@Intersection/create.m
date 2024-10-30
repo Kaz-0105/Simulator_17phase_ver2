@@ -12,6 +12,19 @@ function create(obj, property_name)
         % record_flagsを取得
         obj.record_flags = Network.get('record_flags');
 
+    elseif strcmp(property_name, 'queue_table')
+        % record_flagがtrueのとき
+        if obj.record_flags.queue_length
+            % queue_tableを初期化
+            names = {'time', 'average', 'max'};
+            types = {'double', 'double', 'double'};
+            size = [0, 3];
+            queue_table = table('Size', size, 'VariableNames', names, 'VariableTypes', types);
+
+            % queue_tableを設定
+            obj.set('queue_table', queue_table);
+        end
+        
     elseif strcmp(property_name, 'Roads')
         % Roadsクラスを作成
         obj.InputRoads = simulator.network.Roads(obj, 'input');
