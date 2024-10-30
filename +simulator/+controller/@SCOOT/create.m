@@ -39,29 +39,14 @@ function create(obj, property_name)
         else
             error('num_phases is invalid.');
         end
-    elseif strcmp(property_name, 'current_cycle_start')
+        
+    elseif strcmp(property_name, 'current_time')
         % Simulatorクラスからcurrent_timeを取得
         Controllers = obj.Controller.get('Controllers');
         Simulator = Controllers.get('Simulator');
 
         % current_timeを取得
         obj.current_time = Simulator.get('current_time');
-        obj.current_cycle_start = obj.current_time;
-
-    elseif strcmp(property_name, 'next_cycle_start')
-        % next_cycle_startを更新
-        obj.next_cycle_start = obj.current_cycle_start + obj.cycle_time;
-
-    elseif strcmp(property_name, 'next_split_start')
-        % next_phase_idを取得
-        if obj.current_phase_id == obj.num_phases
-            next_phase_id = 1;
-        else
-            next_phase_id = obj.current_phase_id + 1;
-        end
-
-        % next_split_startを更新
-        obj.next_split_start = obj.PhaseSplitStartMap(obj.current_phase_id);
 
     elseif strcmp(property_name, 'PhaseSaturationMap')
         % PhaseSaturationRateMapの初期化

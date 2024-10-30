@@ -30,7 +30,7 @@ parameters:
             - id : 2
               value : 1
             - id : 3
-              value : 1
+              value : 3
         - id : 2
           rel_flows :
             - id : 1
@@ -38,7 +38,7 @@ parameters:
             - id : 2
               value : 1
             - id : 3
-              value : 1
+              value : 3
         - id : 3
           rel_flows :
             - id : 1
@@ -46,7 +46,7 @@ parameters:
             - id : 2
               value : 1
             - id : 3
-              value : 1
+              value : 3
         - id : 4
           rel_flows :
             - id : 1
@@ -54,4 +54,4 @@ parameters:
             - id : 2
               value : 1
             - id : 3
-              value : 1
+              value : 3

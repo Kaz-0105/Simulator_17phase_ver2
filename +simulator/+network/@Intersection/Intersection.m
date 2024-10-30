@@ -26,6 +26,7 @@ classdef Intersection < utils.class.Common
 
     methods
         create(obj, property_name);
+        update(obj, property_name);
         run(obj, phase_id, type);
     end
 end

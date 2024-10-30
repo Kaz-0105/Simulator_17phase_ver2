@@ -13,25 +13,42 @@ function run(obj)
             obj.update('PhaseSaturationMap');
 
             % 次のフェーズへの移行時間の更新
-            obj.update('next_split_start');
+            obj.update('next_split_start', objective);
 
         elseif strcmp(objective, 'cycle')
             % サイクル時間の更新
             obj.update('cycle_time');
 
+            % 飽和率をプリント
+            obj.PhaseSaturationMap.values
+
         elseif strcmp(objective, 'split_change')
+            % current_split_startを更新
+            obj.update('current_split_start');
+
             % Intersectionクラスから信号を変更する
-            obj.Intersection.run(obj.current_phase_id, 'red');
             obj.Intersection.run(obj.next_phase_id, 'green');
 
             % current_phase_idとnext_phase_idを更新
             obj.update('current_phase_id');
             obj.update('next_phase_id');
 
-            % PhaseSplitStartMapの更新
-            obj.PhaseSplitStartMap(obj.current_phase_id) = obj.PhaseSplitStartMap(obj.current_phase_id) + obj.cycle_time;
+            % next_split_startを更新
+            obj.update('next_split_start', objective);
 
         elseif strcmp(objective, 'cycle_change')
+            % current_cycle_timeとnext_cycle_startを更新
+            obj.update('current_cycle_start');
+            obj.update('next_cycle_start');
+
+        elseif strcmp(objective, 'yellow')
+            % Intersectionクラスから信号を変更する
+            obj.Intersection.run(obj.current_phase_id, 'yellow');
+
+        elseif strcmp(objective, 'red')
+            % Intersectionクラスから信号を変更する
+            obj.Intersection.run(obj.current_phase_id, 'red');
+            
         else
             error('Objective is invalid.');
         end

@@ -6,8 +6,11 @@ function create(obj, property_name)
         % SimulatorのCOMオブジェクトを設定
         obj.Vissim = Vissim.Simulation;
 
+        % Simulatorクラス用の設定を取得
+        simulator = obj.Config.get('simulator');
+
         % シード値を設定
-        obj.seed = 1;
+        obj.seed = simulator.seed;
 
         % Vissimにシード値を設定
         obj.Vissim.set('AttValue', 'RandSeed', obj.seed);

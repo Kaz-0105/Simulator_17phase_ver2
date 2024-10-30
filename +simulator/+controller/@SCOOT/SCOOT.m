@@ -19,12 +19,16 @@ classdef SCOOT < utils.class.Common
     properties
         skip_flag;
         objectives;
+
         current_time;
-        current_cycle_start;
+
         current_phase_id;
+        current_split_start;
+        current_cycle_start;
+        
         next_phase_id;
-        next_cycle_start;
         next_split_start;
+        next_cycle_start;
     end
 
     properties
@@ -71,19 +75,23 @@ classdef SCOOT < utils.class.Common
             % num_phaseを作成
             obj.create('num_phases');
 
-            % current_cycle_start、next_cycle_startの初期化
-            obj.create('current_cycle_start');
-            obj.create('next_cycle_start');
-
-            % PhaseSplitStartMapの初期化
-            obj.create('PhaseSplitStartMap');
+            % current_timeの初期化
+            obj.create('current_time');
 
             % current_phase_idとnext_phase_idの初期化
             obj.current_phase_id = 1;
             obj.next_phase_id = 2;
 
-            % next_split_startの初期化
-            obj.create('next_split_start');
+            % current_cycle_start、next_cycle_startの初期化
+            obj.current_cycle_start = obj.current_time;
+            obj.next_cycle_start = obj.current_time + obj.cycle_time;
+
+            % PhaseSplitStartMapの初期化
+            obj.create('PhaseSplitStartMap');
+
+            % current_split_start, next_split_startの初期化
+            obj.current_split_start = obj.current_time;
+            obj.next_split_start = obj.PhaseSplitStartMap(obj.next_phase_id);
 
             % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
             obj.create('PhaseSaturationMap');
@@ -94,7 +102,7 @@ classdef SCOOT < utils.class.Common
 
     methods
         create(obj, property_name);
-        update(obj, property_name);
+        update(obj, property_name, varargin);
         run(obj);
     end
 end
