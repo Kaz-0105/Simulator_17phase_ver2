@@ -12,6 +12,7 @@ classdef Network < utils.class.Common
     end
 
     properties
+        record_flags;
         current_time;
     end
 
@@ -25,6 +26,9 @@ classdef Network < utils.class.Common
 
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % 評価指標の測定の有無のフラグを設定
+            obj.create('record_flags');
 
             % Intersectionsクラスを作成
             obj.Intersections = simulator.network.Intersections(obj);

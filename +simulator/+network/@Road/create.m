@@ -5,6 +5,13 @@ function create(obj, property_name)
 
         % current_timeを取得
         obj.current_time = Network.get('current_time');
+
+    elseif strcmp(property_name, 'record_flags')
+        % Networkクラスを取得
+        Network = obj.Roads.get('Network');
+
+        % record_flagsを取得
+        obj.record_flags = Network.get('record_flags');
         
     elseif strcmp(property_name, 'Intersections')
         % Intersectionsクラスを取得

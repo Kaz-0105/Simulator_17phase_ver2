@@ -10,6 +10,7 @@ classdef Road < utils.class.Common
         speed;
 
         current_time;
+        record_flags;
     end
 
     methods
@@ -22,6 +23,9 @@ classdef Road < utils.class.Common
 
             % current_timeの初期化
             obj.create('current_time');
+
+            % record_flagsを作成
+            obj.create('record_flags');
         end
     end
 

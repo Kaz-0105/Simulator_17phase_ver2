@@ -14,6 +14,7 @@ classdef Intersection < utils.class.Common
         signal_controller;
 
         current_time;
+        record_flags;
     end
 
     methods
@@ -26,6 +27,9 @@ classdef Intersection < utils.class.Common
 
             % current_timeの初期化
             obj.create('current_time');
+
+            % record_flagsを作成
+            obj.create('record_flags');
         end
     end
 
