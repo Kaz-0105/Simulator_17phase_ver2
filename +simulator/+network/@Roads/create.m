@@ -86,6 +86,92 @@ function create(obj, property_name, type)
             % RoadクラスにVissimのSignalHeadオブジェクトをセット
             Road.create('SignalHead');
         end
+    elseif strcmp(property_name, 'QueueCounters')
+        % LinkQueueCounterMapの初期化
+        LinkQueueCounterMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+
+        % NetwrokクラスのComオブジェクトを取得
+        Net = obj.Network.get('Vissim');
+
+        % QueueCountersのComオブジェクトを取得
+        QueueCounters = Net.QueueCounters;
+
+        % QueueCounterの走査
+        for QueueCounter = QueueCounters.GetAll()'
+            % セルから取り出し
+            QueueCounter = QueueCounter{1};
+
+            % queue_counter構造体を取得
+            queue_counter = struct();
+            queue_counter.id = QueueCounter.get('AttValue', 'No');
+            queue_counter.Vissim = QueueCounter;
+
+            % LinkのComオブジェクトを取得
+            Link = QueueCounter.Link;
+
+            % LinkのIDを取得
+            link_id = Link.get('AttValue', 'No');
+
+            % LinkQueueCounterMapにプッシュ
+            LinkQueueCounterMap(link_id) = queue_counter;
+        end
+
+        % QueueCounterが存在するリンク群を取得
+        target_link_ids = cell2mat(LinkQueueCounterMap.keys());
+
+        % Roadクラスを走査
+        for road_id = obj.getKeys()
+            % Roadクラスを取得
+            Road = obj.itemByKey(road_id);
+
+            % links構造体を取得
+            links = Road.get('links');
+
+            % queue_counters構造体の初期化
+            queue_counters = struct();
+
+            % メインリンクのIDを取得
+            main_link_id = links.main.id;
+
+            % main_link_idがtarget_link_idsに含まれているとき
+            if ismember(main_link_id, target_link_ids)
+                % queue_counter構造体を取得
+                queue_counter = LinkQueueCounterMap(main_link_id);
+
+                % queue_countersにプッシュ
+                queue_counters.main = queue_counter;
+            end
+
+            % 分岐が存在するとき
+            if isfield(links, 'branch')
+                % branchの方向を走査
+                for direction = ["left", "right"]
+                    % char型に変換
+                    direction = char(direction);
+
+                    % その方向の分岐があるとき
+                    if isfield(links.branch, direction)
+                        % branch構造体を取得
+                        branch = links.branch.(direction);
+
+                        % サブリンクのIDを取得
+                        sub_link_id = branch.link.id;
+
+                        % sub_link_idがtarget_link_idsに含まれているとき
+                        if ismember(sub_link_id, target_link_ids)
+                            % queue_counter構造体を取得
+                            queue_counter = LinkQueueCounterMap(sub_link_id);
+
+                            % queue_countersにプッシュ
+                            queue_counters.branch.(direction) = queue_counter;
+                        end
+                    end
+                end
+            end
+
+            % Roadクラスにqueue_countersをセット
+            Road.set('queue_counters', queue_counters);
+        end
 
     elseif strcmp(property_name, 'Intersections')
         % Roadクラスを走査
