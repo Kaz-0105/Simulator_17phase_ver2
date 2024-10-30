@@ -442,7 +442,7 @@ function update(obj, property_name)
         end
 
         % queue_tableにプッシュ
-        obj.queue_table(end + 1, :) = {obj.current_time, average_queue_length, max_queue_length};
+        obj.queue_table(end + 1, :) = {obj.current_time, round(average_queue_length, 1), round(max_queue_length, 1)};
     else
         error('error: Property name is invalid.');
     end
