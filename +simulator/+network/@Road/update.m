@@ -387,6 +387,12 @@ function update(obj, property_name)
             obj.update('queue_table');
         end
 
+        % delay_tableが存在するとき
+        if isprop(obj, 'delay_table')
+            % delay_tableの更新
+            obj.update('delay_table');
+        end
+
     elseif strcmp(property_name, 'queue_table')
         % メインリンクのQueueCounterのComオブジェクトを取得
         QueueCounter = obj.queue_counters.main.Vissim;
@@ -443,6 +449,20 @@ function update(obj, property_name)
 
         % queue_tableにプッシュ
         obj.queue_table(end + 1, :) = {obj.current_time, round(average_queue_length, 1), round(max_queue_length, 1)};
+    elseif strcmp(property_name, 'delay_table')
+        % delay_measurementを走査
+        for delay_measurement = obj.delay_measurement
+            % DelayMeasurementのComオブジェクトを取得
+            DelayMeasurement = delay_measurement.Vissim;
+
+            % delay_timeを取得
+            delay_time = round(DelayMeasurement.get('AttValue', 'VehDelay(Current, Last, All)'), 1);
+
+            % NaNの場合は0に変換
+            if isnan(delay_time)
+                delay_time = 0;
+            end
+        end
     else
         error('error: Property name is invalid.');
     end

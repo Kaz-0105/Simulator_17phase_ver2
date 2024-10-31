@@ -6,8 +6,8 @@ simulator :
   quick_mode : 0
   evaluation :
     dt : 10
-    queue_length : "on"
-    delay_time : "off"
+    queue_length : "off"
+    delay_time : "on"
 
 mpc :
   dt : 2

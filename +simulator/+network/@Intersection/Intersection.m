@@ -33,6 +33,9 @@ classdef Intersection < utils.class.Common
 
             % queue_tableを作成
             obj.create('queue_table');
+
+            % delay_tableを作成
+            obj.create('delay_table');
         end
     end
 
