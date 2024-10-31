@@ -18,6 +18,16 @@ function update(obj, property_name)
             % 信号の入力の決定権をMatlabに移す
             Intersection.update('SignalGroup');
         end
+    elseif strcmp(property_name, 'Evaluation')
+        % Intersectionクラスを走査
+        for intersection_id = obj.getKeys()
+            % Intersectionクラスを取得
+            Intersection = obj.itemByKey(intersection_id);
+
+            % Intersectionクラスの評価指標の測定
+            Intersection.update('Evaluation');
+        end
+        
     else
         error('Property name is invalid.');
     end

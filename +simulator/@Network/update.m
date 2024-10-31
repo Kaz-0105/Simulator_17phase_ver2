@@ -15,7 +15,7 @@ function update(obj, property_name)
         obj.Roads.update('Evaluation');
 
         % Intersectionクラスの評価指標の測定
-        % obj.Intersections.update('Evaluation');
+        obj.Intersections.update('Evaluation');
     elseif strcmp(property_name, 'current_time')
         % current_timeの更新
         obj.current_time = obj.Simulator.get('current_time');
