@@ -37,8 +37,7 @@ classdef Network < utils.class.Common
             obj.Roads = simulator.network.Roads(obj);
 
             % IntersectionクラスとRoadクラスの接続関係を定義
-            obj.update('Intersections');
-            obj.update('Roads');
+            obj.create('Connections');
 
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');
