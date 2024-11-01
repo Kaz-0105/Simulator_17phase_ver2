@@ -450,8 +450,15 @@ function update(obj, property_name)
         % queue_tableにプッシュ
         obj.queue_table(end + 1, :) = {obj.current_time, round(average_queue_length, 1), round(max_queue_length, 1)};
     elseif strcmp(property_name, 'delay_table')
+        % RouteAverageDelayMapとRouteNumMeasurementsMapを初期化
+        RouteAverageDelayMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+        RouteNumMeasurementsMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+
         % delay_measurementを走査
-        for delay_measurement = obj.delay_measurement
+        for delay_measurement = obj.delay_measurements
+            % route_idを取得
+            route_id = delay_measurement.route_id;
+
             % DelayMeasurementのComオブジェクトを取得
             DelayMeasurement = delay_measurement.Vissim;
 
@@ -462,7 +469,45 @@ function update(obj, property_name)
             if isnan(delay_time)
                 delay_time = 0;
             end
+
+            % 最初の測定ではないかつdelay_timeが0の場合
+            if height(obj.delay_table) ~= 0 && delay_time == 0
+                % colume_nameを作成
+                column_name = sprintf('route_%d', route_id);
+
+                % 前の値を取得
+                delay_time = obj.delay_table{end, column_name};
+            end
+
+            % RouteNumMeasurementsMapにプッシュ
+            if isKey(RouteNumMeasurementsMap, route_id)
+                RouteNumMeasurementsMap(route_id) = RouteNumMeasurementsMap(route_id) + 1;
+            else
+                RouteNumMeasurementsMap(route_id) = 1;
+            end
+
+            % RouteAverageDelayMapにプッシュ
+            if isKey(RouteAverageDelayMap, route_id)
+                RouteAverageDelayMap(route_id) = round(RouteAverageDelayMap(route_id) + 1/RouteNumMeasurementsMap(route_id) * (delay_time - RouteAverageDelayMap(route_id)), 1);
+            else
+                RouteAverageDelayMap(route_id) = delay_time;
+            end
         end
+
+        % new_recordを初期化
+        new_record = {obj.current_time};
+
+        % route_idsを作成
+        route_ids = sort(cell2mat(RouteAverageDelayMap.keys), 'ascend');
+
+        % RouteAverageDelayMapを走査
+        for route_id = route_ids
+            % new_recordにプッシュ
+            new_record{end + 1} = RouteAverageDelayMap(route_id);
+        end
+
+        % delay_tableにプッシュ
+        obj.delay_table(end + 1, :) = new_record;
     else
         error('error: Property name is invalid.');
     end

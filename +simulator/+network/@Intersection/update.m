@@ -22,6 +22,12 @@ function update(obj, property_name)
             obj.update('queue_table');
         end
 
+        % delay_tableが存在するとき
+        if isprop(obj, 'delay_table')
+            % delay_tableの更新
+            obj.update('delay_table');
+        end
+
     elseif strcmp(property_name, 'queue_table')
         % average_queue_lengthとmax_queue_lengthを初期化
         average_queue_length = 0;
@@ -54,6 +60,40 @@ function update(obj, property_name)
         % queue_tableを更新
         obj.queue_table(end + 1, :) = {obj.current_time, average_queue_length, max_queue_length};
 
+    elseif strcmp(property_name, 'delay_table')
+        % average_delayとmax_delayを初期化
+        average_delay = 0;
+        max_delay = 0;
+
+        % counterを初期化
+        counter = 0;
+
+        % Roadクラスを走査
+        for road_id = 1 : obj.InputRoads.count()
+            % Roadクラスを取得
+            Road = obj.InputRoads.itemByKey(road_id);
+
+            % delay_tableを取得
+            delay_table = Road.get('delay_table');
+
+            % 最後のレコードを取得
+            delay_record = delay_table(end, :);
+
+            % average_delayを更新
+            for route_id = 1: width(delay_record) - 1
+                % counterをインクリメント
+                counter = counter + 1;
+
+                % average_delayを更新
+                average_delay = average_delay + (delay_record{1, 1 + route_id} - average_delay) / counter;
+
+                % max_delayを更新
+                max_delay = max(max_delay, delay_record{1, 1 + route_id});
+            end
+        end
+
+        % delay_tableを更新
+        obj.delay_table(end + 1, :) = {obj.current_time, average_delay, max_delay};
     else
         error('Property name is invalid.');
     end

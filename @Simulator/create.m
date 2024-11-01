@@ -36,7 +36,9 @@ function create(obj, property_name)
 
         % 評価指標の測定間隔を設定
         obj.eval_interval = simulator.evaluation.dt;
-        
+
+    elseif strcmp(property_name, 'graph')
+        % あとで実装      
     else
         error('error: invalid property_name');
     end

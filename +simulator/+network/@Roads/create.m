@@ -303,7 +303,7 @@ function create(obj, property_name, type)
 
                 % input_road_idとstart_road_idが一致したとき
                 if input_road_id == start_road_id
-                    input_road_order_id = road_order_id;
+                    input_road_order_id = int64(road_order_id);
                     break;
                 end
             end
@@ -318,7 +318,7 @@ function create(obj, property_name, type)
 
                 % output_road_idとto_road_idが一致したとき
                 if output_road_id == to_road_id
-                    output_road_order_id = road_order_id;
+                    output_road_order_id = int64(road_order_id);
                     break;
                 end
             end
@@ -376,10 +376,32 @@ function create(obj, property_name, type)
 
                 % record_flagがtrueのとき
                 if Road.get('record_flags').delay_time
+                    % Intersectionクラスを取得
+                    Intersection = Road.get('OutputIntersection');
+
+                    % InputRoadsクラスを取得
+                    InputRoads = Intersection.get('InputRoads');
+
+                    % num_roadsを取得
+                    num_roads = InputRoads.count();
+
+                    % names, types, sizeを初期化
+                    names = {'time'};
+                    types = {'double'};
+                    size = [0, 1];
+
+                    % route_idを走査
+                    for route_id = 1: (num_roads-1)
+                        % 新しいコラム名を作成
+                        name = sprintf('route_%d', route_id);
+
+                        % names, types, sizeに追加
+                        names{1, end+1} = name;
+                        types{1, end+1} = 'double';
+                        size(2) = size(2) + 1;
+                    end
+
                     % delay_tableを初期化
-                    names = {'time', 'average', 'max'};
-                    types = {'double', 'double', 'double'};
-                    size = [0, 3];
                     delay_table = table('Size', size, 'VariableTypes', types, 'VariableNames', names);
 
                     % Roadクラスにdelay_tableをセット

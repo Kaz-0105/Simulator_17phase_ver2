@@ -4,7 +4,7 @@ classdef Container < utils.class.Common
         end
 
         function num_elements = count(obj)
-            num_elements = obj.Elements.Count;
+            num_elements = int64(obj.Elements.Count);
         end
 
         function element = itemByKey(obj, key)

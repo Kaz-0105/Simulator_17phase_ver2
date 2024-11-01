@@ -28,4 +28,10 @@ function run(obj)
         % 現在の時間を更新
         obj.current_time = obj.break_point;
     end
+
+    % グラフの描画
+    obj.create('graph');
+
+    % 結果の保存
+    obj.save();
 end
