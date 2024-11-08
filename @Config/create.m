@@ -44,6 +44,28 @@ function create(obj, property_name)
         % evaluationをsimulatorにプッシュ
         obj.simulator.evaluation = evaluation;
 
+        % save構造体を初期化
+        save = struct();
+
+        % folder名が空かどうかで場合分け
+        if isempty(data.simulator.save.folder)
+            % 空の場合はsimulator.folderの名前と一致させる
+            save.folder = obj.simulator.folder;
+        else
+            % 空でない場合は設定ファイルの名前を使用
+            save.folder = char(data.simulator.save.folder);
+        end
+
+        % performance_indicatorsの保存の有無を設定
+        if strcmp(char(data.simulator.save.performance_indicators), 'on')
+            save.performance_indicators = true;
+        else
+            save.performance_indicators = false;
+        end
+        
+        % saveをsimulatorにプッシュ
+        obj.simulator.save = save;
+
     elseif strcmp(property_name, 'Vissim')
         % VissimのCOMオブジェクトを取得
         obj.Vissim = actxserver('VISSIM.Vissim');

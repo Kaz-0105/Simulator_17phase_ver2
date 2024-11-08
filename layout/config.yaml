@@ -1,5 +1,5 @@
 simulator : 
-  folder : "two_lane"
+  folder : "one_lane"
   dt : 1 
   total_time : 1000
   seed : 1
@@ -8,6 +8,10 @@ simulator :
     dt : 10
     queue_length : "off"
     delay_time : "on"
+    calc_time : "off"
+  save : 
+    performance_indicators: "on"
+    
 
 mpc :
   dt : 2
