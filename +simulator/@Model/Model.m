@@ -1,21 +1,37 @@
 classdef Model < utils.class.Common
     properties
+        Config;
+        Simulator;
+    end
+
+    properties
         table;
         folder;
         file;
+        id;
     end
 
     methods
-        function obj = Model(folder, file)
+        function obj = Model(Simulator, file)
+            % ConfigクラスとSimulatorクラスを設定
+            obj.Config = Simulator.get('Config');
+            obj.Simulator = Simulator;
+
             % フォルダとファイル名を設定する
-            obj.folder = folder;
+            obj.folder = obj.Config.get('simulator').folder;
             obj.file = file;
 
             % idを初期化
             obj.id = NaN;
 
-            % csvファイルを取得してtableに変換する
-            obj.table = readtable([pwd, '/results/', obj.folder, '/', obj.file, '.csv']);
+            % ファイルが存在するとき
+            if exist([pwd, '/results/', obj.folder, '/', obj.file, '.csv'], 'file')
+                % tableを読み込む
+                obj.table = readtable([pwd, '/results/', obj.folder, '/', obj.file, '.csv']);
+            else
+                % 新しくtableを作成
+                obj.create('table');
+            end
         end
     end
 
@@ -195,5 +211,9 @@ classdef Model < utils.class.Common
             flag = true;
             obj.id = NaN;
         end
+    end
+
+    methods
+        create(obj, property_name);
     end
 end

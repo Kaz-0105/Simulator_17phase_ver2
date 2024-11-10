@@ -24,12 +24,11 @@ function create(obj, property_name, type)
                 % links, speed, inflowsのプロパティの作成
                 Road.create('links');
                 Road.create('speed');
-                Road.create('inflows');
 
                 % Elementsにroadをプッシュ
                 obj.Elements(Road.get('id')) = Road;
             end
-
+            
             % RoutingDecisionの設定
             obj.create('routing_decisions');
 

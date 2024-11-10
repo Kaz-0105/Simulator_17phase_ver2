@@ -5,6 +5,7 @@ classdef Network < utils.class.Common
         Controllers;
         Intersections;
         Roads;
+        VehicleInputs;
     end
 
     properties
@@ -38,6 +39,9 @@ classdef Network < utils.class.Common
 
             % IntersectionクラスとRoadクラスの接続関係を定義
             obj.create('Connections');
+
+            % VehicleInputsクラスを作成
+            obj.VehicleInputs = simulator.network.VehicleInputs(obj);
 
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');

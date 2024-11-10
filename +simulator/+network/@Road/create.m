@@ -473,25 +473,6 @@ function create(obj, property_name)
 
         % speedを設定
         obj.speed = road.speed;
-
-    elseif strcmp(property_name, 'inflows')
-        % Networkクラス用の設定を取得
-        network = obj.Config.get('network');
-
-        % RoadsMapを取得
-        RoadsMap = network.roads.RoadsMap;
-
-        % road構造体を取得
-        road = RoadsMap(obj.id);
-
-        % inflowsを設定
-        if isfield(road, 'inflows')
-            prop = addprop(obj, 'inflows');
-            prop.SetAccess = 'public';
-            prop.GetAccess = 'public';
-
-            obj.inflows = road.inflows;
-        end
     else
         error('error: Property name is invalid.');
     end

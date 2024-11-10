@@ -10,6 +10,10 @@ classdef Simulator < utils.class.Common
     end
 
     properties
+        ModelsMap;
+    end
+
+    properties
         dt;
         total_time;
         seed;
@@ -51,6 +55,9 @@ classdef Simulator < utils.class.Common
 
             % Controllersクラスを作成
             obj.Controllers = simulator.Controllers(obj);
+
+            % Modelsクラスを作成
+            obj.create('ModelsMap');
         end
     end
 
