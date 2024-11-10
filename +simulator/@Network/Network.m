@@ -6,6 +6,7 @@ classdef Network < utils.class.Common
         Intersections;
         Roads;
         VehicleInputs;
+        VehicleRoutingDecisions;
     end
 
     properties
@@ -42,6 +43,9 @@ classdef Network < utils.class.Common
 
             % VehicleInputsクラスを作成
             obj.VehicleInputs = simulator.network.VehicleInputs(obj);
+
+            % VehicleRoutingDecisionsクラスを作成
+            obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
 
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');
