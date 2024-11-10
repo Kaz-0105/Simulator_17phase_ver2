@@ -26,6 +26,9 @@ classdef VehicleRoutes < utils.class.Container
 
             % orderをセット
             obj.create('order');
+
+            % rel_flowをセット
+            obj.create('rel_flow');
         end
     end
 

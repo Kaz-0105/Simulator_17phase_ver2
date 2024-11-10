@@ -73,7 +73,6 @@ function update(obj, property_name , varargin)
             error('Not defined number of roads.');
         end
 
-        
         % Roadクラスを走査
         for road_id = road_ids
             % Roadクラスを取得
@@ -94,29 +93,28 @@ function update(obj, property_name , varargin)
             target_rel_flow = 0;
             total_rel_flow = 0;
 
-            % routesを取得
-            routes = Road.get('routing_decision').routes;
+            % VehicleRoutesクラスを取得
+            VehicleRoutes = Road.get('VehicleRoutingDecision').get('VehicleRoutes');
 
-            % RoutesMapとRouteOrderMapを取得
-            RoutesMap = routes.RoutesMap;
-            RouteOrderMap = routes.RouteOrderMap;
-
-            % routeを走査
-            for route_id = 1: RoutesMap.Count()
-                % routeを取得
-                route = RoutesMap(route_id);
+            % VeicleRouteクラスを走査
+            for vehicle_route_id = VehicleRoutes.getKeys()
+                % VehicleRouteクラスを取得
+                VehicleRoute = VehicleRoutes.itemByKey(vehicle_route_id);
 
                 % order_idを取得
-                order_id = RouteOrderMap(route_id);
+                order_id = VehicleRoute.get('order');
 
-                % order_idがorder_idsに含まれる場合
+                % rel_flowを取得
+                rel_flow = VehicleRoute.get('rel_flow');
+
+                % orderがorder_idsに含まれる場合
                 if ismember(order_id, order_ids)
                     % target_rel_flowを更新
-                    target_rel_flow = target_rel_flow + route.rel_flow;
+                    target_rel_flow = target_rel_flow + rel_flow;
                 end
 
                 % total_rel_flowを更新
-                total_rel_flow = total_rel_flow + route.rel_flow;
+                total_rel_flow = total_rel_flow + rel_flow;
             end
 
             % inflowを更新

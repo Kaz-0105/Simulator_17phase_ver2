@@ -8,6 +8,7 @@ classdef VehicleRoute < utils.class.Common
     properties
         id;
         order;
+        rel_flow;
         Vissim;
     end
 

@@ -29,7 +29,7 @@ function create(obj, property_name, type)
                 obj.Elements(Road.get('id')) = Road;
             end
 
-            % RoutingDecisionの設定
+            % routing_decisionsの設定
             obj.create('routing_decisions');
 
             % DataCollectionsの設定
