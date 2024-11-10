@@ -15,8 +15,7 @@ function create(obj, property_name)
             intersection_struct = IntersectionsMap(intersection_id);
 
             % Intersectionクラスを作成
-            Intersection = simulator.network.Intersection(obj);
-            Intersection.set('id', intersection_struct.id);
+            Intersection = simulator.network.Intersection(obj, intersection_struct.id);
             Intersection.set('method', intersection_struct.method);
 
             % Elementsにintersectionをプッシュ
@@ -32,9 +31,6 @@ function create(obj, property_name)
             % IntersectionクラスにRoadsを作成
             Intersection.create('Roads');
         end
-
-        % Intersectionクラスにsignal_controllerを作成
-        obj.create('signal_controller');
 
     elseif strcmp(property_name, 'signal_controller')
         % SignalControllersMapを初期化

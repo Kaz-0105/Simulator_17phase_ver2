@@ -28,7 +28,7 @@ function create(obj, property_name, type)
                 % Elementsにroadをプッシュ
                 obj.Elements(Road.get('id')) = Road;
             end
-            
+
             % RoutingDecisionの設定
             obj.create('routing_decisions');
 
@@ -61,6 +61,9 @@ function create(obj, property_name, type)
 
                     % ElementsにRoadをプッシュ
                     obj.Elements(input_road.id) = Road;
+
+                    % RoadクラスにIntersectionをセット
+                    Road.set('OutputIntersection', obj.Intersection);
                 end
             elseif strcmp(obj.type, 'output')   
                 % 流出道路を走査
@@ -70,6 +73,9 @@ function create(obj, property_name, type)
 
                     % ElementsにRoadをプッシュ
                     obj.Elements(output_road.id) = Road;
+
+                    % RoadクラスにIntersectionをセット
+                    Road.set('InputIntersection', obj.Intersection);
                 end
             end
         else

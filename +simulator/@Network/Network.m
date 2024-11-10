@@ -32,14 +32,11 @@ classdef Network < utils.class.Common
             % 評価指標の測定の有無のフラグを設定
             obj.create('record_flags');
 
-            % Intersectionsクラスを作成
-            obj.Intersections = simulator.network.Intersections(obj);
-
             % Roadsクラスを作成
             obj.Roads = simulator.network.Roads(obj);
 
-            % IntersectionクラスとRoadクラスの接続関係を定義
-            obj.create('Connections');
+            % Intersectionsクラスを作成
+            obj.Intersections = simulator.network.Intersections(obj);
 
             % VehicleInputsクラスを作成
             obj.VehicleInputs = simulator.network.VehicleInputs(obj);
@@ -47,6 +44,9 @@ classdef Network < utils.class.Common
             % VehicleRoutingDecisionsクラスを作成
             obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
 
+            % RoadクラスにDelayMeasurementsを紐づける
+            obj.Roads.create('DelayMeasurements');
+            
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');
         end

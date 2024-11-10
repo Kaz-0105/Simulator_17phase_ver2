@@ -2,6 +2,8 @@ classdef VehicleRoutingDecision < utils.class.Common
     properties
         Config;
         VehicleRoutingDecisions;
+        Road;
+        Intersection;
         VehicleRoutes;
     end
 
@@ -21,9 +23,6 @@ classdef VehicleRoutingDecision < utils.class.Common
 
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
-
-            % VehicleRoutesクラスを作成
-            obj.VehicleRoutes = simulator.network.VehicleRoutes(obj);
         end
     end
 end

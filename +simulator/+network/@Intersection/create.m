@@ -42,6 +42,38 @@ function create(obj, property_name)
         % Roadsクラスを作成
         obj.InputRoads = simulator.network.Roads(obj, 'input');
         obj.OutputRoads = simulator.network.Roads(obj, 'output');
+    
+    elseif strcmp(property_name, 'RoadOrderMap')
+        % RoadOrderMapを初期化
+        prop = addprop(obj, 'RoadOrderMap');
+        prop.SetAccess = 'public';
+        prop.GetAccess = 'public';
+
+        obj.RoadOrderMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
+
+        % InputRoadを走査
+        for order = obj.InputRoads.getKeys()
+            % Roadクラスを取得
+            Road = obj.InputRoads.itemByKey(order);
+            
+            % road_idを取得
+            road_id = Road.get('id');
+            
+            % RoadOrderMapに追加
+            obj.RoadOrderMap(road_id) = order;
+        end
+
+        % OutputRoadを走査
+        for order = obj.OutputRoads.getKeys()
+            % Roadクラスを取得
+            Road = obj.OutputRoads.itemByKey(order);
+            
+            % road_idを取得
+            road_id = Road.get('id');
+            
+            % RoadOrderMapに追加
+            obj.RoadOrderMap(road_id) = order;
+        end
 
     elseif strcmp(property_name, 'order_id')
         % SignalGroupsMapを取得

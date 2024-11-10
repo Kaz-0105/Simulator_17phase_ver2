@@ -27,10 +27,6 @@ classdef Roads < utils.class.Container
                 prop.SetAccess = 'public';
                 prop.GetAccess = 'public';
 
-                % Intersectionsクラスを設定
-                obj.Intersections = obj.Network.get('Intersections');
-                obj.Intersections.set('Roads', obj);
-
                 % 要素クラスを作成
                 obj.create('Elements', 'Network');
 

@@ -18,12 +18,13 @@ classdef Intersection < utils.class.Common
     end
 
     methods
-        function obj = Intersection(Intersections)
-            % Configクラスを設定
+        function obj = Intersection(Intersections, id)
+            % ConfigクラスとIntersectionクラスを設定
             obj.Config = Intersections.get('Config');
-
-            % Intersectionsクラスを設定
             obj.Intersections = Intersections;
+
+            % idを設定
+            obj.id = id;
 
             % current_timeの初期化
             obj.create('current_time');
@@ -36,6 +37,12 @@ classdef Intersection < utils.class.Common
 
             % delay_tableを作成
             obj.create('delay_table');
+
+            % Roadsクラスを作成
+            obj.create('Roads');
+
+            % RordOrderMapの作成
+            obj.create('RoadOrderMap');
         end
     end
 

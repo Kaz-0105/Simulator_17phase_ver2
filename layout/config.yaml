@@ -1,5 +1,5 @@
 simulator : 
-  folder : "one_lane"
+  folder : "two_lane"
   dt : 1 
   total_time : 1000
   seed : 1

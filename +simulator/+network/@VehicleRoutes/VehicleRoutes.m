@@ -23,6 +23,9 @@ classdef VehicleRoutes < utils.class.Container
 
             % 下位クラスを作成
             obj.create('Elements');
+
+            % orderをセット
+            obj.create('order');
         end
     end
 

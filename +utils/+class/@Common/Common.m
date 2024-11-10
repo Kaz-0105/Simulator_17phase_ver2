@@ -20,5 +20,12 @@ classdef Common < handle & dynamicprops
 
             obj.(property_name) = value;
         end
+
+        function delete(obj, property_name)
+            prop = findprop(obj, property_name);
+            if ~isempty(prop)
+                delete(prop);
+            end
+        end
     end
 end

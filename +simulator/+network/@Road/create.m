@@ -13,68 +13,68 @@ function create(obj, property_name)
         % record_flagsを取得
         obj.record_flags = Network.get('record_flags');
         
-    elseif strcmp(property_name, 'Intersections')
-        % Intersectionsクラスを取得
-        Intersections = obj.Roads.get('Intersections');
+    % elseif strcmp(property_name, 'Intersections')
+    %     % Intersectionsクラスを取得
+    %     Intersections = obj.Roads.get('Intersections');
 
-        % Intersectionクラスを走査
-        for intersection_id = 1: Intersections.count()
-            Intersection = Intersections.itemByKey(intersection_id);
+    %     % Intersectionクラスを走査
+    %     for intersection_id = 1: Intersections.count()
+    %         Intersection = Intersections.itemByKey(intersection_id);
 
-            % InputRoadsクラスを取得
-            InputRoads = Intersection.get('InputRoads');
+    %         % InputRoadsクラスを取得
+    %         InputRoads = Intersection.get('InputRoads');
 
-            for input_road_id = InputRoads.getKeys()
-                % Roadクラスを取得
-                Road = InputRoads.itemByKey(input_road_id);
+    %         for input_road_id = InputRoads.getKeys()
+    %             % Roadクラスを取得
+    %             Road = InputRoads.itemByKey(input_road_id);
 
-                if obj.id == Road.get('id')
-                    % プロパティにOutputIntersectionクラスを追加
-                    prop = addprop(obj, 'OutputIntersection');
-                    prop.SetAccess = 'public';
-                    prop.GetAccess = 'public';
+    %             if obj.id == Road.get('id')
+    %                 % プロパティにOutputIntersectionクラスを追加
+    %                 prop = addprop(obj, 'OutputIntersection');
+    %                 prop.SetAccess = 'public';
+    %                 prop.GetAccess = 'public';
 
-                    % OutputIntersectionクラスを設定
-                    obj.OutputIntersection = Intersection;
+    %                 % OutputIntersectionクラスを設定
+    %                 obj.OutputIntersection = Intersection;
 
-                    % Intersectionクラスの設定を取得
-                    intersections = obj.Config.get('network').intersections;
+    %                 % Intersectionクラスの設定を取得
+    %                 intersections = obj.Config.get('network').intersections;
 
-                    % IntersectionsMapを取得
-                    IntersectionsMap = intersections.IntersectionsMap;
+    %                 % IntersectionsMapを取得
+    %                 IntersectionsMap = intersections.IntersectionsMap;
 
-                    % intersection構造体を取得
-                    intersection = IntersectionsMap(Intersection.get('id'));
+    %                 % intersection構造体を取得
+    %                 intersection = IntersectionsMap(Intersection.get('id'));
 
-                    % roadsを取得
-                    roads = intersection.input_roads;
+    %                 % roadsを取得
+    %                 roads = intersection.input_roads;
 
-                    % road構造体を取得
-                    road = roads(input_road_id);
+    %                 % road構造体を取得
+    %                 road = roads(input_road_id);
 
-                    % routind_decisionにrel_flowsを設定
-                    obj.routing_decision.rel_flows = road.rel_flows;
-                end
-            end
+    %                 % routind_decisionにrel_flowsを設定
+    %                 obj.routing_decision.rel_flows = road.rel_flows;
+    %             end
+    %         end
 
-            % OutputRoadsクラスを取得
-            OutputRoads = Intersection.get('OutputRoads');
+    %         % OutputRoadsクラスを取得
+    %         OutputRoads = Intersection.get('OutputRoads');
 
-            for output_road_id = OutputRoads.getKeys()
-                % Roadクラスを取得
-                Road = OutputRoads.itemByKey(output_road_id);
+    %         for output_road_id = OutputRoads.getKeys()
+    %             % Roadクラスを取得
+    %             Road = OutputRoads.itemByKey(output_road_id);
 
-                if obj.id == Road.get('id')
-                    % プロパティにInputIntersectionクラスを追加
-                    prop = addprop(obj, 'InputIntersection');
-                    prop.SetAccess = 'public';
-                    prop.GetAccess = 'public';
+    %             if obj.id == Road.get('id')
+    %                 % プロパティにInputIntersectionクラスを追加
+    %                 prop = addprop(obj, 'InputIntersection');
+    %                 prop.SetAccess = 'public';
+    %                 prop.GetAccess = 'public';
 
-                    % InputIntersectionクラスを設定
-                    obj.InputIntersection = Intersection;
-                end
-            end
-        end
+    %                 % InputIntersectionクラスを設定
+    %                 obj.InputIntersection = Intersection;
+    %             end
+    %         end
+    %     end
     elseif strcmp(property_name, 'links')
         % NetworkクラスのComオブジェクトを取得
         Network = obj.Roads.get('Network');
