@@ -3,8 +3,9 @@ classdef Network < utils.class.Common
         Config;
         Simulator;
         Controllers;
-        Intersections;
+        Links;
         Roads;
+        Intersections;
         VehicleInputs;
         VehicleRoutingDecisions;
         DataCollectionMeasurements;
@@ -32,6 +33,9 @@ classdef Network < utils.class.Common
 
             % 評価指標の測定の有無のフラグを設定
             obj.create('record_flags');
+
+            % Linkクラスを作成
+            obj.Links = simulator.network.Links(obj);
 
             % Roadsクラスを作成
             obj.Roads = simulator.network.Roads(obj);
