@@ -40,21 +40,48 @@ function create(obj, property_name)
         
     elseif strcmp(property_name, 'Roads')
         % Roadsクラスを作成
-        obj.InputRoads = simulator.network.Roads(obj, 'input');
-        obj.OutputRoads = simulator.network.Roads(obj, 'output');
+        obj.Roads.input = simulator.network.Roads(obj);
+        obj.Roads.output = simulator.network.Roads(obj);
+
+        % Roadsクラスを取得
+        Roads = obj.Intersections.get('Roads');
+
+        % 流入道路を走査
+        for input_road = obj.intersection_struct.input_roads
+            % Roadクラスを取得
+            Road = Roads.itemByKey(input_road.road_id);
+
+            % ElementsにRoadをプッシュ
+            obj.Roads.input.add(Road, input_road.id);
+
+            % RoadクラスにIntersectionをセット
+            Intersections = Road.get('Intersections');
+            Intersections.output = obj;
+            Road.set('Intersections', Intersections);
+        end
+
+        % 流出道路を走査
+        for output_road = obj.intersection_struct.output_roads
+            % Roadクラスを取得
+            Road = Roads.itemByKey(output_road.road_id);
+
+            % ElementsにRoadをプッシュ
+            obj.Roads.output.add(Road, output_road.id);
+
+            % RoadクラスにIntersectionをセット
+            Intersections = Road.get('Intersections');
+            Intersections.input = obj;
+            Road.set('Intersections', Intersections);
+        end
     
     elseif strcmp(property_name, 'RoadOrderMap')
         % RoadOrderMapを初期化
-        prop = addprop(obj, 'RoadOrderMap');
-        prop.SetAccess = 'public';
-        prop.GetAccess = 'public';
+        obj.set('RoadOrderMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
 
-        obj.RoadOrderMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
-
-        % InputRoadを走査
-        for order = obj.InputRoads.getKeys()
+        % 流入道路を走査
+        for order = obj.Roads.input.getKeys()
             % Roadクラスを取得
-            Road = obj.InputRoads.itemByKey(order);
+            Road = obj.Roads.input.itemByKey(order);
             
             % road_idを取得
             road_id = Road.get('id');
@@ -63,10 +90,10 @@ function create(obj, property_name)
             obj.RoadOrderMap(road_id) = order;
         end
 
-        % OutputRoadを走査
-        for order = obj.OutputRoads.getKeys()
+        % 流出道路を走査
+        for order = obj.Roads.output.getKeys()
             % Roadクラスを取得
-            Road = obj.OutputRoads.itemByKey(order);
+            Road = obj.Roads.output.itemByKey(order);
             
             % road_idを取得
             road_id = Road.get('id');
@@ -106,10 +133,10 @@ function create(obj, property_name)
                 % found_flagの初期化
                 found_flag = false;
 
-                % InputRoadを走査
-                for road_id = obj.InputRoads.getKeys()
+                % 流入道路を走査
+                for road_id = obj.Roads.input.getKeys()
                     % Roadクラスを取得
-                    Road = obj.InputRoads.itemByKey(road_id);
+                    Road = obj.Roads.input.itemByKey(road_id);
 
                     % target_link_idsを初期化
                     target_link_ids = [];
@@ -156,9 +183,9 @@ function create(obj, property_name)
                 found_flag = false;
 
                 % OutputRoadを走査
-                for road_id = obj.OutputRoads.getKeys()
+                for road_id = obj.Roads.output.getKeys()
                     % Roadクラスを取得
-                    Road = obj.OutputRoads.itemByKey(road_id);
+                    Road = obj.Roads.output.itemByKey(road_id);
 
                     % main_link_idを取得
                     main_link_id = Road.links.main.id;
@@ -194,9 +221,9 @@ function create(obj, property_name)
                 count = count + 1;
 
                 % 条件を満たすとき
-                if mod(signal_group.from_road_id + count - signal_group.to_road_id, obj.InputRoads.count()) == 0
+                if mod(signal_group.from_road_id + count - signal_group.to_road_id, obj.Roads.input.count()) == 0
                     % order_idを設定
-                    order_id = (signal_group.from_road_id -1) * (obj.InputRoads.count() - 1) + count;
+                    order_id = (signal_group.from_road_id -1) * (obj.Roads.input.count() - 1) + count;
 
                     % order_idをsignal_groupにプッシュ
                     signal_group.order_id = order_id;

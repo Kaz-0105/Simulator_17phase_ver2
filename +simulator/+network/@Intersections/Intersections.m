@@ -5,10 +5,6 @@ classdef Intersections < utils.class.Container
         Roads;
     end
 
-    properties
-        Elements;
-    end
-
     methods
         function obj = Intersections(Network)
             % Configクラスを設定

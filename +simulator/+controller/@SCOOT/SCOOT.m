@@ -61,7 +61,7 @@ classdef SCOOT < utils.class.Common
             obj.create('PhaseSignalGroupsMap');
 
             % Roadsクラスを取得
-            obj.Roads = obj.Intersection.get('InputRoads');
+            obj.Roads = obj.Intersection.get('Roads').input;
 
             % RoadクラスにSCOOTクラスを設定
             for road_id = 1: obj.Roads.count()

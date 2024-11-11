@@ -24,8 +24,14 @@ function create(obj, property_name)
         % main_linkを初期化
         main_link = struct();
 
+        % linksを取得
+        links = obj.road_struct.links;
+
+        % linksを初期化
+        obj.set('links', struct());
+
         % idを取得
-        main_link.id = obj.links.main;
+        main_link.id = links.main;
 
         % Comオブジェクトを取得
         main_link.Vissim = Links.ItemByKey(main_link.id);
@@ -40,9 +46,9 @@ function create(obj, property_name)
         obj.links.main = main_link;
 
         % 分岐が存在する場合
-        if isfield(obj.links, 'branch')
+        if isfield(links, 'branch')
             % 左に分岐が存在する場合
-            if isfield(obj.links.branch, 'left')
+            if isfield(links.branch, 'left')
                 % branch_leftを初期化
                 branch_left = struct();
 
@@ -50,7 +56,7 @@ function create(obj, property_name)
                 link = struct();
 
                 % linkのidを取得
-                link.id = obj.links.branch.left;
+                link.id = links.branch.left;
 
                 % Comオブジェクトを取得
                 link.Vissim = Links.ItemByKey(link.id);
@@ -102,7 +108,7 @@ function create(obj, property_name)
             end
 
             % 右に分岐が存在する
-            if isfield(obj.links.branch, 'right')
+            if isfield(links.branch, 'right')
                 % branch_rightを初期化
                 branch_right = struct();
 
@@ -110,7 +116,7 @@ function create(obj, property_name)
                 link = struct();
 
                 % linkのidを取得
-                link.id = obj.links.branch.right;
+                link.id = links.branch.right;
 
                 % Comオブジェクトを取得
                 link.Vissim = Links.ItemByKey(link.id);
@@ -161,6 +167,11 @@ function create(obj, property_name)
                 end
             end
         end
+    elseif strcmp(property_name, 'DataCollections')
+        % InputDataCollectionsとOutputDataCollectionsを初期化
+        obj.DataCollections.input = simulator.network.DataCollectionMeasurements(obj);
+        obj.DataCollections.output = simulator.network.DataCollectionMeasurements(obj);
+
     elseif strcmp(property_name, 'SignalHead')
         % NetworkクラスのComオブジェクトを取得 
         Network = obj.Roads.get('Network');

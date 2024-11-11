@@ -48,7 +48,7 @@ function create(obj, property_name)
                 Intersection = Intersections.itemByKey(intersection_id);
 
                 % 道路の数を取得
-                num_roads = Intersection.get('InputRoads').count();
+                num_roads = Intersection.get('Roads').input.count();
 
                 % max_num_roadsを更新
                 if num_roads > max_num_roads

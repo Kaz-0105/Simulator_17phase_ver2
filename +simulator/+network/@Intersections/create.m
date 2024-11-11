@@ -1,8 +1,5 @@
 function create(obj, property_name)
     if strcmp(property_name, 'Elements')
-        % Elementsを初期化
-        obj.Elements = containers.Map('KeyType', 'double', 'ValueType', 'any');
-        
         % Intersectionsクラス用の設定を取得
         network = obj.Config.get('network');
         intersections = network.intersections;
@@ -15,11 +12,10 @@ function create(obj, property_name)
             intersection_struct = IntersectionsMap(intersection_id);
 
             % Intersectionクラスを作成
-            Intersection = simulator.network.Intersection(obj, intersection_struct.id);
-            Intersection.set('method', intersection_struct.method);
+            Intersection = simulator.network.Intersection(obj, intersection_struct);
 
             % Elementsにintersectionをプッシュ
-            obj.Elements(Intersection.get('id')) = Intersection;
+            obj.add(Intersection);
         end
 
     elseif strcmp(property_name, 'Roads')
@@ -165,7 +161,7 @@ function create(obj, property_name)
                     link_id = Link.get('AttValue', 'No');
 
                     % Roadクラスを走査
-                    for road_id = 1: Roads.getKeys()
+                    for road_id = Roads.getKeys()
                         % Roadクラスを取得
                         Road = Roads.itemByKey(road_id);
 
@@ -193,16 +189,16 @@ function create(obj, property_name)
                 % Intersectionクラスを取得
                 Intersection = obj.itemByKey(intersection_id);
 
-                % InputRoadsを取得
-                InputRoads = Intersection.get('InputRoads');
+                % Roadsを取得
+                Roads = Intersection.get('Roads');
 
                 % input_road_idsを初期化
                 input_road_ids = [];
 
-                % InputRoadsを走査
-                for order_id = InputRoads.getKeys()
+                % 流入道路を走査
+                for order_id = Roads.input.getKeys()
                     % Roadクラスを取得
-                    Road = InputRoads.itemByKey(order_id);
+                    Road = Roads.input.itemByKey(order_id);
 
                     % road_idを取得
                     road_id = Road.get('id');

@@ -74,17 +74,17 @@ function create(obj, property_name)
         % SignalGroupsMapを取得
         SignalGroupsMap = obj.Intersection.get('signal_controller').signal_groups.SignalGroupsMap;
 
-        % InputRoadsを取得
-        InputRoads = obj.Intersection.get('InputRoads');
+        % Roads構造体を取得
+        Roads = obj.Intersection.get('Roads');
 
-        if InputRoads.count() == 4
+        if Roads.input.count() == 4
             % PhaseSignalGroupsMapを設定
             PhaseSignalGroupsMap(1) = [1, 2, 7, 8];
             PhaseSignalGroupsMap(2) = [3, 9];
             PhaseSignalGroupsMap(3) = [4, 5, 10, 11];
             PhaseSignalGroupsMap(4) = [6, 12];
 
-        elseif InputRoads.count() == 3
+        elseif Roads.input.count() == 3
             % PhaseSignalGroupsMapを設定
             obj.PhaseSignalGroupsMap(1) = [1, 2, 5];
             obj.PhaseSignalGroupsMap(2) = [3, 4];

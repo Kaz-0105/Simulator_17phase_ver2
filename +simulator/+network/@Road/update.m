@@ -7,10 +7,10 @@ function update(obj, property_name)
         obj.current_time = Network.get('current_time');
 
     elseif strcmp(property_name, 'Vehicles')
-        if isprop(obj, 'InputIntersection')
-            if isprop(obj.InputIntersection, 'MPC')
+        if isfield(obj.Intersections, 'input')
+            if isprop(obj.Intersections.input, 'MPC')
                 controller = 'MPC';
-            elseif isprop(obj.InputIntersection, 'SCOOT')
+            elseif isprop(obj.Intersections.input, 'SCOOT')
                 controller = 'SCOOT';
             else
                 error('Not defined controller.');
@@ -279,7 +279,7 @@ function update(obj, property_name)
                 current_phase_id = obj.SCOOT.get('current_phase_id');
                 num_phases = obj.SCOOT.get('num_phases');
             catch
-                SCOOT = obj.InputIntersection.get('SCOOT');
+                SCOOT = obj.Intersection.input.get('SCOOT');
                 current_phase_id = SCOOT.get('current_phase_id');
                 num_phases = SCOOT.get('num_phases');
             end

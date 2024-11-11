@@ -1,10 +1,15 @@
 classdef Container < utils.class.Common
+    properties
+        Elements;
+    end
+    
     methods
         function obj = Container()
+            obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
         end
 
         function num_elements = count(obj)
-            num_elements = int64(obj.Elements.Count);
+            num_elements = int32(obj.Elements.Count);
         end
 
         function element = itemByKey(obj, key)
@@ -15,17 +20,22 @@ classdef Container < utils.class.Common
             keys = cell2mat(obj.Elements.keys);
         end
 
-        function add(obj, Element)
-            obj.Elements(Element.get('id')) = Element;
+        function add(obj, Element, key)
+            % 引数を初期化
+            if nargin == 2
+                obj.Elements(Element.get('id')) = Element;
+            elseif nargin == 3
+                obj.Elements(key) = Element;
+            end 
         end
     end
 
     methods (Static)
-        function values = getVissimKeys(VissimCollection)
+        function values = getVissimKeys(VissimContainer)
             try
-                values = VissimCollection.GetMultiAttValues('No');
+                values = VissimContainer.GetMultiAttValues('No');
             catch 
-                values = VissimCollection.GetMultiAttValues('Index');
+                values = VissimContainer.GetMultiAttValues('Index');
             end
 
             values = sort(transpose(cell2mat(values)));

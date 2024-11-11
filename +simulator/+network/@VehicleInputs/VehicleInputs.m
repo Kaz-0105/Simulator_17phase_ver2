@@ -4,13 +4,6 @@ classdef VehicleInputs < utils.class.Container
         Network;
     end
 
-    properties
-        Elements;
-    end
-
-    properties
-    end
-
     methods
         function obj = VehicleInputs(Network)
             % ConfigクラスとNetworkクラスを設定

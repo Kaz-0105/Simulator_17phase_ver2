@@ -7,9 +7,6 @@ function create(obj, property_name)
         obj.Vissim = Net.VehicleRoutingDecisionsStatic;
 
     elseif strcmp(property_name, 'Elements')
-        % Elementsを初期化
-        obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
-
         % VehicleRoutingDecisionsを走査
         for vehicle_routing_decision_id = utils.class.Container.getVissimKeys(obj.Vissim)
             % VehicleRoutingDecisionクラスを作成
@@ -74,11 +71,7 @@ function create(obj, property_name)
         end
     elseif strcmp(property_name, 'LinkRoadMap')
         % 動的プロパティを初期化
-        prop = addprop(obj, 'LinkRoadMap');
-        prop.SetAccess = 'public';
-        prop.GetAccess = 'public';
-
-        obj.LinkRoadMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
+        obj.set('LinkRoadMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
 
         % Roadsクラスを取得
         Roads = obj.Network.get('Roads');

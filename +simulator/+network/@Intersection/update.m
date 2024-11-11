@@ -37,9 +37,9 @@ function update(obj, property_name)
         road_counter = 0;
 
         % Roadクラスを走査
-        for road_id = obj.InputRoads.getKeys()
+        for road_id = obj.Roads.input.getKeys()
             % Roadクラスを取得
-            Road = obj.InputRoads.itemByKey(road_id);
+            Road = obj.Roads.input.itemByKey(road_id);
 
             % queue_tableを取得
             queue_table = Road.get('queue_table');
@@ -69,9 +69,9 @@ function update(obj, property_name)
         counter = 0;
 
         % Roadクラスを走査
-        for road_id = 1 : obj.InputRoads.count()
+        for road_id = 1 : obj.Roads.input.count()
             % Roadクラスを取得
-            Road = obj.InputRoads.itemByKey(road_id);
+            Road = obj.Roads.input.itemByKey(road_id);
 
             % delay_tableを取得
             delay_table = Road.get('delay_table');

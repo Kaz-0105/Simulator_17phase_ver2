@@ -4,8 +4,7 @@ classdef Intersection < utils.class.Common
         Intersections;
 
         Controller;
-        InputRoads;
-        OutputRoads;
+        Roads;
     end
 
     properties
@@ -18,13 +17,17 @@ classdef Intersection < utils.class.Common
     end
 
     methods
-        function obj = Intersection(Intersections, id)
+        function obj = Intersection(Intersections, intersection_struct)
             % ConfigクラスとIntersectionクラスを設定
             obj.Config = Intersections.get('Config');
             obj.Intersections = Intersections;
 
-            % idを設定
-            obj.id = id;
+            % idとメソッドを設定
+            obj.id = intersection_struct.id;
+            obj.method = intersection_struct.method;
+
+            % intersection_structをセット
+            obj.set('intersection_struct', intersection_struct);
 
             % current_timeの初期化
             obj.create('current_time');

@@ -6,9 +6,6 @@ function create(obj, property_name)
         % Comオブジェクトを設定
         obj.Vissim = VehicleRoutingDecision.VehRoutSta;
     elseif strcmp(property_name, 'Elements')
-        % Elementsを初期化  
-        obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
-
         % VehicleRouteを走査
         for vehicle_route_id = utils.class.Container.getVissimKeys(obj.Vissim)
             % VehicleRouteクラスを作成

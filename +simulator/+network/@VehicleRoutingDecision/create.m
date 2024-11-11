@@ -8,7 +8,7 @@ function create(obj, property_name)
         
     elseif strcmp(property_name, 'Intersection')
         % Intersectionクラスを取得
-        obj.Intersection = obj.Road.get('OutputIntersection');
+        obj.Intersection = obj.Road.get('Intersections').output;
 
     elseif strcmp(property_name, 'VehicleRoutes')
         % VehicleRoutesクラスを作成

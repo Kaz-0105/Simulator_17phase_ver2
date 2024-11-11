@@ -42,10 +42,10 @@ classdef MPC < utils.class.Common
             obj.Intersection.set('MPC', obj);
 
             % Roadsクラスを設定
-            obj.Roads = obj.Intersection.get('InputRoads');
+            obj.Roads = obj.Intersection.get('Roads');
             
             % RoadクラスにMPCクラスを設定
-            for road_id = 1: obj.Roads.count()
+            for road_id = 1: obj.Roads.input.count()
                 Road = obj.Roads.itemByKey(road_id);
                 Road.set('MPC', obj);
             end

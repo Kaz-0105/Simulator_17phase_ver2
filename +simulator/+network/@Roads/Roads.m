@@ -3,32 +3,16 @@ classdef Roads < utils.class.Container
         Config;
     end
 
-    properties
-        Elements;
-    end
-
     methods
-        function obj = Roads(Network_or_Intersection, type)
-            % Configクラスを設定
-            obj.Config = Network_or_Intersection.get('Config');
-
+        function obj = Roads(UpperClass)
             % typeによって分岐
-            if isa(Network_or_Intersection, 'simulator.Network')
-                % プロパティにNetworkクラスを追加
-                prop = addprop(obj, 'Network');
-                prop.SetAccess = 'public';
-                prop.GetAccess = 'public';
-
+            if isa(UpperClass, 'simulator.Network')
                 % Networkクラスを設定
-                obj.Network = Network_or_Intersection;
-
-                % プロパティにIntersectionsクラスを追加
-                prop = addprop(obj, 'Intersections');
-                prop.SetAccess = 'public';
-                prop.GetAccess = 'public';
+                obj.set('Network', UpperClass);
+                obj.Config = obj.Network.get('Config');
 
                 % 要素クラスを作成
-                obj.create('Elements', 'Network');
+                obj.create('Elements');
 
                 % 要素クラスをVissimのSignalHeadオブジェクトと紐づける
                 obj.create('SignalHeads');
@@ -36,25 +20,11 @@ classdef Roads < utils.class.Container
                 % 要素クラスをVissimのQueueCounterオブジェクトと紐づける
                 obj.create('QueueCounters');
                 
-            elseif isa(Network_or_Intersection, 'simulator.network.Intersection')
-                % プロパティにIntersectionsクラスを追加
-                prop = addprop(obj, 'Intersection');
-                prop.SetAccess = 'public';
-                prop.GetAccess = 'public';
-
+            elseif isa(UpperClass, 'simulator.network.Intersection')
                 % Intersectionsクラスを設定
-                obj.Intersection = Network_or_Intersection;
+                obj.set('Intersection', UpperClass);
+                obj.Config = obj.Intersection.get('Config');
 
-                % プロパティにtypeを追加
-                prop = addprop(obj, 'type');
-                prop.SetAccess = 'public';
-                prop.GetAccess = 'public';
-
-                % typeを設定
-                obj.type = type;
-
-                % 要素クラスを作成
-                obj.create('Elements', 'Intersection');
             else
                 error('error: invalid argument');
             end

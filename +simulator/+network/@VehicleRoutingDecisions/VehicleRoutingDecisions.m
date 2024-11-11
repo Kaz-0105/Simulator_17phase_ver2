@@ -6,7 +6,6 @@ classdef VehicleRoutingDecisions < utils.class.Container
 
     properties
         Vissim;
-        Elements;
     end
 
     methods

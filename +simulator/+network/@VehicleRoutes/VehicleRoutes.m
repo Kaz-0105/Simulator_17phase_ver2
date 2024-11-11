@@ -5,10 +5,6 @@ classdef VehicleRoutes < utils.class.Container
     end
 
     properties
-        Elements;
-    end
-
-    properties
         Vissim;
     end
 

@@ -7,6 +7,7 @@ classdef Network < utils.class.Common
         Roads;
         VehicleInputs;
         VehicleRoutingDecisions;
+        DataCollectionMeasurements;
     end
 
     properties
@@ -43,6 +44,9 @@ classdef Network < utils.class.Common
 
             % VehicleRoutingDecisionsクラスを作成
             obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
+
+            % DataCollectionMeasurementsクラスを作成
+            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
 
             % RoadクラスにDelayMeasurementsを紐づける
             obj.Roads.create('DelayMeasurements');

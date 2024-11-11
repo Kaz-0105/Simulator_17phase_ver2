@@ -1,86 +1,28 @@
-function create(obj, property_name, type)
+function create(obj, property_name)
     if strcmp(property_name, 'Elements')
-        % Elementsを初期化
-        obj.Elements = containers.Map('KeyType', 'double', 'ValueType', 'any');
+        % Roadsクラス用の設定を取得
+        network = obj.Config.get('network');
+        roads = network.roads;
 
-        % 上位層のクラスがNetworkかIntersectionかで分岐
-        if strcmp(type, 'Network')
-            % Roadsクラス用の設定を取得
-            network = obj.Config.get('network');
-            roads = network.roads;
+        % RoadsMapを取得
+        RoadsMap = roads.RoadsMap;
 
-            % RoadsMapを取得
-            RoadsMap = roads.RoadsMap;
+        for road_id = cell2mat(RoadsMap.keys())
+            % road_structを取得
+            road_struct = RoadsMap(road_id);
 
-            for road_id = cell2mat(RoadsMap.keys())
-                % road_structを取得
-                road_struct = RoadsMap(road_id);
+            % Roadクラスを作成
+            Road = simulator.network.Road(obj, road_struct);
 
-                % Roadクラスを作成
-                Road = simulator.network.Road(obj);
-                Road.set('id', road_struct.id);
-                Road.set('links', road_struct.links);
-
-                % links, speed, inflowsのプロパティの作成
-                Road.create('links');
-                Road.create('speed');
-
-                % Elementsにroadをプッシュ
-                obj.Elements(Road.get('id')) = Road;
-            end
-
-            % routing_decisionsの設定
-            obj.create('routing_decisions');
-
-            % DataCollectionsの設定
-            obj.create('DataCollections');
-
-        elseif strcmp(type, 'Intersection')
-            % IntersectionクラスのIDを取得
-            intersection_id = obj.Intersection.get('id');
-
-            % Intersectionクラス用の設定を取得
-            network = obj.Config.get('network');
-            intersections = network.intersections;
-
-            % IntersectionsMapを取得
-            IntersectionsMap = intersections.IntersectionsMap;
-
-            % 対象の交差点の構造体を取得
-            intersection_struct = IntersectionsMap(intersection_id);
-
-            % 全体のRoadsクラスを取得
-            Intersections = obj.Intersection.get('Intersections');
-            Roads = Intersections.get('Roads');
-
-            if strcmp(obj.type, 'input')
-                % 流入道路を走査
-                for input_road = intersection_struct.input_roads
-                    % Roadクラスを取得
-                    Road = Roads.itemByKey(input_road.road_id);
-
-                    % ElementsにRoadをプッシュ
-                    obj.Elements(input_road.id) = Road;
-
-                    % RoadクラスにIntersectionをセット
-                    Road.set('OutputIntersection', obj.Intersection);
-                end
-            elseif strcmp(obj.type, 'output')   
-                % 流出道路を走査
-                for output_road = intersection_struct.output_roads
-                    % Roadクラスを取得
-                    Road = Roads.itemByKey(output_road.road_id);
-
-                    % ElementsにRoadをプッシュ
-                    obj.Elements(output_road.id) = Road;
-
-                    % RoadクラスにIntersectionをセット
-                    Road.set('InputIntersection', obj.Intersection);
-                end
-            end
-        else
-            error('Type is invalid.');
+            % Elementsにroadをプッシュ
+            obj.add(Road);
         end
+
+        % routing_decisionsの設定
+        obj.create('routing_decisions');
+
+        % DataCollectionsの設定
+        obj.create('DataCollections');
 
     elseif strcmp(property_name, 'SignalHeads')
         % Roadクラスを走査
@@ -293,43 +235,42 @@ function create(obj, property_name, type)
             % StartRoadクラスを取得
             StartRoad = obj.itemByKey(start_road_id);
 
-            % Intersectionクラス、InputRoadsクラス、OutputRoadsクラスを取得
-            Intersection = StartRoad.get('OutputIntersection');
-            InputRoads = Intersection.get('InputRoads');
-            OutputRoads = Intersection.get('OutputRoads');
+            % Intersectionクラス、Roads構造体を取得
+            Intersection = StartRoad.get('Intersections').output;
+            Roads = Intersection.get('Roads');
 
             % InputRoadを走査
-            for road_order_id = 1: InputRoads.count()
+            for road_order_id = 1: Roads.input.count()
                 % InputRoadクラスを取得
-                InputRoad = InputRoads.itemByKey(road_order_id);
+                InputRoad = Roads.input.itemByKey(road_order_id);
 
                 % input_road_idを取得
                 input_road_id = InputRoad.get('id');
 
                 % input_road_idとstart_road_idが一致したとき
                 if input_road_id == start_road_id
-                    input_road_order_id = int64(road_order_id);
+                    input_road_order_id = road_order_id;
                     break;
                 end
             end
 
             % OutputRoadを走査
-            for road_order_id = 1: OutputRoads.count()
+            for road_order_id = 1: Roads.output.count()
                 % OutputRoadクラスを取得
-                OutputRoad = OutputRoads.itemByKey(road_order_id);
+                OutputRoad = Roads.output.itemByKey(road_order_id);
 
                 % OutputRoadのIDを取得
                 output_road_id = OutputRoad.get('id');
 
                 % output_road_idとto_road_idが一致したとき
                 if output_road_id == to_road_id
-                    output_road_order_id = int64(road_order_id);
+                    output_road_order_id = road_order_id;
                     break;
                 end
             end
 
             % num_roadsを取得
-            num_roads = InputRoads.count();
+            num_roads = Roads.input.count();
 
             % route_order_idを走査
             for route_order_id = 1: (num_roads-1)
@@ -382,13 +323,13 @@ function create(obj, property_name, type)
                 % record_flagがtrueのとき
                 if Road.get('record_flags').delay_time
                     % Intersectionクラスを取得
-                    Intersection = Road.get('OutputIntersection');
+                    Intersection = Road.get('Intersection').output;
 
-                    % InputRoadsクラスを取得
-                    InputRoads = Intersection.get('InputRoads');
+                    % Roads構造体を取得
+                    Roads = Intersection.get('Roads');
 
                     % num_roadsを取得
-                    num_roads = InputRoads.count();
+                    num_roads = Roads.input.count();
 
                     % names, types, sizeを初期化
                     names = {'time'};
@@ -496,8 +437,8 @@ function create(obj, property_name, type)
             end
         end
 
-        % MeasurementPointMapの初期化
-        MeasurementPointMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
+        % PointMeasurementMapの初期化
+        PointMeasurementMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
 
         % DataCollectionMeasurementsのComオブジェクトを取得
         Net = obj.Network.get('Vissim');
@@ -526,8 +467,8 @@ function create(obj, property_name, type)
             % IDを取得
             point_id = DataCollectionPoint.get('AttValue', 'No');
 
-            % MeasurementPointMapに追加
-            MeasurementPointMap(point_id) = measurement_id;
+            % PointMeasurementMapに追加
+            PointMeasurementMap(point_id) = measurement_id;
         end
 
         % DataCollectionMeasurementsのComオブジェクトを取得
@@ -566,7 +507,7 @@ function create(obj, property_name, type)
                         end
 
                         % measurement_idを取得
-                        measurement_id = MeasurementPointMap(point_id);
+                        measurement_id = PointMeasurementMap(point_id);
 
                         % DataCollectionsMapに追加
                         DataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);
@@ -600,7 +541,7 @@ function create(obj, property_name, type)
                     OutputDataCollectionsMap = Road.get('OutputDataCollectionsMap');
 
                     % measurement_idを取得
-                    measurement_id = MeasurementPointMap(point_id);
+                    measurement_id = PointMeasurementMap(point_id);
 
                     % OutputDataCollectionsMapに追加
                     OutputDataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);
@@ -630,7 +571,7 @@ function create(obj, property_name, type)
                                 OutputDataCollectionsMap = Road.get('OutputDataCollectionsMap');
 
                                 % measurement_idを取得
-                                measurement_id = MeasurementPointMap(point_id);
+                                measurement_id = PointMeasurementMap(point_id);
 
                                 % OutputDataCollectionsMapに追加
                                 OutputDataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);

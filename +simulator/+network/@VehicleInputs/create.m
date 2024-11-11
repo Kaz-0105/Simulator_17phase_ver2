@@ -1,8 +1,5 @@
 function create(obj, property_name)
     if strcmp(property_name, 'Elements')
-        % Elementsを初期化
-        obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
-
         % NetworkクラスのComオブジェクトを取得
         Net = obj.Network.get('Vissim');
 

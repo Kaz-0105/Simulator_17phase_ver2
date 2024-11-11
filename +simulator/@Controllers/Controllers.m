@@ -6,10 +6,6 @@ classdef Controllers < utils.class.Container
         Network;
     end
 
-    properties
-        Elements;
-    end
-
     methods
         function obj = Controllers(Simulator)
             % Configクラスを設定
