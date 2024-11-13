@@ -51,6 +51,11 @@ function create(obj, property_name)
             % Roadクラスを取得
             Road = Roads.itemByKey(input_road.road_id);
 
+            % RoadクラスにSignalHeads, DelayMeasurements, QueueCountersをセット
+            Road.create('SignalHeads');
+            Road.create('DelayMeasurements');
+            Road.create('QueueCounters');
+
             % ElementsにRoadをプッシュ
             obj.Roads.input.add(Road, input_road.id);
 

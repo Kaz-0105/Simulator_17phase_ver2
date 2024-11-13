@@ -23,10 +23,10 @@ function create(obj, property_name)
             Link = obj.itemByKey(link_id);
 
             % Linkの接続関係を考える
-            Link.create('type');
+            Link.create('class');
 
-            % Linkのtypeがlinkの場合
-            if strcmp(Link.get('type'), 'link')
+            % Linkのclassがlinkの場合
+            if strcmp(Link.get('class'), 'link')
                 % コンテナを作成
                 Link.create('Links');
             end
@@ -37,8 +37,8 @@ function create(obj, property_name)
             % Linkクラスを取得
             Link = obj.itemByKey(link_id);
 
-            % Linkのtypeがconnectorの場合
-            if strcmp(Link.get('type'), 'connector')
+            % Linkのclassがconnectorの場合
+            if strcmp(Link.get('class'), 'connector')
                 % ToLinkとFromLinkのIDを取得
                 to_link_id = Link.get('Vissim').ToLink.get('AttValue', 'No');
                 from_link_id = Link.get('Vissim').FromLink.get('AttValue', 'No');

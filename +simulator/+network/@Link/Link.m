@@ -6,8 +6,9 @@ classdef Link < utils.class.Common
 
     properties
         id;
-        type;
+        class;
         length;
+        num_lanes;
         Vissim;
     end
 
@@ -25,6 +26,9 @@ classdef Link < utils.class.Common
 
             % lengthの設定
             obj.length = obj.Vissim.get('AttValue', 'Length2D');
+
+            % num_lanesの設定
+            obj.num_lanes = obj.Vissim.Lanes.Count();
         end
     end
 

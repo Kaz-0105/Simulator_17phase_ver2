@@ -29,6 +29,12 @@ classdef Intersection < utils.class.Common
             % intersection_structをセット
             obj.set('intersection_struct', intersection_struct);
 
+            % Roadsクラスを作成
+            obj.create('Roads');
+
+            % RordOrderMapの作成
+            obj.create('RoadOrderMap');
+
             % current_timeの初期化
             obj.create('current_time');
 
@@ -40,12 +46,6 @@ classdef Intersection < utils.class.Common
 
             % delay_tableを作成
             obj.create('delay_table');
-
-            % Roadsクラスを作成
-            obj.create('Roads');
-
-            % RordOrderMapの作成
-            obj.create('RoadOrderMap');
         end
     end
 

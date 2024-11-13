@@ -28,6 +28,12 @@ classdef Links < utils.class.Container
                 % ConfigクラスとLinksクラスを取得
                 obj.Config = UpperClass.get('Config');
                 obj.set('Link', UpperClass);
+            
+            elseif isa(UpperClass, 'simulator.network.Road')
+                % ConfigクラスとRoadクラスを取得
+                obj.Config = UpperClass.get('Config');
+                obj.set('Road', UpperClass);
+                
             else
                 error('UpperClass is invalid.');
             end

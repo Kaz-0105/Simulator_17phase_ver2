@@ -20,12 +20,6 @@ classdef VehicleRoutingDecisions < utils.class.Container
             % 下位クラスを作成
             obj.create('Elements');
 
-            % Roadクラスをセット
-            obj.create('Road');
-
-            % Intersectionクラスをセット
-            obj.create('Intersection');
-
             % LinkRoadMapを作成
             obj.create('LinkRoadMap');
 

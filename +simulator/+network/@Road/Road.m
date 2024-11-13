@@ -3,6 +3,7 @@ classdef Road < utils.class.Common
         Config;
         Roads;
         Intersections;
+        Links;
         DataCollections;
     end
 
@@ -28,8 +29,23 @@ classdef Road < utils.class.Common
             obj.set('road_struct', road_struct);
 
             % links, speedを作成
-            obj.create('links');
+            obj.create('Links');
             obj.create('speed');
+
+            % SignalHeadsを作成
+            obj.create('SignalHeads');
+
+            % QueueCountersを作成
+            obj.create('QueueCounters');
+
+            % DelayMeasurementsを作成
+            obj.create('DelayMeasurements');
+
+            % VehicleRoutingDecisionの作成
+            obj.create('VehicleRoutingDecision');
+
+            % DataCollectionMeasurementsを初期化
+            obj.create('DataCollections');
 
             % current_timeの初期化
             obj.create('current_time');
@@ -37,11 +53,8 @@ classdef Road < utils.class.Common
             % record_flagsを作成
             obj.create('record_flags');
 
-            % DataCollectionsを作成
-            obj.create('DataCollections');
-
             % Intersectionsの初期化
-            Intersections = struct();
+            obj.Intersections = struct();
         end
     end
 

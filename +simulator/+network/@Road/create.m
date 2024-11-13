@@ -12,166 +12,107 @@ function create(obj, property_name)
 
         % record_flagsを取得
         obj.record_flags = Network.get('record_flags');
-        
-    elseif strcmp(property_name, 'links')
-        % NetworkクラスのComオブジェクトを取得
-        Network = obj.Roads.get('Network');
-        Net = Network.get('Vissim');
-
-        % LinksのComオブジェクトを取得
-        Links = Net.Links;
-
-        % main_linkを初期化
-        main_link = struct();
+    
+    elseif strcmp(property_name, 'Links')
+        % Linksクラスを初期化
+        obj.Links = simulator.network.Links(obj);
 
         % linksを取得
         links = obj.road_struct.links;
 
-        % linksを初期化
-        obj.set('links', struct());
+        % 全体のLinksクラスを取得
+        Links = obj.Roads.get('Network').get('Links');
 
-        % idを取得
-        main_link.id = links.main;
+        % MainLinkを取得
+        MainLink = Links.itemByKey(links.main);
 
-        % Comオブジェクトを取得
-        main_link.Vissim = Links.ItemByKey(main_link.id);
+        % typeを設定
+        MainLink.set('type', 'main');
 
-        % main_linkの長さを取得
-        main_link.length = main_link.Vissim.get('AttValue', 'Length2D');
-
-        % lanesを取得
-        main_link.lanes = main_link.Vissim.Lanes.Count();
-
-        % linksにmain_linkをプッシュ
-        obj.links.main = main_link;
-
+        % メインリンクをLinksにプッシュ
+        obj.Links.add(MainLink);  
+        
         % 分岐が存在する場合
         if isfield(links, 'branch')
+            % Connectorsクラスを初期化
+            obj.set('Connectors', simulator.network.Links(obj));
+
             % 左に分岐が存在する場合
             if isfield(links.branch, 'left')
-                % branch_leftを初期化
-                branch_left = struct();
+                % SubLinkを取得
+                SubLink = Links.itemByKey(links.branch.left);
 
-                % linkを初期化
-                link = struct();
+                % typeを設定
+                SubLink.set('type', 'left');
 
-                % linkのidを取得
-                link.id = links.branch.left;
+                % サブリンクをLinksにプッシュ
+                obj.Links.add(SubLink);
 
-                % Comオブジェクトを取得
-                link.Vissim = Links.ItemByKey(link.id);
+                % Connectorを走査
+                for link_id = Links.getKeys()
+                    % Linkクラスを取得
+                    Link = Links.itemByKey(link_id);
 
-                % linkの長さを取得
-                link.length = link.Vissim.get('AttValue', 'Length2D');
-
-                % linkをbranch_leftにプッシュ
-                branch_left.link = link;
-
-                % connectorを探す
-                for Link = Links.GetAll()'
-                    % セルから取り出し
-                    Link = Link{1};
-
-                    % FromLinkを取得
-                    FromLink = Link.FromLink;
-
-                    if isempty(FromLink)
+                    % connectorでない場合スキップ
+                    if ~strcmp(Link.get('class'), 'connector')
                         continue;
                     end
 
-                    if FromLink.get('AttValue', 'No') == main_link.id
-                        % connectorを初期化
-                        connector = struct();
+                    % ToLinkを取得
+                    ToLink = Link.get('ToLink');
 
-                        % idを設定
-                        connector.id = Link.get('AttValue', 'No');
-
-                        % Comオブジェクトを設定
-                        connector.Vissim = Link;
-
-                        % connectorの長さを取得
-                        connector.length = Link.get('AttValue', 'Length2D');
-
-                        % from_posとto_posを取得
-                        connector.from_pos = Link.get('AttValue', 'FromPos');
-                        connector.to_pos = Link.get('AttValue', 'ToPos');
-
-                        % branch_leftにconnectorをプッシュ
-                        branch_left.connector = connector;
-
-                        % branch_leftをlinksにプッシュ
-                        obj.links.branch.left = branch_left;
+                    % サブリンクのIDと一致するかで分岐
+                    if ToLink.get('id') == SubLink.get('id')
+                        % ConnectorsにLinkをプッシュ
+                        obj.Connectors.add(Link);
+                        
+                        % linksに情報を追加
+                        links.branch.left(1, end + 1) = Link.get('id');
 
                         break;
                     end
                 end
             end
 
-            % 右に分岐が存在する
             if isfield(links.branch, 'right')
-                % branch_rightを初期化
-                branch_right = struct();
+                % SubLinkを取得
+                SubLink = Links.itemByKey(links.branch.right);
 
-                % linkを初期化
-                link = struct();
+                % typeを設定
+                SubLink.set('type', 'right');
 
-                % linkのidを取得
-                link.id = links.branch.right;
+                % サブリンクをLinksにプッシュ
+                obj.Links.add(SubLink);
 
-                % Comオブジェクトを取得
-                link.Vissim = Links.ItemByKey(link.id);
+                % Connectorを走査
+                for link_id = Links.getKeys()
+                    % Linkクラスを取得
+                    Link = Links.itemByKey(link_id);
 
-                % linkの長さを取得
-                link.length = link.Vissim.get('AttValue', 'Length2D');
-
-                % linkをbranch_rightにプッシュ
-                branch_right.link = link;
-
-                % connectorを探す
-                for Link = Links.GetAll()'
-                    % セルから取り出し
-                    Link = Link{1};
-
-                    % FromLinkを取得
-                    FromLink = Link.FromLink;
-
-                    if isempty(FromLink)
+                    % connectorでない場合スキップ
+                    if ~strcmp(Link.get('class'), 'connector')
                         continue;
                     end
 
-                    if FromLink.get('AttValue', 'No') == main_link.id
-                        % connectorを初期化
-                        connector = struct();
+                    % ToLinkを取得
+                    ToLink = Link.get('ToLink');
 
-                        % idを設定
-                        connector.id = Link.get('AttValue', 'No');
+                    % サブリンクのIDと一致するかで分岐
+                    if ToLink.get('id') == SubLink.get('id')
+                        % ConnectorsにLinkをプッシュ
+                        obj.Connectors.add(Link);
 
-                        % Comオブジェクトを設定
-                        connector.Vissim = Link;
-
-                        % connectorの長さを取得
-                        connector.length = Link.get('AttValue', 'Length2D');
-
-                        % from_posとto_posを取得
-                        connector.from_pos = Link.get('AttValue', 'FromPos');
-                        connector.to_pos = Link.get('AttValue', 'ToPos');
-
-                        % branch_rightにconnectorをプッシュ
-                        branch_right.connector = connector;
-
-                        % branch_rightをlinksにプッシュ
-                        obj.links.branch.right = branch_right;
-
+                        % linksに情報を追加
+                        links.branch.right(1, end + 1) = Link.get('id');
+                        
                         break;
                     end
                 end
             end
-        end
-    elseif strcmp(property_name, 'DataCollections')
-        % InputDataCollectionsとOutputDataCollectionsを初期化
-        obj.DataCollections.input = simulator.network.DataCollectionMeasurements(obj);
-        obj.DataCollections.output = simulator.network.DataCollectionMeasurements(obj);
 
+            % linksをセット
+            obj.links = links;
+        end
     elseif strcmp(property_name, 'SignalHead')
         % NetworkクラスのComオブジェクトを取得 
         Network = obj.Roads.get('Network');
@@ -278,6 +219,13 @@ function create(obj, property_name)
 
         % speedを設定
         obj.speed = road.speed;
+
+    elseif strcmp(property_name, 'SignalHeads')
+        % SignalHeadsクラスを初期化
+        obj.set('SignalHeads', simulator.network.SignalHeads(obj));
+
+        % signal_headsを初期化
+        obj.set('signal_heads', struct());
     else
         error('error: Property name is invalid.');
     end

@@ -18,11 +18,8 @@ function create(obj, property_name)
             obj.add(Road);
         end
 
-        % routing_decisionsの設定
-        obj.create('routing_decisions');
-
         % DataCollectionsの設定
-        obj.create('DataCollections');
+        % obj.create('DataCollections');
 
     elseif strcmp(property_name, 'SignalHeads')
         % Roadクラスを走査
@@ -414,181 +411,99 @@ function create(obj, property_name)
                 Road.create('routes');
             end
         end
-    elseif strcmp(property_name, 'DataCollections')
+    elseif strcmp(property_name, 'LinkRoadMap')
+        obj.set('LinkRoadMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));   
         % Roadクラスを走査
         for road_id = obj.getKeys()
             % Roadクラスを取得
             Road = obj.itemByKey(road_id);
 
-            if isprop(Road, 'routing_decision')
-                % InputDataCollectionsMapとOutputDataCollectionsMapの初期化
-                InputDataCollectionsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
-                OutputDataCollectionsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+            % Linksを取得
+            Links = Road.get('Links');
 
-                % RoadクラスにInputDataCollectionsMapとOutputDataCollectionsMapをセット
-                Road.set('InputDataCollectionsMap', InputDataCollectionsMap);
-                Road.set('OutputDataCollectionsMap', OutputDataCollectionsMap);
-            else
-                % InputDataCollectionsMapとOutputDataCollectionsMapの初期化
-                OutputDataCollectionsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
-
-                % RoadクラスにInputDataCollectionsMapとOutputDataCollectionsMapをセット
-                Road.set('OutputDataCollectionsMap', OutputDataCollectionsMap);
-            end
-        end
-
-        % PointMeasurementMapの初期化
-        PointMeasurementMap = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
-
-        % DataCollectionMeasurementsのComオブジェクトを取得
-        Net = obj.Network.get('Vissim');
-        DataCollectionMeasurements = Net.DataCollectionMeasurements;
-
-        % DataCollectionMeasurementの走査
-        for DataCollectionMeasurement = DataCollectionMeasurements.GetAll()'
-            % セルから取り出し
-            DataCollectionMeasurement = DataCollectionMeasurement{1};
-
-            % IDを取得
-            measurement_id = DataCollectionMeasurement.get('AttValue', 'No');
-
-            % DataCollectionPointsのComオブジェクトを取得
-            DataCollectionPoints = DataCollectionMeasurement.DataCollectionPoints;
-
-            % DataCollectionPointsの要素の数が１になっているかバリデーション
-            if DataCollectionPoints.Count() ~= 1
-                error('DataCollectionPoints.Count() is invalid.');
+            % Linkクラスを走査
+            for link_id = Links.getKeys()
+                % LinkRoadMapにプッシュ
+                obj.LinkRoadMap(link_id) = road_id;
             end
 
-            % DataCollectionPointのComオブジェクトを取得
-            DataCollectionPoint = DataCollectionPoints.GetAll();
-            DataCollectionPoint = DataCollectionPoint{1};
+            % Connectorsが存在するとき
+            if isfield(Road, 'Connectors')
+                % Connectorsを取得
+                Connectors = Road.get('Connectors');
 
-            % IDを取得
-            point_id = DataCollectionPoint.get('AttValue', 'No');
-
-            % PointMeasurementMapに追加
-            PointMeasurementMap(point_id) = measurement_id;
-        end
-
-        % DataCollectionMeasurementsのComオブジェクトを取得
-        Net = obj.Network.get('Vissim');
-        DataCollectionPoints = Net.DataCollectionPoints;
-
-        % DataCollectionPointの走査
-        for DataCollectionPoint = DataCollectionPoints.GetAll()'
-            % セルから取り出し
-            DataCollectionPoint = DataCollectionPoint{1};
-
-            % IDを取得
-            point_id = DataCollectionPoint.get('AttValue', 'No');
-
-            % LinkのComオブジェクトを取得
-            Link = DataCollectionPoint.Lane.Link;
-
-            % LinkのIDを取得
-            link_id = Link.get('AttValue', 'No');
-
-            if link_id < 10000
-                for road_id = obj.getKeys()
-                    % Roadクラスを取得
-                    Road = obj.itemByKey(road_id);
-
-                    % links構造体の取得
-                    links = Road.get('links');
-
-                    % メインリンクと比較
-                    if link_id == links.main.id
-                        % 流出口かどうかで分岐
-                        if isprop(Road, 'routing_decision')
-                            DataCollectionsMap = Road.get('InputDataCollectionsMap');
-                        else
-                            DataCollectionsMap = Road.get('OutputDataCollectionsMap');
-                        end
-
-                        % measurement_idを取得
-                        measurement_id = PointMeasurementMap(point_id);
-
-                        % DataCollectionsMapに追加
-                        DataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);
-
-                        % 処理を抜ける
-                        break;
-                    end
+                % Connectorsを走査
+                for link_id = Connectors.getKeys()
+                    % LinkRoadMapにプッシュ
+                    obj.LinkRoadMap(link_id) = road_id;
                 end
-
-                % 処理を抜ける
-                continue;
             end
+        end
 
-            % 1つ前のLinkを取得
-            Link = Link.FromLink;
 
-            % LinkのIDを取得
-            link_id = Link.get('AttValue', 'No');
+    elseif strcmp(property_name, 'VehicleRoutingDecision')
+        % VehicleRoutingDecisionsクラスを取得
+        VehicleRoutingDecisions = obj.Network.get('VehicleRoutingDecisions');
 
-            % Roadクラスを走査
-            for road_id = obj.getKeys()
+        % VehicleRoutingDecisionを走査
+        for vehicle_routing_decision_id = VehicleRoutingDecisions.getKeys()
+            % VehicleRoutingDecisionクラスを取得
+            VehicleRoutingDecision = VehicleRoutingDecisions.itemByKey(vehicle_routing_decision_id);
+
+            % link_idを取得
+            link_id = VehicleRoutingDecision.get('link_id');
+
+            % Roadクラスを取得
+            Road = obj.itemByKey(obj.LinkRoadMap(link_id));
+
+            % RoadクラスにVehicleRoutingDecisionをセット
+            Road.set('VehicleRoutingDecision', VehicleRoutingDecision);
+            VehicleRoutingDecision.set('Road', Road);
+        end
+
+    elseif strcmp(property_name, 'DataCollections')
+        % DataCollectionMeasurementsを取得
+        DataCollections = obj.get('Network').get('DataCollections');
+
+        % Linksを取得
+        Links = obj.get('Network').get('Links');
+
+        % DataCollectionMeasurementsを走査
+        for measurement_id = DataCollections.getKeys()
+            % DataCollectionクラスを取得
+            DataCollection = DataCollections.itemByKey(measurement_id);
+
+            % link_idを取得
+            link_id = DataCollection.get('link_id');
+
+            Link = Links.itemByKey(link_id);
+
+            % Linkがコネクタのとき
+            if strcmp(Link.get('class'), 'link')
                 % Roadクラスを取得
-                Road = obj.itemByKey(road_id);
+                Road = obj.itemByKey(obj.LinkRoadMap(link_id));
 
-                % links構造体の取得
-                links = Road.get('links');
-
-                % メインリンクと比較
-                if link_id == links.main.id
-                    % OutputDataCollectionsMapを取得
-                    OutputDataCollectionsMap = Road.get('OutputDataCollectionsMap');
-
-                    % measurement_idを取得
-                    measurement_id = PointMeasurementMap(point_id);
-
-                    % OutputDataCollectionsMapに追加
-                    OutputDataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);
-
-                    % 処理を抜ける
-                    break;
+                % 流入道路か流出道路かで分岐
+                if isprop(Road, 'VehicleRoutingDecision')
+                    Road.DataCollections.input.add(obj, Road.DataCollections.input.count() + 1);
+                else
+                    Road.DataCollections.output.add(obj, Road.DataCollections.output.count() + 1);
                 end
+            elseif strcmp(link.get('class'), 'connector')
+                % from_link_idを取得
+                from_link_id = DataCollection.get('from_link_id');
 
-                % サブリンクがあるとき
-                if isfield(links, 'branch')
-                    % stop_flagの初期化
-                    stop_flag = false;
+                % Roadクラスを取得
+                Road = obj.itemByKey(obj.LinkRoadMap(from_link_id));
 
-                    % branchの方向を走査
-                    for direction = ["left", "right"]
-                        % char型に変換
-                        direction = char(direction);
-
-                        % その方向の分岐があるとき
-                        if isfield(links.branch, direction)
-                            % branch構造体を取得
-                            branch = links.branch.(direction);
-
-                            % サブリンクとの比較
-                            if link_id == branch.link.id
-                                % OutputDataCollectionsMapを取得
-                                OutputDataCollectionsMap = Road.get('OutputDataCollectionsMap');
-
-                                % measurement_idを取得
-                                measurement_id = PointMeasurementMap(point_id);
-
-                                % OutputDataCollectionsMapに追加
-                                OutputDataCollectionsMap(measurement_id) = DataCollectionMeasurements.ItemByKey(measurement_id);
-
-                                % 処理を抜ける
-                                stop_flag = true;
-                            end
-                        end
-                    end
-
-                    % 処理を抜ける
-                    if stop_flag
-                        break;
-                    end
-                end
+                % DataCollectionsにプッシュ
+                Road.DataCollections.output.add(obj, Road.DataCollections.output.count() + 1);
+            else
+                error('Link class is invalid.');
             end
         end
+    
+        
     else
         error('Property name is invalid.');
     end

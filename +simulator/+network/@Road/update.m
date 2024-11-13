@@ -380,6 +380,12 @@ function update(obj, property_name)
         else
             error('Method is invalid.');
         end
+
+    elseif strcmp(property_name, 'DataCollections')
+        % DataCollectionsを初期化
+        obj.DataCollections.input = simulator.network.DataCollections(obj);
+        obj.DataCollections.output = simulator.network.DataCollections(obj);
+        
     elseif strcmp(property_name, 'Evaluation')
         % queue_tableが存在するとき
         if isprop(obj, 'queue_table')

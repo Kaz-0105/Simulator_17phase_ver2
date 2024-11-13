@@ -9,6 +9,7 @@ classdef VehicleRoutingDecision < utils.class.Common
 
     properties
         id;
+        link_id;
         Vissim;
     end
 
@@ -23,6 +24,9 @@ classdef VehicleRoutingDecision < utils.class.Common
 
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % link_idの取得
+            obj.link_id = obj.Vissim.Link.get('AttValue', 'No');
         end
     end
 end

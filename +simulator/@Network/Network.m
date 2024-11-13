@@ -4,11 +4,14 @@ classdef Network < utils.class.Common
         Simulator;
         Controllers;
         Links;
-        Roads;
-        Intersections;
+        SignalHeads;
+        QueueCounters;
+        DelayMeasurements;
         VehicleInputs;
         VehicleRoutingDecisions;
         DataCollectionMeasurements;
+        Roads;
+        Intersections;
     end
 
     properties
@@ -34,8 +37,20 @@ classdef Network < utils.class.Common
             % 評価指標の測定の有無のフラグを設定
             obj.create('record_flags');
 
-            % Linkクラスを作成
+            % Linksクラスを作成
             obj.Links = simulator.network.Links(obj);
+
+            % SignalHeadsクラスを作成
+            obj.SignalHeads = simulator.network.SignalHeads(obj);
+
+            % QueueCountersクラスを作成
+            obj.QueueCounters = simulator.network.QueueCounters(obj);
+
+            % DelayMeasurementsクラスを作成
+            obj.DelayMeasurements = simulator.network.DelayMeasurements(obj);
+
+            % DataCollectionMeasurementsクラスを作成
+            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
 
             % Roadsクラスを作成
             obj.Roads = simulator.network.Roads(obj);
@@ -49,8 +64,7 @@ classdef Network < utils.class.Common
             % VehicleRoutingDecisionsクラスを作成
             obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
 
-            % DataCollectionMeasurementsクラスを作成
-            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
+            
 
             % RoadクラスにDelayMeasurementsを紐づける
             obj.Roads.create('DelayMeasurements');
