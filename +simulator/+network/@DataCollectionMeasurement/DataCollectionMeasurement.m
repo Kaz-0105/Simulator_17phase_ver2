@@ -2,13 +2,11 @@ classdef DataCollectionMeasurement < utils.class.Common
     properties
         Config;
         DataCollectionMeasurements;
-        Road;
     end
 
     properties
         id;
-        point_id;
-        link_id;
+        type;
         Vissim;
     end
 

@@ -16,6 +16,9 @@ classdef DataCollectionMeasurements < utils.class.Container
                 % 要素クラスを作成
                 obj.create('Elements');
 
+                % Roadクラスにおいて必要のないDataCollectionMeasurementsを削除
+                obj.get('Network').get('Roads').delete('DataCollections');
+
             elseif isa(UpperClass, 'simulator.network.Road')
                 % RoadクラスとConfigクラスを取得
                 obj.set('Road', UpperClass);

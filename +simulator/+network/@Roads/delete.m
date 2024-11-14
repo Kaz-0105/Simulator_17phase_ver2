@@ -35,6 +35,32 @@ function delete(obj, property_name)
                 Road.delete('delay_measurements');
             end
         end
+    elseif strcmp(property_name, 'DataCollections')
+        % Roadクラスを走査
+        for road_id = obj.getKeys()
+            % Roadクラスを取得
+            Road = obj.itemByKey(road_id);
+
+            % DataCollectionsを取得
+            DataCollections = Road.get('DataCollections');
+            data_collections = Road.get('data_collections');
+            
+            % DataCollectionMeasurementsに要素が存在しない場合削除
+            if DataCollections.input.count() == 0
+                DataCollections = rmfield(DataCollections, 'input');
+                data_collections = rmfield(data_collections, 'input');
+            end
+
+            if DataCollections.output.count() == 0
+                DataCollections = rmfield(DataCollections, 'output');
+                data_collections = rmfield(data_collections, 'output');
+            end
+
+            % DataCollectionsを更新
+            Road.set('DataCollections', DataCollections);
+            Road.set('data_collections', data_collections);
+
+        end
     else
         error('Property name is invalid.');
     end

@@ -146,102 +146,10 @@ function create(obj, property_name)
         obj.set('DataCollections', DataCollections);    
 
         % data_collectionsを初期化
-        obj.set('data_collections', []);
+        data_collections.input = [];
+        data_collections.output = [];
+        obj.set('data_collections', data_collections);
 
-    elseif strcmp(property_name, 'SignalHead')
-        % NetworkクラスのComオブジェクトを取得 
-        Network = obj.Roads.get('Network');
-        Net = Network.get('Vissim');
-
-        % SignalHeadsのComオブジェクトを取得
-        SignalHeads = Net.SignalHeads;
-
-        for SignalHead = SignalHeads.GetAll()'
-            % セルから取り出し
-            SignalHead = SignalHead{1};
-
-            % SignalHeadが設置されているConnectorを取得
-            Connector = SignalHead.Lane.Link;
-
-            % 対応するLinkを取得
-            Link = Connector.FromLink;
-
-            % リンクのIDを取得
-            link_id = Link.get('AttValue', 'No');
-
-            % SignalHeadがこの道路内に存在するかで分岐
-            if link_id == obj.links.main.id
-                % link構造体を取得
-                link = obj.links.main;
-
-                % signal_head構造体を初期化
-                signal_head = struct();
-
-                % id, Comオブジェクト, 位置を取得
-                signal_head.id = SignalHead.get('AttValue', 'No');
-                signal_head.Vissim = SignalHead;
-                signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
-
-                % signal_headsが存在しない場合
-                if ~isfield(link, 'signal_heads')
-                    link.signal_heads = signal_head;
-                else
-                    link.signal_heads(1, end + 1) = signal_head;
-                end
-
-                % linksにmain_linkをプッシュ
-                obj.links.main = link;
-
-            elseif isfield(obj.links, 'branch')
-                if isfield(obj.links.branch, 'left')
-                    if link_id == obj.links.branch.left.link.id
-                        % link構造体を取得
-                        link = obj.links.branch.left.link;
-
-                        % signal_head構造体を初期化
-                        signal_head = struct();
-                        
-                        % id, Comオブジェクト, 位置を取得
-                        signal_head.id = SignalHead.get('AttValue', 'No');
-                        signal_head.Vissim = SignalHead;
-                        signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
-
-                        % signal_headsが存在しない場合
-                        if ~isfield(link, 'signal_heads')
-                            link.signal_heads = signal_head;
-                        else
-                            link.signal_heads(1, end + 1) = signal_head;
-                        end
-
-                        % links.branch.leftにlinkをプッシュ
-                        obj.links.branch.left.link = link;
-                    end
-                elseif isfield(obj.links.branch, 'right')
-                    if link_id == obj.links.branch.right.link.id
-                        % link構造体を取得
-                        link = obj.links.branch.right.link;
-
-                        % signal_head構造体を初期化
-                        signal_head = struct();
-
-                        % id, Comオブジェクト, 位置を取得
-                        signal_head.id = SignalHead.get('AttValue', 'No');
-                        signal_head.Vissim = SignalHead;
-                        signal_head.pos = SignalHead.get('AttValue', 'Pos') + link.length;
-
-                        % signal_headsが存在しない場合
-                        if ~isfield(link, 'signal_heads')
-                            link.signal_heads = signal_head;
-                        else
-                            link.signal_heads(1, end + 1) = signal_head;
-                        end
-
-                        % links.branch.rightにlinkをプッシュ
-                        obj.links.branch.right.link = link;
-                    end
-                end
-            end
-        end
     elseif strcmp(property_name, 'speed')
         % Networkクラス用の設定を取得
         network = obj.Config.get('network');
