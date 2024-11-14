@@ -17,14 +17,10 @@ function create(obj, property_name)
         obj.FromLink = Links.itemByKey(from_link_id);
         obj.ToLink = Links.itemByKey(to_link_id);
     
-    elseif strcmp(property_name, 'Roads')
-        % LinkRoadMapの取得
-        Roads = obj.SignalHeads.get('Network').get('Roads');    
-        LinkRoadMap = Roads.get('LinkRoadMap');
-
+    elseif strcmp(property_name, 'Roads')   
         % 各種Roadクラスの設定
-        obj.FromRoad = Roads.itemByKey(LinkRoadMap(obj.FromLink.get('id')));
-        obj.ToRoad = Roads.itemByKey(LinkRoadMap(obj.ToLink.get('id')));
+        obj.FromRoad = obj.FromLink.get('Road');
+        obj.ToRoad = obj.ToLink.get('Road');
 
         % RoadOrderMapの取得
         Intersection = obj.FromRoad.get('Intersections').output;
@@ -50,6 +46,7 @@ function create(obj, property_name)
         end
 
         % 信号機の進路の方向を設定
+        obj.order = order;
         signal_head.order = order;
 
         % FromRoadに信号機の情報を追加

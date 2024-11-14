@@ -10,8 +10,6 @@ classdef Intersection < utils.class.Common
     properties
         id;
         method;
-        signal_controller;
-
         current_time;
         record_flags;
     end
@@ -40,12 +38,6 @@ classdef Intersection < utils.class.Common
 
             % record_flagsを作成
             obj.create('record_flags');
-
-            % queue_tableを作成
-            % obj.create('queue_table');
-
-            % delay_tableを作成
-            % obj.create('delay_table');
         end
     end
 

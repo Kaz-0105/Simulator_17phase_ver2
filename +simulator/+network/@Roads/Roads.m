@@ -13,18 +13,6 @@ classdef Roads < utils.class.Container
 
                 % 要素クラスを作成
                 obj.create('Elements');
-
-                % LinkRoadMapを作成
-                obj.create('LinkRoadMap');
-
-                % DataCollectionsクラスを作成
-                % obj.create('DataCollections');
-
-                % 要素クラスをVissimのSignalHeadオブジェクトと紐づける
-                % obj.create('SignalHeads');
-
-                % 要素クラスをVissimのQueueCounterオブジェクトと紐づける
-                % obj.create('QueueCounters');
                 
             elseif isa(UpperClass, 'simulator.network.Intersection')
                 % Intersectionsクラスを設定

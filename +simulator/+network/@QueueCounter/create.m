@@ -12,9 +12,7 @@ function create(obj, property_name)
         obj.Link = Links.itemByKey(link_id);
 
         % Roadクラスを設定
-        Roads = obj.QueueCounters.get('Network').get('Roads');
-        LinkRoadMap = Roads.get('LinkRoadMap');
-        obj.Road = Roads.itemByKey(LinkRoadMap(link_id));
+        obj.Road = obj.Link.get('Road');
 
         % queue_counter構造体の作成
         queue_counter.id = obj.id;

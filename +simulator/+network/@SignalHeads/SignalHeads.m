@@ -16,8 +16,8 @@ classdef SignalHeads < utils.class.Container
                 % 要素クラスを作成
                 obj.create('Elements');
 
-                % LinkSignalHeadsMapの作成
-                obj.create('LinkSignalHeadsMap');
+                % GroupHeadMapを作成
+                obj.create('GroupHeadsMap');
 
                 % Roadクラスにおいて必要のないSignalHeadsを削除
                 obj.get('Network').get('Roads').delete('SignalHeads');
@@ -26,6 +26,11 @@ classdef SignalHeads < utils.class.Container
                 % ConfigクラスとRoadクラスを設定
                 obj.Config = UpperClass.get('Config');
                 obj.set('Road', UpperClass);
+
+            elseif isa(UpperClass, 'simulator.network.SignalGroup')
+                % ConfigクラスとSignalGroupクラスを設定
+                obj.Config = UpperClass.get('Config');
+                obj.set('SignalGroup', UpperClass);
 
             else
                 error('UppeClass is not a valid class');

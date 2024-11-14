@@ -30,13 +30,9 @@ function create(obj, property_name)
         obj.ToLink = Links.itemByKey(to_link_id);
 
     elseif strcmp(property_name, 'Roads')
-        % Roadsクラスを取得
-        Roads = obj.DelayMeasurements.get('Network').get('Roads');
-        LinkRoadMap = Roads.get('LinkRoadMap');
-
         % Roadクラスを設定
-        obj.FromRoad = Roads.itemByKey(LinkRoadMap(obj.FromLink.get('id')));
-        obj.ToRoad = Roads.itemByKey(LinkRoadMap(obj.ToLink.get('id')));
+        obj.FromRoad = obj.FromLink.get('Road');
+        obj.ToRoad = obj.ToLink.get('Road');
 
         % Intersectionクラスを取得
         Intersection = obj.FromRoad.get('Intersections').output;

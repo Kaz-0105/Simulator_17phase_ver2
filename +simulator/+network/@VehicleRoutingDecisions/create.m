@@ -25,24 +25,6 @@ function create(obj, property_name)
             % Intersectionクラスを取得
             RoutingDecision.create('Intersection');
         end
-    elseif strcmp(property_name, 'LinkRoadMap')
-        % 動的プロパティを初期化
-        obj.set('LinkRoadMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
-
-        % Roadsクラスを取得
-        Roads = obj.Network.get('Roads');
-
-        % Roadクラスを走査
-        for road_id = Roads.getKeys()
-            % Roadクラスを取得
-            Road = Roads.itemByKey(road_id);
-
-            % links構造体を取得
-            links = Road.get('links');
-
-            % LinkRoadMapに追加
-            obj.LinkRoadMap(links.main.id) = road_id;
-        end
     else
         error('Property name is invalid.');
     end

@@ -22,13 +22,9 @@ function create(obj, property_name)
         % VehicleRoutingDecisionクラスを取得
         VehicleRoutingDecision = obj.VehicleRoutes.get('VehicleRoutingDecision');
 
-        % Roadsクラスを取得
-        Roads = VehicleRoutingDecision.get('VehicleRoutingDecisions').get('Network').get('Roads');
-        LinkRoadMap = Roads.get('LinkRoadMap');
-
         % Roadクラスを取得
-        obj.FromRoad = Roads.itemByKey(LinkRoadMap(obj.FromLink.get('id')));
-        obj.ToRoad = Roads.itemByKey(LinkRoadMap(obj.ToLink.get('id')));
+        obj.FromRoad = obj.FromLink.get('Road');
+        obj.ToRoad = obj.ToLink.get('Road');
     
     elseif strcmp(property_name, 'vehicle_route')
         % VehicleRoutingDecisionクラスを取得

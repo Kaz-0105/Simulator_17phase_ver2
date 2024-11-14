@@ -14,11 +14,7 @@ function create(obj, property_name)
 
     elseif strcmp(property_name, 'Road')
         % Roadクラスの取得
-        Roads = obj.VehicleRoutingDecisions.get('Network').get('Roads');
-        LinkRoadMap = Roads.get('LinkRoadMap'); 
-
-        % Roadクラスの取得
-        obj.Road = Roads.itemByKey(LinkRoadMap(obj.Link.get('id')));
+        obj.Road = obj.Link.get('Road');
         obj.Road.set('VehicleRoutingDecision', obj);
     else
         error('Property name is invalid.');

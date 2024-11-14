@@ -3,6 +3,8 @@ classdef Network < utils.class.Common
         Config;
         Simulator;
         Controllers;
+        Roads;
+        Intersections;
         Links;
         SignalHeads;
         QueueCounters;
@@ -10,8 +12,7 @@ classdef Network < utils.class.Common
         VehicleInputs;
         VehicleRoutingDecisions;
         DataCollectionMeasurements;
-        Roads;
-        Intersections;
+        SignalControllers;
     end
 
     properties
@@ -49,6 +50,9 @@ classdef Network < utils.class.Common
             % SignalHeadsクラスを作成
             obj.SignalHeads = simulator.network.SignalHeads(obj);
 
+            % SignalControllersクラスを作成
+            obj.SignalControllers = simulator.network.SignalControllers(obj);
+
             % QueueCountersクラスを作成
             obj.QueueCounters = simulator.network.QueueCounters(obj);
 
@@ -66,6 +70,8 @@ classdef Network < utils.class.Common
             
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');
+
+          
         end
     end
 
