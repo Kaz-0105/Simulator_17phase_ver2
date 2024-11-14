@@ -13,22 +13,14 @@ classdef DataCollectionMeasurements < utils.class.Container
                 % VissimのCOMオブジェクトを設定
                 obj.create('Vissim');
 
-                % LinkRoadMapを作成
-                obj.create('LinkRoadMap');
-
                 % 要素クラスを作成
                 obj.create('Elements');
-
-                % LinkRoadMapの削除
-                obj.delete('LinkRoadMap');
 
             elseif isa(UpperClass, 'simulator.network.Road')
                 % RoadクラスとConfigクラスを取得
                 obj.set('Road', UpperClass);
                 obj.Config = obj.Road.get('Config');
             end
-
-            
         end
     end
 

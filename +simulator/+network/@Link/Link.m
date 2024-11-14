@@ -2,6 +2,7 @@ classdef Link < utils.class.Common
     properties
         Config;
         Links;
+        Road;
     end
 
     properties

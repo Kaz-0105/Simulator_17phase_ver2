@@ -59,7 +59,12 @@ function create(obj, property_name)
         for route_id = obj.getKeys()
             % VehicleRouteクラスを取得
             VehicleRoute = obj.itemByKey(route_id);
+
+            % rel_flowを設定
             VehicleRoute.set('rel_flow', rel_flows(VehicleRoute.get('order')));
+
+            % Vissimに適用
+            VehicleRoute.get('Vissim').set('AttValue', 'RelFlow(1)', VehicleRoute.get('rel_flow'));
         end
     else
         error('Property name is invalid.');

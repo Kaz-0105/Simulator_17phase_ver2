@@ -12,12 +12,6 @@ classdef VehicleInputs < utils.class.Container
 
             % 下位クラスを作成
             obj.create('Elements');
-
-            % Roadクラスをセット
-            obj.create('Road');
-
-            % 流量をセット
-            obj.create('volume');
         end
     end
 end

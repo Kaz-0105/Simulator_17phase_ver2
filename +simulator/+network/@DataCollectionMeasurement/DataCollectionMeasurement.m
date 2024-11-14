@@ -9,7 +9,6 @@ classdef DataCollectionMeasurement < utils.class.Common
         id;
         point_id;
         link_id;
-        objective;
         Vissim;
     end
 
@@ -25,11 +24,11 @@ classdef DataCollectionMeasurement < utils.class.Common
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
 
-            % point_idを設定
-            obj.create('point_id');
+            % Linkクラス関連の設定
+            obj.create('Links');
 
-            % from_link_idを設定
-            obj.create('from_link_id');
+            % Roadクラス関連の設定
+            obj.create('Roads');
         end
     end
 

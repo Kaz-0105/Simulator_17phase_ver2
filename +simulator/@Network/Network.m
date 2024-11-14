@@ -58,14 +58,11 @@ classdef Network < utils.class.Common
             % VehicleRoutingDecisionsクラスを作成
             obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
 
-            % DataCollectionMeasurementsクラスを作成
-            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
-
             % VehicleInputsクラスを作成
             obj.VehicleInputs = simulator.network.VehicleInputs(obj);
-            
-            % RoadクラスにDelayMeasurementsを紐づける
-            obj.Roads.create('DelayMeasurements');
+
+            % DataCollectionMeasurementsクラスを作成
+            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
             
             % current_timeの初期化
             obj.current_time = obj.Simulator.get('current_time');

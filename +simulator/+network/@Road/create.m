@@ -30,7 +30,8 @@ function create(obj, property_name)
         MainLink.set('type', 'main');
 
         % メインリンクをLinksにプッシュ
-        obj.Links.add(MainLink);  
+        obj.Links.add(MainLink);
+        MainLink.set('Road', obj);  
         
         % 分岐が存在する場合
         if isfield(links, 'branch')
@@ -47,6 +48,7 @@ function create(obj, property_name)
 
                 % サブリンクをLinksにプッシュ
                 obj.Links.add(SubLink);
+                Sublink.set('Road', obj);
 
                 % Connectorを走査
                 for link_id = Links.getKeys()
@@ -65,6 +67,7 @@ function create(obj, property_name)
                     if ToLink.get('id') == SubLink.get('id')
                         % ConnectorsにLinkをプッシュ
                         obj.Connectors.add(Link);
+                        Link.set('Road', obj);
                         
                         % linksに情報を追加
                         links.branch.left(1, end + 1) = Link.get('id');
@@ -83,6 +86,7 @@ function create(obj, property_name)
 
                 % サブリンクをLinksにプッシュ
                 obj.Links.add(SubLink);
+                SubLink.set('Road', obj);
 
                 % Connectorを走査
                 for link_id = Links.getKeys()
@@ -101,6 +105,7 @@ function create(obj, property_name)
                     if ToLink.get('id') == SubLink.get('id')
                         % ConnectorsにLinkをプッシュ
                         obj.Connectors.add(Link);
+                        Link.set('Road', obj);
 
                         % linksに情報を追加
                         links.branch.right(1, end + 1) = Link.get('id');
@@ -109,10 +114,10 @@ function create(obj, property_name)
                     end
                 end
             end
-
-            % linksをセット
-            obj.links = links;
         end
+
+        % linksをセット
+        obj.links = links;
     elseif strcmp(property_name, 'SignalHeads')
         % SignalHeadsクラスを初期化
         obj.set('SignalHeads', simulator.network.SignalHeads(obj));

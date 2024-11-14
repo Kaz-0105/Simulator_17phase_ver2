@@ -2,15 +2,13 @@ classdef VehicleInput < utils.class.Common
     properties
         Config;
         VehicleInputs;
+        Link;
         Road;
     end
 
     properties
         id;
         Vissim;
-    end
-
-    properties
         volume;
     end
 
@@ -25,6 +23,15 @@ classdef VehicleInput < utils.class.Common
 
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % Linkクラスの設定
+            obj.create('Link');
+
+            % Roadクラスを設定
+            obj.create('Road');
+
+            % volumeの設定
+            obj.create('volume');
         end
     end
 end
