@@ -74,8 +74,8 @@ function create(obj, property_name)
         % SignalGroupsを取得
         SignalGroups = obj.Intersection.get('SignalController').get('SignalGroups');
 
-        % SignalGroupsMapを取得
-        SignalGroupsMap = obj.Intersection.get('signal_controller').signal_groups.SignalGroupsMap;
+        % OrderGroupMapを取得
+        OrderGroupMap = obj.Intersection.get('SignalController').get('OrderGroupMap');
 
         % Roadsクラスを取得
         Roads = obj.Intersection.get('Roads');
@@ -97,29 +97,26 @@ function create(obj, property_name)
 
         % フェーズを走査
         for phase_id = 1: PhaseSignalGroupsMap.Count()
-            % order_idsを取得
-            order_ids = PhaseSignalGroupsMap(phase_id);
+            % signal_group_ordersを取得
+            signal_group_orders = PhaseSignalGroupsMap(phase_id);
 
-            % tmpSignalGroupsMapを初期化
-            tmpSignalGroupsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+            % TmpSignalGroupsを初期化
+            TmpSignalGroups = simulator.network.SignalGroups(obj.Intersection);
 
-            % order_idを走査
-            for order_id = order_ids
-                % signal_groupを走査
-                for signal_group_id = cell2mat(SignalGroupsMap.keys())
-                    % signal_groupを取得
-                    signal_group = SignalGroupsMap(signal_group_id);
+            % orderを走査
+            for signal_group_order = signal_group_orders
+                % signal_group_idを取得
+                signal_group_id = OrderGroupMap(signal_group_order);
 
-                    if signal_group.order_id == order_id
-                        % signal_groupをtmpSignalGroupsMapにプッシュ
-                        tmpSignalGroupsMap(order_id) = signal_group;
-                        break;
-                    end
-                end
+                % SignalGroupを取得
+                SignalGroup = SignalGroups.itemByKey(signal_group_id);
+
+                % SignalGroupをTmpSignalGroupsにプッシュ
+                TmpSignalGroups.add(SignalGroup, signal_group_order);
             end
 
-            % tmpSignalGroupsMapをPhaseSignalGroupsMapにプッシュ
-            PhaseSignalGroupsMap(phase_id) = tmpSignalGroupsMap;
+            % TmpSignalGroupsをPhaseSignalGroupsMapにプッシュ
+            PhaseSignalGroupsMap(phase_id) = TmpSignalGroups;
         end
 
         % IntersectionクラスにPhaseSignalGroupsMapを設定

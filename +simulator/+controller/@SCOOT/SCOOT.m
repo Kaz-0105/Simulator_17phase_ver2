@@ -29,6 +29,8 @@ classdef SCOOT < utils.class.Common
         next_phase_id;
         next_split_start;
         next_cycle_start;
+
+        split_adjusted_flag;
     end
 
     properties
@@ -92,6 +94,9 @@ classdef SCOOT < utils.class.Common
             % current_split_start, next_split_startの初期化
             obj.current_split_start = obj.current_time;
             obj.next_split_start = obj.PhaseSplitStartMap(obj.next_phase_id);
+
+            % split_adjusted_flagの初期化
+            obj.split_adjusted_flag = false;
 
             % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
             obj.create('PhaseSaturationMap');

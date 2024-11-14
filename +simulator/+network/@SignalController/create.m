@@ -42,6 +42,22 @@ function create(obj, property_name)
             % signal_group構造体をsignal_groupsにプッシュ
             obj.signal_groups = [obj.signal_groups, signal_group];  
         end
+
+    elseif strcmp(property_name, 'OrderGroupMap')
+        % GroupOrderMapを初期化
+        obj.set('OrderGroupMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
+
+        % SignalGroupを取得
+        for signal_group_id = obj.SignalGroups.getKeys()
+            % SignalGroupを取得
+            SignalGroup = obj.SignalGroups.itemByKey(signal_group_id);
+            
+            % orderを取得
+            order = SignalGroup.get('order');
+
+            % GroupOrderMapにorderをプッシュ
+            obj.OrderGroupMap(order) = signal_group_id;
+        end
     else
         error('Property name is invalid.');
     end

@@ -279,13 +279,13 @@ function update(obj, property_name)
                 current_phase_id = obj.SCOOT.get('current_phase_id');
                 num_phases = obj.SCOOT.get('num_phases');
             catch
-                SCOOT = obj.Intersection.input.get('SCOOT');
+                SCOOT = obj.Intersections.input.get('SCOOT');
                 current_phase_id = SCOOT.get('current_phase_id');
                 num_phases = SCOOT.get('num_phases');
             end
 
             % inflowを取得
-            if isprop(obj, 'InputDataCollectionsMap')
+            if isfield(obj.DataCollections, 'input')
                 if isprop(obj, 'PhaseInflowMap')
                     if obj.former_phase_id == current_phase_id
                         % inflowを取得
@@ -343,13 +343,13 @@ function update(obj, property_name)
             end
 
             % InputDataCollectionを走査
-            if isprop(obj, 'InputDataCollectionsMap')
-                for data_collection_id = cell2mat(obj.InputDataCollectionsMap.keys())
-                    % InputDataCollectionのComオブジェクトを取得
-                    InputDataCollection = obj.InputDataCollectionsMap(data_collection_id);
+            if isfield(obj.DataCollections, 'input')
+                for data_collection_id = obj.DataCollections.input.getKeys()
+                    % DataCollectionクラスを取得
+                    DataCollection = obj.DataCollections.input.itemByKey(data_collection_id);
 
                     % このステップで通過した自動車台数を取得
-                    num_vehs = InputDataCollection.get('AttValue', 'Vehs(Current, Last, All)');
+                    num_vehs = DataCollection.get('Vissim').get('AttValue', 'Vehs(Current, Last, All)');
 
                     % inflowにプッシュ
                     inflow = inflow + num_vehs;
@@ -359,13 +359,13 @@ function update(obj, property_name)
                 obj.PhaseInflowMap(current_phase_id) = inflow;
             end
 
-            % OutputDataCollectionを走査
-            for data_collection_id = cell2mat(obj.OutputDataCollectionsMap.keys())
-                % OutputDataCollectionのComオブジェクトを取得
-                OutputDataCollection = obj.OutputDataCollectionsMap(data_collection_id);
+            % 流出側のDataCollectionを走査
+            for data_collection_id = obj.DataCollections.output.getKeys()
+                % DataCollectionクラスを取得
+                DataCollection = obj.DataCollections.output.itemByKey(data_collection_id);
 
                 % このステップで通過した自動車台数を取得
-                num_vehs = OutputDataCollection.get('AttValue', 'Vehs(Current, Last, All)');
+                num_vehs = DataCollection.get('Vissim').get('AttValue', 'Vehs(Current, Last, All)');
 
                 % outflowにプッシュ
                 outflow = outflow + num_vehs;
@@ -381,10 +381,10 @@ function update(obj, property_name)
             error('Method is invalid.');
         end
 
-    elseif strcmp(property_name, 'DataCollections')
-        % DataCollectionsを初期化
-        obj.DataCollections.input = simulator.network.DataCollections(obj);
-        obj.DataCollections.output = simulator.network.DataCollections(obj);
+    % elseif strcmp(property_name, 'DataCollections')
+    %     % DataCollectionsを初期化
+    %     obj.DataCollections.input = simulator.network.DataCollections(obj);
+    %     obj.DataCollections.output = simulator.network.DataCollections(obj);
         
     elseif strcmp(property_name, 'Evaluation')
         % queue_tableが存在するとき

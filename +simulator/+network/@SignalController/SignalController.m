@@ -35,6 +35,9 @@ classdef SignalController < utils.class.Common
 
             % signal_groups構造体を作成
             obj.create('signal_groups');
+
+            % GroupOrderMapを作成
+            obj.create('OrderGroupMap');
         end
     end
 end

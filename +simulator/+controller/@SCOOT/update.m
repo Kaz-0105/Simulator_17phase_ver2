@@ -4,8 +4,10 @@ function update(obj, property_name , varargin)
         obj.objectives = [];
 
         if obj.current_time + obj.delta_s + 2 == obj.next_split_start
-            obj.skip_flag = false;
-            obj.objectives = [obj.objectives, "split"];
+            if ~obj.split_adjusted_flag
+                obj.skip_flag = false;
+                obj.objectives = [obj.objectives, "split"];
+            end
         end
 
         if obj.current_time + 1 == obj.next_cycle_start
@@ -200,13 +202,44 @@ function update(obj, property_name , varargin)
                     end
 
                     % PhaseSplitStartMapを更新
-                    obj.PhaseSplitStartMap(obj.next_phase_id) = obj.PhaseSplitStartMap(obj.next_phase_id) - 1;
+                    if obj.PhaseSplitStartMap(obj.next_phase_id) - obj.current_split_start >= 10 + 1
+                        obj.PhaseSplitStartMap(obj.next_phase_id) = obj.PhaseSplitStartMap(obj.next_phase_id) - 1;
+                    end
+                end
+
+            elseif obj.PhaseSaturationMap(obj.current_phase_id) > obj.PhaseSaturationMap(obj.next_phase_id)
+                next_next_phase_id = obj.next_phase_id + 1;
+                if next_next_phase_id > obj.num_phases
+                    next_next_phase_id = 1;
+                end
+
+                % 継続時間が10秒以上のとき
+                if obj.PhaseSplitStartMap(next_next_phase_id) - obj.PhaseSplitStartMap(obj.next_phase_id) > 10
+                    if obj.PhaseSplitStartMap(next_next_phase_id) - obj.PhaseSplitStartMap(obj.next_phase_id) < 10 + obj.delta_s
+                        % next_split_startを更新（最低の連続時間を確保）
+                        obj.next_split_start = obj.PhaseSplitStartMap(next_next_phase_id) - 10;
+                    else
+                        % next_split_startを更新
+                        obj.next_split_start = obj.next_split_start + obj.delta_s;
+                    end
+
+                    % PhaseSplitStartMapを更新
+                    if obj.PhaseSplitStartMap(next_next_phase_id) - obj.PhaseSplitStartMap(obj.next_phase_id) >= 10 + 1
+                        obj.PhaseSplitStartMap(obj.next_phase_id) = obj.PhaseSplitStartMap(obj.next_phase_id) + 1;
+                    end
+                    
                 end
             end
+
+            % split_adjusted_flagを更新
+            obj.split_adjusted_flag = true;
 
         elseif strcmp(objective, 'split_change')
             % next_split_startを更新
             obj.next_split_start = obj.PhaseSplitStartMap(obj.next_phase_id);
+
+            % split_adjusted_flagを更新
+            obj.split_adjusted_flag = false;
         else
             error('Objective is invalid.');
         end
