@@ -19,6 +19,9 @@ classdef SignalHeads < utils.class.Container
                 % LinkSignalHeadsMapの作成
                 obj.create('LinkSignalHeadsMap');
 
+                % Roadクラスにおいて必要のないSignalHeadsを削除
+                obj.get('Network').get('Roads').delete('SignalHeads');
+
             elseif isa(UpperClass, 'simulator.network.Road')
                 % ConfigクラスとRoadクラスを設定
                 obj.Config = UpperClass.get('Config');

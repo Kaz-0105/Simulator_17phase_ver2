@@ -113,6 +113,36 @@ function create(obj, property_name)
             % linksをセット
             obj.links = links;
         end
+    elseif strcmp(property_name, 'SignalHeads')
+        % SignalHeadsクラスを初期化
+        obj.set('SignalHeads', simulator.network.SignalHeads(obj));
+
+        % signal_headsを初期化
+        obj.set('signal_heads', []);
+
+    elseif strcmp(property_name, 'QueueCounters')
+        % QueueCountersクラスを初期化
+        obj.set('QueueCounters', simulator.network.QueueCounters(obj));
+
+        % queue_countersを初期化
+        obj.set('queue_counters', []);
+
+    elseif strcmp(property_name, 'DelayMeasurements')
+        % DelayMeasurementsクラスを初期化
+        obj.set('DelayMeasurements', simulator.network.DelayMeasurements(obj));
+
+        % delay_measurementsを初期化
+        obj.set('delay_measurements', []);
+
+    elseif strcmp(property_name, 'DataCollections')
+        % DataCollectionsクラスを初期化
+        DataCollections.input = simulator.network.DataCollectionMeasurements(obj);
+        DataCollections.output = simulator.network.DataCollectionMeasurements(obj);
+        obj.set('DataCollections', DataCollections);    
+
+        % data_collectionsを初期化
+        obj.set('data_collections', []);
+
     elseif strcmp(property_name, 'SignalHead')
         % NetworkクラスのComオブジェクトを取得 
         Network = obj.Roads.get('Network');
@@ -219,13 +249,6 @@ function create(obj, property_name)
 
         % speedを設定
         obj.speed = road.speed;
-
-    elseif strcmp(property_name, 'SignalHeads')
-        % SignalHeadsクラスを初期化
-        obj.set('SignalHeads', simulator.network.SignalHeads(obj));
-
-        % signal_headsを初期化
-        obj.set('signal_heads', struct());
     else
         error('error: Property name is invalid.');
     end

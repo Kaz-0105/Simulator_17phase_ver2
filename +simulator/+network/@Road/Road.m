@@ -28,7 +28,7 @@ classdef Road < utils.class.Common
             % road_structを設定
             obj.set('road_struct', road_struct);
 
-            % links, speedを作成
+            % Links, speedを作成
             obj.create('Links');
             obj.create('speed');
 
@@ -40,9 +40,6 @@ classdef Road < utils.class.Common
 
             % DelayMeasurementsを作成
             obj.create('DelayMeasurements');
-
-            % VehicleRoutingDecisionの作成
-            obj.create('VehicleRoutingDecision');
 
             % DataCollectionMeasurementsを初期化
             obj.create('DataCollections');

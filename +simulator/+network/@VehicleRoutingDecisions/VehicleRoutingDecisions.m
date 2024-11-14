@@ -20,14 +20,8 @@ classdef VehicleRoutingDecisions < utils.class.Container
             % 下位クラスを作成
             obj.create('Elements');
 
-            % LinkRoadMapを作成
-            obj.create('LinkRoadMap');
-
             % VehicleRoutesクラスを作成
             obj.create('VehicleRoutes');
-
-            % LinkRoadMapを削除
-            obj.delete('LinkRoadMap');
         end
     end
 

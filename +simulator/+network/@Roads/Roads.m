@@ -18,7 +18,7 @@ classdef Roads < utils.class.Container
                 obj.create('LinkRoadMap');
 
                 % DataCollectionsクラスを作成
-                obj.create('DataCollections');
+                % obj.create('DataCollections');
 
                 % 要素クラスをVissimのSignalHeadオブジェクトと紐づける
                 % obj.create('SignalHeads');
@@ -40,5 +40,6 @@ classdef Roads < utils.class.Container
     methods
         create(obj, property_name, type);
         update(obj, property_name);
+        delete(obj, property_name);
     end
 end

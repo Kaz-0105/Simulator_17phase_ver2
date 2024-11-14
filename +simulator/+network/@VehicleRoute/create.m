@@ -19,7 +19,7 @@ function create(obj, property_name)
         Roads = RoutingDecisions.get('Network').get('Roads');
 
         % LinkRoadMapを取得
-        LinkRoadMap = RoutingDecisions.get('LinkRoadMap');
+        LinkRoadMap = Roads.get('LinkRoadMap');
 
         % Roadクラスを取得
         obj.Road = Roads.itemByKey(LinkRoadMap(to_link_id));

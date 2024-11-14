@@ -2,6 +2,8 @@ classdef QueueCounter < utils.class.Common
     properties
         Config;
         QueueCounters;
+        Road;
+        Link;
     end
 
     properties
@@ -20,6 +22,9 @@ classdef QueueCounter < utils.class.Common
 
             % QueueCounterのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % Roadの設定
+            obj.create('Road');
         end
     end
 end

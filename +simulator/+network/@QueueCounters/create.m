@@ -6,13 +6,13 @@ function create(obj, property_name)
         % VissimのCOMオブジェクトを設定
         obj.set('Vissim', Net.QueueCounters); 
     elseif strcmp(property_name, 'Elements')
-        % SignalHeadを走査
+        % QueueCounterを走査
         for signal_head_id = utils.class.Container.getVissimKeys(obj.Vissim)
-            % SignalHeadクラスを作成
-            SignalHead = simulator.network.SignalHead(obj, signal_head_id);
+            % QueueCounterクラスを作成
+            QueueCounter = simulator.network.QueueCounter(obj, signal_head_id);
 
-            % ElementsにSignalHeadをプッシュ
-            obj.add(SignalHead);
+            % ElementsにQueueCounterをプッシュ
+            obj.add(QueueCounter);
         end
     else
         error('Property name is not a valid class');

@@ -2,6 +2,11 @@ classdef SignalHead < utils.class.Common
     properties
         Config;
         SignalHeads;
+        Link;
+        FromLink;
+        ToLink;
+        FromRoad;
+        ToRoad;
     end
 
     properties
@@ -20,6 +25,12 @@ classdef SignalHead < utils.class.Common
 
             % SignalHeadのCOMオブジェクトを設定
             obj.create('Vissim');
+
+            % Link関連の設定
+            obj.create('Links');
+
+            % Road関連の設定
+            obj.create('Roads');
         end
     end
 

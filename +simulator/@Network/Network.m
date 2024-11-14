@@ -40,6 +40,12 @@ classdef Network < utils.class.Common
             % Linksクラスを作成
             obj.Links = simulator.network.Links(obj);
 
+            % Roadsクラスを作成
+            obj.Roads = simulator.network.Roads(obj);
+
+            % Intersectionsクラスを作成
+            obj.Intersections = simulator.network.Intersections(obj);
+
             % SignalHeadsクラスを作成
             obj.SignalHeads = simulator.network.SignalHeads(obj);
 
@@ -49,23 +55,15 @@ classdef Network < utils.class.Common
             % DelayMeasurementsクラスを作成
             obj.DelayMeasurements = simulator.network.DelayMeasurements(obj);
 
-            % DataCollectionMeasurementsクラスを作成
-            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
-
-            % Roadsクラスを作成
-            obj.Roads = simulator.network.Roads(obj);
-
-            % Intersectionsクラスを作成
-            obj.Intersections = simulator.network.Intersections(obj);
-
-            % VehicleInputsクラスを作成
-            obj.VehicleInputs = simulator.network.VehicleInputs(obj);
-
             % VehicleRoutingDecisionsクラスを作成
             obj.VehicleRoutingDecisions = simulator.network.VehicleRoutingDecisions(obj);
 
-            
+            % DataCollectionMeasurementsクラスを作成
+            obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
 
+            % VehicleInputsクラスを作成
+            obj.VehicleInputs = simulator.network.VehicleInputs(obj);
+            
             % RoadクラスにDelayMeasurementsを紐づける
             obj.Roads.create('DelayMeasurements');
             

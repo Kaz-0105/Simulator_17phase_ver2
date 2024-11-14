@@ -15,6 +15,10 @@ classdef DelayMeasurements < utils.class.Container
 
                 % 要素クラスを作成
                 obj.create('Elements');
+
+                % Roadクラスにおいて必要のないDelayMeasurementsを削除
+                obj.get('Network').get('Roads').delete('DelayMeasurements');
+                
             elseif isa(UpperClass, 'simulator.network.Road')
                 % ConfigクラスとRoadクラスを設定
                 obj.Config = UpperClass.get('Config');

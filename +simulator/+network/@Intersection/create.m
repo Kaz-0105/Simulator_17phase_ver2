@@ -44,7 +44,7 @@ function create(obj, property_name)
         obj.Roads.output = simulator.network.Roads(obj);
 
         % Roadsクラスを取得
-        Roads = obj.Intersections.get('Roads');
+        Roads = obj.Intersections.get('Network').get('Roads');
 
         % 流入道路を走査
         for input_road = obj.intersection_struct.input_roads
