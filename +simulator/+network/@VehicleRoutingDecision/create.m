@@ -5,15 +5,21 @@ function create(obj, property_name)
 
         % Comオブジェクトを設定
         obj.Vissim = VehicleRoutingDecisions.ItemByKey(obj.id);
-        
-    elseif strcmp(property_name, 'Intersection')
-        % Intersectionクラスを取得
-        obj.Intersection = obj.Road.get('Intersections').output;
 
-    elseif strcmp(property_name, 'VehicleRoutes')
-        % VehicleRoutesクラスを作成
-        obj.VehicleRoutes = simulator.network.VehicleRoutes(obj);
-        
+    elseif strcmp(property_name, 'Link')
+        % Linkクラスを取得
+        link_id = obj.Vissim.Link.get('AttValue', 'No');
+        Links = obj.VehicleRoutingDecisions.get('Network').get('Links');
+        obj.Link = Links.itemByKey(link_id);
+
+    elseif strcmp(property_name, 'Road')
+        % Roadクラスの取得
+        Roads = obj.VehicleRoutingDecisions.get('Network').get('Roads');
+        LinkRoadMap = Roads.get('LinkRoadMap'); 
+
+        % Roadクラスの取得
+        obj.Road = Roads.itemByKey(LinkRoadMap(obj.Link.get('id')));
+        obj.Road.set('VehicleRoutingDecision', obj);
     else
         error('Property name is invalid.');
     end

@@ -2,7 +2,11 @@ classdef VehicleRoute < utils.class.Common
     properties
         Config;
         VehicleRoutes;
-        Road;
+        Connector;
+        ToLink;
+        FromLink;
+        FromRoad;
+        ToRoad;
     end
 
     properties
@@ -24,8 +28,14 @@ classdef VehicleRoute < utils.class.Common
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
 
-            % Roadクラスをセット
-            obj.create('Road');
+            % Linkクラス関連の設定
+            obj.create('Links');
+
+            % Roadクラス関連の設定
+            obj.create('Roads');
+
+            % vehicle_routeを作成
+            obj.create('vehicle_route');
         end
     end
 

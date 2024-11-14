@@ -20,11 +20,8 @@ classdef VehicleRoutes < utils.class.Container
             % 下位クラスを作成
             obj.create('Elements');
 
-            % orderをセット
-            obj.create('order');
-
-            % rel_flowをセット
-            obj.create('rel_flow');
+            % rel_flowを設定
+            obj.create('rel_flows');
         end
     end
 

@@ -19,9 +19,6 @@ classdef VehicleRoutingDecisions < utils.class.Container
 
             % 下位クラスを作成
             obj.create('Elements');
-
-            % VehicleRoutesクラスを作成
-            obj.create('VehicleRoutes');
         end
     end
 

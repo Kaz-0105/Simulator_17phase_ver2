@@ -25,15 +25,6 @@ function create(obj, property_name)
             % Intersectionクラスを取得
             RoutingDecision.create('Intersection');
         end
-    elseif strcmp(property_name, 'VehicleRoutes')
-        % RoutingDecisionを走査
-        for routing_decision_id = obj.getKeys()
-            % RoutingDecisionクラスを取得
-            RoutingDecision = obj.itemByKey(routing_decision_id);
-
-            % VehicleRoutesクラスを作成
-            RoutingDecision.create('VehicleRoutes');
-        end
     elseif strcmp(property_name, 'LinkRoadMap')
         % 動的プロパティを初期化
         obj.set('LinkRoadMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));

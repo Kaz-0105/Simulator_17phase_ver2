@@ -2,6 +2,7 @@ classdef VehicleRoutingDecision < utils.class.Common
     properties
         Config;
         VehicleRoutingDecisions;
+        Link;
         Road;
         Intersection;
         VehicleRoutes;
@@ -9,8 +10,8 @@ classdef VehicleRoutingDecision < utils.class.Common
 
     properties
         id;
-        link_id;
         Vissim;
+        vehicle_routes;
     end
 
     methods
@@ -25,8 +26,24 @@ classdef VehicleRoutingDecision < utils.class.Common
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
 
-            % link_idの取得
-            obj.link_id = obj.Vissim.Link.get('AttValue', 'No');
+            % Linkクラスを設定
+            obj.create('Link');
+
+            % Roadクラスを設定
+            obj.create('Road');
+
+            % Intersectionクラスを取得
+            obj.Intersection = obj.Road.get('Intersections').output;
+
+            % vehicle_routesを初期化
+            obj.vehicle_routes = [];
+
+            % VehicleRoutesクラスを作成
+            obj.VehicleRoutes = simulator.network.VehicleRoutes(obj);
         end
+    end
+
+    methods
+        create(obj, property_name);
     end
 end

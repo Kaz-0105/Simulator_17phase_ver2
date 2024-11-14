@@ -43,7 +43,7 @@ function create(obj, property_name)
         RoadOrderMap = Intersection.get('RoadOrderMap');
 
         % 道路数を取得
-        num_roads = length(RoadOrderMap)/2;
+        num_roads = int32(RoadOrderMap.Count())/2;
 
         % 道路の順番を取得
         from_road_order = RoadOrderMap(obj.FromRoad.get('id'));
