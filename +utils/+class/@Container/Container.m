@@ -17,7 +17,7 @@ classdef Container < utils.class.Common
         end
 
         function keys = getKeys(obj)
-            keys = cell2mat(obj.Elements.keys);
+            keys = sort(cell2mat(obj.Elements.keys));
         end
 
         function add(obj, Element, key)

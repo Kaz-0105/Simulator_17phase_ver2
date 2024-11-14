@@ -37,17 +37,17 @@ function create(obj, property_name)
         signal_head.id = obj.id;
         
         % 信号機の進路の方向を取得
-        order = 0;
+        direction = 0;
         while true
-            order = order + 1;
-            if mod(from_road_order + order - to_road_order, num_roads) == 0
+            direction = direction + 1;
+            if mod(from_road_order + direction - to_road_order, num_roads) == 0
                 break;
             end
         end
 
         % 信号機の進路の方向を設定
-        obj.order = order;
-        signal_head.order = order;
+        obj.direction = direction;
+        signal_head.direction = direction;
 
         % FromRoadに信号機の情報を追加
         signal_heads = obj.FromRoad.get('signal_heads');

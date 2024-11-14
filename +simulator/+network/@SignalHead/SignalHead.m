@@ -11,7 +11,7 @@ classdef SignalHead < utils.class.Common
 
     properties
         id;
-        order;
+        direction;
         Vissim;
     end
 

@@ -8,6 +8,8 @@ classdef SignalGroup < utils.class.Common
 
     properties
         id;
+        order;
+        direction;
         signal_heads;
         Vissim;
     end

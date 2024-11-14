@@ -15,6 +15,16 @@ function create(obj, property_name)
             % SignalGroupクラスを追加
             obj.add(SignalGroup);
         end
+    
+    elseif strcmp(property_name, 'orders')
+        % SignalGroupを走査
+        for signal_group_id = obj.getKeys()
+            % SignalGroupクラスを取得
+            SignalGroup = obj.itemByKey(signal_group_id);
+
+            % orderを設定
+            SignalGroup.create('order');
+        end
     else
         error('Property name is invalid.');
     end

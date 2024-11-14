@@ -20,11 +20,20 @@ function create(obj, property_name)
             SignalHead = SignalHeads.itemByKey(signal_head_id);
 
             signal_head.id = signal_head_id;
-            signal_head.order = SignalHead.get('order');
+            signal_head.order = SignalHead.get('direction');
 
             % SignalHeadクラスをSignalHeadsクラスに追加
             obj.SignalHeads.add(SignalHead);
             obj.signal_heads = [obj.signal_heads, signal_head];
+
+            % directionのバリデーション
+            if isempty(obj.direction)
+                obj.direction = SignalHead.get('direction');
+            else
+                if obj.direction ~= SignalHead.get('direction')
+                    error('Direction is not same.');
+                end
+            end
 
             % SignalHeadクラスにSignalGroupクラスを追加
             SignalHead.set('SignalGroup', obj);
@@ -48,6 +57,22 @@ function create(obj, property_name)
                 end
             end
         end
+
+    elseif strcmp(property_name, 'order')
+        % Intersectionクラスを取得
+        Intersection = obj.SignalGroups.get('SignalController').get('Intersection');
+
+        % RoadOrderMapの取得
+        RoadOrderMap = Intersection.get('RoadOrderMap');
+
+        % 道路の数を取得
+        num_roads = int32(RoadOrderMap.Count())/2;
+
+        % 道路の順番を取得
+        road_order = RoadOrderMap(obj.Road.get('id'));
+
+        % 信号群の順番を設定
+        obj.order = (road_order  - 1) * (num_roads - 1) + obj.direction;
     else
         error('Property name is invalid.');
     end

@@ -26,6 +26,22 @@ function create(obj, property_name)
                 end
             end
         end
+    elseif strcmp(property_name, 'signal_groups')
+        % signal_groupsを初期化
+        obj.signal_groups = [];
+
+        for signal_group_id = obj.SignalGroups.getKeys()
+            % SignalGroupクラスを取得
+            SignalGroup = obj.SignalGroups.itemByKey(signal_group_id);
+
+            % signal_group構造体に情報を追加
+            signal_group.id = signal_group_id;
+            signal_group.order = SignalGroup.get('order');
+            signal_group.direction = SignalGroup.get('direction');
+
+            % signal_group構造体をsignal_groupsにプッシュ
+            obj.signal_groups = [obj.signal_groups, signal_group];  
+        end
     else
         error('Property name is invalid.');
     end

@@ -71,10 +71,13 @@ function create(obj, property_name)
         % PhaseSignalGroupsMapを初期化
         PhaseSignalGroupsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
 
+        % SignalGroupsを取得
+        SignalGroups = obj.Intersection.get('SignalController').get('SignalGroups');
+
         % SignalGroupsMapを取得
         SignalGroupsMap = obj.Intersection.get('signal_controller').signal_groups.SignalGroupsMap;
 
-        % Roads構造体を取得
+        % Roadsクラスを取得
         Roads = obj.Intersection.get('Roads');
 
         if Roads.input.count() == 4
@@ -83,17 +86,16 @@ function create(obj, property_name)
             PhaseSignalGroupsMap(2) = [3, 9];
             PhaseSignalGroupsMap(3) = [4, 5, 10, 11];
             PhaseSignalGroupsMap(4) = [6, 12];
-
         elseif Roads.input.count() == 3
             % PhaseSignalGroupsMapを設定
-            obj.PhaseSignalGroupsMap(1) = [1, 2, 5];
-            obj.PhaseSignalGroupsMap(2) = [3, 4];
-            obj.PhaseSignalGroupsMap(3) = 6;
-
+            PhaseSignalGroupsMap(1) = [1, 2, 5];
+            PhaseSignalGroupsMap(2) = [3, 4];
+            PhaseSignalGroupsMap(3) = 6;
         else
             error('error: Not defined number of roads.');
         end
 
+        % フェーズを走査
         for phase_id = 1: PhaseSignalGroupsMap.Count()
             % order_idsを取得
             order_ids = PhaseSignalGroupsMap(phase_id);

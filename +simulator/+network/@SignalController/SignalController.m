@@ -9,6 +9,7 @@ classdef SignalController < utils.class.Common
     properties
         id;
         Vissim;
+        signal_groups;
     end
 
     methods
@@ -28,6 +29,12 @@ classdef SignalController < utils.class.Common
 
             % Intersectionクラスを作成
             obj.create('Intersection');
+
+            % SignalGroupクラスにorderを設定
+            obj.SignalGroups.create('orders');
+
+            % signal_groups構造体を作成
+            obj.create('signal_groups');
         end
     end
 end
