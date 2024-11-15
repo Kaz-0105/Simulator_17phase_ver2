@@ -1,6 +1,7 @@
 classdef DelayMeasurement < utils.class.Common
     properties
         Config;
+        Timer;
         DelayMeasurements;
         Link;
         FromLink;
@@ -16,8 +17,9 @@ classdef DelayMeasurement < utils.class.Common
 
     methods
         function obj = DelayMeasurement(DelayMeasurements, id)
-            % ConfigクラスとDelayMeasurementsクラスを設定
+            % ConfigクラスとTimerクラスとDelayMeasurementsクラスを設定
             obj.Config = DelayMeasurements.get('Config');
+            obj.Timer = DelayMeasurements.get('Timer');
             obj.DelayMeasurements = DelayMeasurements;
 
             % idを設定

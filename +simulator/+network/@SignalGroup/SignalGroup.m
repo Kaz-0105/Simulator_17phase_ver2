@@ -1,6 +1,7 @@
 classdef SignalGroup < utils.class.Common
     properties
         Config;
+        Timer;
         SignalGroups;
         SignalHeads;
         Road;
@@ -17,8 +18,9 @@ classdef SignalGroup < utils.class.Common
 
     methods
         function obj = SignalGroup(SignalGroups, id)
-            % ConfigクラスとSignalGroupsクラスを設定
+            % ConfigクラスとTimerクラスとSignalGroupsクラスを設定
             obj.Config = SignalGroups.get('Config');
+            obj.Timer = SignalGroups.get('Timer');
             obj.SignalGroups = SignalGroups;
 
             % idを設定

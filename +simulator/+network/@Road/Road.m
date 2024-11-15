@@ -1,6 +1,7 @@
 classdef Road < utils.class.Common
     properties
         Config;
+        Timer;
         Roads;
         Intersections;
         Links;
@@ -11,8 +12,7 @@ classdef Road < utils.class.Common
         id;
         links;
         speed;
-
-        current_time;
+        
         record_flags;
     end
 
@@ -20,6 +20,7 @@ classdef Road < utils.class.Common
         function obj = Road(Roads, road_struct)
             % ConfigクラスとRoadsクラスを設定
             obj.Config = Roads.get('Config');
+            obj.Timer = Roads.get('Timer');
             obj.Roads = Roads;
 
             % idを設定
@@ -43,9 +44,6 @@ classdef Road < utils.class.Common
 
             % DataCollectionMeasurementsを初期化
             obj.create('DataCollections');
-
-            % current_timeの初期化
-            obj.create('current_time');
 
             % record_flagsを作成
             obj.create('record_flags');

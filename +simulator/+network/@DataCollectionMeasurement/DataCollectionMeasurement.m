@@ -1,6 +1,7 @@
 classdef DataCollectionMeasurement < utils.class.Common
     properties
         Config;
+        Timer;
         DataCollectionMeasurements;
     end
 
@@ -12,8 +13,9 @@ classdef DataCollectionMeasurement < utils.class.Common
 
     methods 
         function obj = DataCollectionMeasurement(DataCollectionMeasurements, id)
-            % ConfigクラスとDataCollectionMeasurementsクラスを設定
+            % ConfigクラスとTimerクラスとDataCollectionMeasurementsクラスを設定
             obj.Config = DataCollectionMeasurements.get('Config');
+            obj.Timer = DataCollectionMeasurements.get('Timer');
             obj.DataCollectionMeasurements = DataCollectionMeasurements;
 
             % idを設定

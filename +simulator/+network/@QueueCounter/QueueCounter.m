@@ -1,6 +1,7 @@
 classdef QueueCounter < utils.class.Common
     properties
         Config;
+        Timer;
         QueueCounters;
         Road;
         Link;
@@ -13,8 +14,9 @@ classdef QueueCounter < utils.class.Common
 
     methods 
         function obj = QueueCounter(QueueCounters, id)
-            % ConfigクラスとQueueCountersクラスを設定
+            % ConfigクラスとTimerクラスとQueueCountersクラスを設定
             obj.Config = QueueCounters.get('Config');
+            obj.Timer = QueueCounters.get('Timer');
             obj.QueueCounters = QueueCounters;
 
             % idを設定

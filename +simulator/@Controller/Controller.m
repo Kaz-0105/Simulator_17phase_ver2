@@ -1,6 +1,7 @@
 classdef Controller < utils.class.Common
     properties
         Config;
+        Timer;
         Controllers;
 
         Intersection;
@@ -8,22 +9,17 @@ classdef Controller < utils.class.Common
 
     properties
         id;
-        current_time;
     end
 
     methods 
-        function obj = Controller(Controllers)
-            % Configクラスを設定
+        function obj = Controller(Controllers, id)
+            % Configクラス、Timerクラス、Controllersクラスを取得
             obj.Config = Controllers.get('Config');
-
-            % Controllersクラスを設定
+            obj.Timer = Controllers.get('Timer');
             obj.Controllers = Controllers;
 
             % idを設定
-            obj.id = Controllers.count() + 1;
-
-            % current_timeの初期化
-            obj.create('current_time');
+            obj.id = id;
         end
     end
 

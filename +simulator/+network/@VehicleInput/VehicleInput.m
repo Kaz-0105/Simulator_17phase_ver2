@@ -1,6 +1,7 @@
 classdef VehicleInput < utils.class.Common
     properties
         Config;
+        Timer;
         VehicleInputs;
         Link;
         Road;
@@ -14,8 +15,9 @@ classdef VehicleInput < utils.class.Common
 
     methods
         function obj = VehicleInput(VehicleInputs, id)
-            % ConfigクラスとVehicleInputsクラスを設定
+            % ConfigクラスとTimerクラスとVehicleInputsクラスを設定
             obj.Config = VehicleInputs.get('Config');
+            obj.Timer = VehicleInputs.get('Timer');
             obj.VehicleInputs = VehicleInputs;
 
             % idを設定

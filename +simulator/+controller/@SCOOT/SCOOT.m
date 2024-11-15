@@ -1,6 +1,7 @@
 classdef SCOOT < utils.class.Common
     properties
         Config;
+        Timer;
         Controller;
         Intersection;
         Roads;
@@ -19,8 +20,6 @@ classdef SCOOT < utils.class.Common
     properties
         skip_flag;
         objectives;
-
-        current_time;
 
         current_phase_id;
         current_split_start;
@@ -41,9 +40,10 @@ classdef SCOOT < utils.class.Common
 
     methods 
         function obj = SCOOT(Controller)
-            % Configクラスを取得
+            % Config、Timerクラスを取得
             obj.Config = Controller.get('Config');
-
+            obj.Timer = Controller.get('Timer');
+        
             % SCOOTのパラメータを取得
             scoot = obj.Config.get('controllers').SCOOT;
             obj.delta_s = scoot.ds;
@@ -76,9 +76,6 @@ classdef SCOOT < utils.class.Common
 
             % num_phaseを作成
             obj.create('num_phases');
-
-            % current_timeの初期化
-            obj.current_time = obj.Controller.get('current_time');
 
             % current_phase_idとnext_phase_idの初期化
             obj.current_phase_id = 1;

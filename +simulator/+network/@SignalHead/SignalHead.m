@@ -1,6 +1,7 @@
 classdef SignalHead < utils.class.Common
     properties
         Config;
+        Timer;
         SignalHeads;
         Link;
         FromLink;
@@ -17,8 +18,9 @@ classdef SignalHead < utils.class.Common
 
     methods
         function obj = SignalHead(SignalHeads, id)
-            % ConfigクラスとSignalHeadsクラスを設定
+            % ConfigクラスとTimerクラスとSignalHeadsクラスを設定
             obj.Config = SignalHeads.get('Config');
+            obj.Timer = SignalHeads.get('Timer');
             obj.SignalHeads = SignalHeads;
 
             % idを設定

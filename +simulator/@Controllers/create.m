@@ -9,7 +9,7 @@ function create(obj, property_name)
             Intersection = Intersections.itemByKey(intersection_id);
 
             % Controllerクラスを作成
-            Controller = simulator.Controller(obj);
+            Controller = simulator.Controller(obj, obj.count() + 1);
 
             % ControllerクラスとIntersectionクラスを紐付け
             Controller.set('Intersection', Intersection);
@@ -29,7 +29,7 @@ function create(obj, property_name)
             end
 
             % ElementsにControllerをプッシュ
-            obj.Elements(Controller.get('id')) = Controller;
+            obj.add(Controller);
         end
     else
         error('Property name is invalid.');

@@ -10,10 +10,10 @@ function create(obj, property_name)
         obj.simulator.folder = char(data.simulator.folder);
 
         % ステップ時間を設定
-        obj.simulator.dt = data.simulator.dt;
+        obj.simulator.time_step = data.simulator.time_step;
 
         % シミュレーション時間を設定
-        obj.simulator.total_time = data.simulator.total_time;
+        obj.simulator.finish_time = data.simulator.finish_time;
 
         % Vissimのシード値を設定
         obj.simulator.seed = data.simulator.seed;
@@ -25,7 +25,7 @@ function create(obj, property_name)
         evaluation = struct();
 
         % データの測定間隔を設定
-        evaluation.dt = data.simulator.evaluation.dt;
+        evaluation.time_step = data.simulator.evaluation.time_step;
 
         % queue_lengthの測定の有無を設定
         if strcmp(char(data.simulator.evaluation.queue_length), 'on')
@@ -74,21 +74,21 @@ function create(obj, property_name)
 
         % DataCollectionについての設定
         obj.Vissim.Evaluation.set('AttValue', 'DataCollCollectData', true);
-        obj.Vissim.Evaluation.set('AttValue', 'DataCollInterval', obj.simulator.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollInterval', obj.simulator.time_step);
         obj.Vissim.Evaluation.set('AttValue', 'DataCollFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'DataCollToTime', obj.simulator.total_time);
+        obj.Vissim.Evaluation.set('AttValue', 'DataCollToTime', obj.simulator.finish_time);
 
         % DelayTimeについての設定
         obj.Vissim.Evaluation.set('AttValue', 'DelaysCollectData', obj.simulator.evaluation.delay_time);
-        obj.Vissim.Evaluation.set('AttValue', 'DelaysInterval', obj.simulator.evaluation.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysInterval', obj.simulator.evaluation.time_step);
         obj.Vissim.Evaluation.set('AttValue', 'DelaysFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'DelaysToTime', obj.simulator.total_time);
+        obj.Vissim.Evaluation.set('AttValue', 'DelaysToTime', obj.simulator.finish_time);
 
         % QueueLengthについての設定
         obj.Vissim.Evaluation.set('AttValue', 'QueuesCollectData', obj.simulator.evaluation.queue_length);
-        obj.Vissim.Evaluation.set('AttValue', 'QueuesInterval', obj.simulator.evaluation.dt);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesInterval', obj.simulator.evaluation.time_step);
         obj.Vissim.Evaluation.set('AttValue', 'QueuesFromTime', 0);
-        obj.Vissim.Evaluation.set('AttValue', 'QueuesToTime', obj.simulator.total_time);
+        obj.Vissim.Evaluation.set('AttValue', 'QueuesToTime', obj.simulator.finish_time);
 
     elseif strcmp(property_name, 'network')
         % 構造体を初期化
@@ -331,10 +331,13 @@ function create(obj, property_name)
         data = yaml.loadFile([pwd, '\layout\config.yaml']);
 
         % スプリットとサイクルの変動幅を取得
-        scoot.ds = data.scoot.ds;
+        scoot.split_change_width = data.scoot.split_change_width;
 
         % スタートの周期を取得
-        scoot.cycle = data.scoot.cycle;
+        scoot.initial_cycle = data.scoot.initial_cycle;
+
+        % スプリットの最小時間を取得
+        scoot.min_split = data.scoot.min_split;
 
         % 指数移動平均の係数を取得
         scoot.alpha = data.scoot.alpha;

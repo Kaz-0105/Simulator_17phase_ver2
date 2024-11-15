@@ -1,6 +1,7 @@
 classdef Link < utils.class.Common
     properties
         Config;
+        Timer;
         Links;
         Road;
     end
@@ -15,8 +16,9 @@ classdef Link < utils.class.Common
 
     methods
         function obj = Link(Links, id)
-            % ConfigクラスとLinksクラスを取得
+            % ConfigクラスとTimerクラスとLinksクラスを設定
             obj.Config = Links.get('Config');
+            obj.Timer = Links.get('Timer');
             obj.Links = Links;
 
             % LinkのIDを取得

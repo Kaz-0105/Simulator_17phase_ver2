@@ -1,6 +1,7 @@
 classdef Intersection < utils.class.Common
     properties
         Config;
+        Timer;
         Intersections;
 
         Controller;
@@ -10,14 +11,14 @@ classdef Intersection < utils.class.Common
     properties
         id;
         method;
-        current_time;
         record_flags;
     end
 
     methods
         function obj = Intersection(Intersections, intersection_struct)
-            % ConfigクラスとIntersectionクラスを設定
+            % ConfigクラスとTimerクラスとIntersectionsクラスを設定
             obj.Config = Intersections.get('Config');
+            obj.Timer = Intersections.get('Timer');
             obj.Intersections = Intersections;
 
             % idとメソッドを設定
@@ -32,9 +33,6 @@ classdef Intersection < utils.class.Common
 
             % RordOrderMapの作成
             obj.create('RoadOrderMap');
-
-            % current_timeの初期化
-            obj.create('current_time');
 
             % record_flagsを作成
             obj.create('record_flags');

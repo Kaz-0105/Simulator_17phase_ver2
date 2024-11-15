@@ -1,6 +1,7 @@
 classdef Controllers < utils.class.Container
     properties
         Config;
+        Timer;
         Simulator;
 
         Network;
@@ -8,10 +9,9 @@ classdef Controllers < utils.class.Container
 
     methods
         function obj = Controllers(Simulator)
-            % Configクラスを設定
+            % Config、Timer、Simulatorクラスを取得
             obj.Config = Simulator.get('Config');
-
-            % Simulatorクラスを設定
+            obj.Timer = Simulator.get('Timer');
             obj.Simulator = Simulator;
 
             % Networkクラスを作成

@@ -1,6 +1,7 @@
 classdef VehicleRoutes < utils.class.Container
     properties
         Config;
+        Timer;
         VehicleRoutingDecision;
     end
 
@@ -10,8 +11,9 @@ classdef VehicleRoutes < utils.class.Container
 
     methods
         function obj = VehicleRoutes(VehicleRoutingDecision)
-            % ConfigクラスとVehicleRoutingDecisionsクラスを設定
+            % ConfigクラスとTimerクラスとVehicleRoutingDecisionクラスを設定
             obj.Config = VehicleRoutingDecision.get('Config');
+            obj.Timer = VehicleRoutingDecision.get('Timer');
             obj.VehicleRoutingDecision = VehicleRoutingDecision;
 
             % VissimのCOMオブジェクトを設定

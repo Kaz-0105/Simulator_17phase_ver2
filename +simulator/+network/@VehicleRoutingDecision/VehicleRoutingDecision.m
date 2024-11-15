@@ -1,6 +1,7 @@
 classdef VehicleRoutingDecision < utils.class.Common
     properties
         Config;
+        Timer;
         VehicleRoutingDecisions;
         Link;
         Road;
@@ -16,8 +17,9 @@ classdef VehicleRoutingDecision < utils.class.Common
 
     methods
         function obj = VehicleRoutingDecision(VehicleRoutingDecisions, id)
-            % ConfigクラスとVehicleRoutingDecisionsクラスを設定
+            % ConfigクラスとTimerクラスとVehicleRoutingDecisionsクラスを設定
             obj.Config = VehicleRoutingDecisions.get('Config');
+            obj.Timer = VehicleRoutingDecisions.get('Timer');
             obj.VehicleRoutingDecisions = VehicleRoutingDecisions;
 
             % idを設定

@@ -1,12 +1,11 @@
 function run(obj)
     % シミュレーションを実行
-    while (obj.current_time < obj.total_time)
+    while (obj.Timer.get('finish_flag') == false)
         % Networkクラスを更新
-        obj.Network.update('current_time');
         obj.Network.update('Vehicles');
 
-        % 評価指標の測定（eval_intervalごとに実施）
-        if mod(obj.current_time, obj.eval_interval) == 0
+        % 評価指標の更新
+        if obj.Timer.get('evaluation_flag')
             obj.Network.update('Evaluation');
         end
 
@@ -14,19 +13,17 @@ function run(obj)
         obj.Controllers.update('current_time');
         obj.Controllers.run();
 
-        % break_pointを更新
-        obj.update('break_point');
+        % Timerクラスを更新
+        obj.Timer.run();
 
         % シミュレーションを実行
+        obj.Vissim.set('AttValue', 'SimBreakAt', obj.Timer.get('current_time'));
         obj.Vissim.RunContinuous();
 
         % 最初の更新のとき
         if ~obj.running_flag 
             obj.update('running_flag');
         end 
-        
-        % 現在の時間を更新
-        obj.current_time = obj.break_point;
     end
 
     % グラフの描画

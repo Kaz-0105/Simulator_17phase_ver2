@@ -1,13 +1,15 @@
 classdef SignalGroups < utils.class.Container
     properties
         Config;
+        Timer;
     end
 
     methods
         function obj = SignalGroups(UpperClass)
             if isa(UpperClass, 'simulator.network.SignalController')
-                % ConfigクラスとSignalControllerクラスを設定
-                obj.Config = UpperClass.get('Config');  
+                % ConfigクラスとTimerクラスとSignalControllerクラスを設定
+                obj.Config = UpperClass.get('Config'); 
+                obj.Timer = UpperClass.get('Timer'); 
                 obj.set('SignalController', UpperClass);
 
                 % VissimのCOMオブジェクトを設定

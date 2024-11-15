@@ -1,6 +1,7 @@
 classdef VehicleRoute < utils.class.Common
     properties
         Config;
+        Timer;
         VehicleRoutes;
         Connector;
         ToLink;
@@ -18,8 +19,9 @@ classdef VehicleRoute < utils.class.Common
 
     methods
         function obj = VehicleRoute(VehicleRoutes, id)
-            % ConfigクラスとVehicleRoutesクラスを設定
+            % ConfigクラスとTimerクラスとVehicleRoutesクラスを設定
             obj.Config = VehicleRoutes.get('Config');
+            obj.Timer = VehicleRoutes.get('Timer');
             obj.VehicleRoutes = VehicleRoutes;
 
             % idを設定

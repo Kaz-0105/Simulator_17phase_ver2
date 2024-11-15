@@ -1,6 +1,7 @@
 classdef SignalController < utils.class.Common
     properties
         Config;
+        Timer;
         SignalControllers;
         SignalGroups;
         Intersection;
@@ -14,8 +15,9 @@ classdef SignalController < utils.class.Common
 
     methods
         function obj = SignalController(SignalControllers, id)
-            % ConfigクラスとSignalControllersクラスを設定
+            % ConfigクラスとTimerクラスとSignalControllersクラスを設定
             obj.Config = SignalControllers.get('Config');
+            obj.Timer = SignalControllers.get('Timer');
             obj.SignalControllers = SignalControllers;
 
             % idを設定

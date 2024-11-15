@@ -1,11 +1,11 @@
 simulator : 
   folder : "two_lane"
-  dt : 1 
-  total_time : 1000
+  time_step : 1 
+  finish_time : 1000
   seed : 1
   quick_mode : 0
   evaluation :
-    dt : 10
+    time_step : 10
     queue_length : "off"
     delay_time : "on"
     calc_time : "off"
@@ -20,9 +20,13 @@ mpc :
   D_o : 100
 
 scoot : 
-  ds : 4
-  cycle : 60
+  split_change_width : 4
+  initial_cycle : 60
+  min_split : 10
   alpha : 0.8
   beta : 0.2
+  yellow_time : 1
+  red_time : 1
+
 
   

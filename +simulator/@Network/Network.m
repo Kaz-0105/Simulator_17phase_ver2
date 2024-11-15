@@ -1,6 +1,7 @@
 classdef Network < utils.class.Common
     properties
         Config;
+        Timer;
         Simulator;
         Controllers;
         Roads;
@@ -21,15 +22,13 @@ classdef Network < utils.class.Common
 
     properties
         record_flags;
-        current_time;
     end
 
     methods
         function obj = Network(Simulator)
-            % Configクラスを設定
+            % Config、Timer、Simulatorクラスを設定
             obj.Config = Simulator.get('Config');
-
-            % Simulatorクラスを設定
+            obj.Timer = Simulator.get('Timer');
             obj.Simulator = Simulator;
 
             % VissimのCOMオブジェクトを設定
@@ -67,11 +66,6 @@ classdef Network < utils.class.Common
 
             % DataCollectionMeasurementsクラスを作成
             obj.DataCollectionMeasurements = simulator.network.DataCollectionMeasurements(obj);
-            
-            % current_timeの初期化
-            obj.current_time = obj.Simulator.get('current_time');
-
-          
         end
     end
 

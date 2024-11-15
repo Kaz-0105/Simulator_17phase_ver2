@@ -1,6 +1,7 @@
 classdef Links < utils.class.Container
     properties
         Config;
+        Timer;
     end
 
     properties
@@ -11,8 +12,9 @@ classdef Links < utils.class.Container
         function obj = Links(UpperClass)
             % UpperClassで分岐
             if isa(UpperClass, 'simulator.Network')
-                % ConfigクラスとNetworkクラスを取得
+                % ConfigクラスとTimerクラスとNetworkクラスを取得
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Network', UpperClass);
 
                 % VissimのComオブジェクトを取得
@@ -25,13 +27,15 @@ classdef Links < utils.class.Container
                 obj.create('Connections');
 
             elseif isa(UpperClass, 'simulator.network.Link')
-                % ConfigクラスとLinksクラスを取得
+                % ConfigクラスとTimerクラスとLinkクラスを取得
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Link', UpperClass);
             
             elseif isa(UpperClass, 'simulator.network.Road')
-                % ConfigクラスとRoadクラスを取得
+                % ConfigクラスとTimerクラスとRoadクラスを取得
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Road', UpperClass);
                 
             else

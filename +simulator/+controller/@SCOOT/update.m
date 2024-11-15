@@ -56,16 +56,16 @@ function update(obj, property_name , varargin)
         if obj.Roads.count() == 4
             if obj.current_phase_id == 1
                 road_ids = [1, 3];
-                order_ids = [1, 2];
+                orders = [1, 2];
             elseif obj.current_phase_id == 2
                 road_ids = [1, 3];
-                order_ids = 3;
+                orders = 3;
             elseif obj.current_phase_id == 3
                 road_ids = [2, 4];
-                order_ids = [1, 2];
+                orders = [1, 2];
             elseif obj.current_phase_id == 4
                 road_ids = [2, 4];
-                order_ids = 3;
+                orders = 3;
             else
                 error('current_phase_id is invalid.');
             end
@@ -103,14 +103,14 @@ function update(obj, property_name , varargin)
                 % VehicleRouteクラスを取得
                 VehicleRoute = VehicleRoutes.itemByKey(vehicle_route_id);
 
-                % order_idを取得
-                order_id = VehicleRoute.get('order');
+                % orderを取得
+                order = VehicleRoute.get('order');
 
                 % rel_flowを取得
                 rel_flow = VehicleRoute.get('rel_flow');
 
-                % orderがorder_idsに含まれる場合
-                if ismember(order_id, order_ids)
+                % orderがordersに含まれる場合
+                if ismember(order, orders)
                     % target_rel_flowを更新
                     target_rel_flow = target_rel_flow + rel_flow;
                 end
@@ -274,9 +274,9 @@ function update(obj, property_name , varargin)
         count = 0;
 
         % フェーズを走査
-        for order_id = 1: obj.num_phases
+        for order = 1: obj.num_phases
             % フェーズIDを取得
-            phase_id = mod(obj.current_phase_id + order_id, obj.num_phases);
+            phase_id = mod(obj.current_phase_id + order, obj.num_phases);
 
             % 0になってしまった場合、num_phasesに変更
             if phase_id == 0
@@ -286,7 +286,7 @@ function update(obj, property_name , varargin)
             % PhaseSplitStartMapを更新
             if strcmp(up_or_down, 'up')
                 % PhaseSplitStartMapを更新
-                obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) + (order_id-1) * delta / obj.num_phases;
+                obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) + (order-1) * delta / obj.num_phases;
             elseif strcmp(up_or_down, 'down')
                 % 1つ前のフェーズIDを取得
                 if phase_id == 1
@@ -296,12 +296,28 @@ function update(obj, property_name , varargin)
                 end
 
                 % スプリットの長さが10秒より大きいかどうかで場合分け
-                if obj.PhaseSplitStartMap(phase_id) - obj.PhaseSplitStartMap(former_phase_id) > 10
-                    % PhaseSplitStartMapを更新
-                    obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order_id - 1 - count) * delta / obj.num_phases;
+                if order == 1
+                    if obj.PhaseSplitStartMap(phase_id) + obj.cycle_time - obj.PhaseSplitStartMap(former_phase_id) > 10
+                        % PhaseSplitStartMapを更新
+                        obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order - 1 - count) * delta / obj.num_phases;
+                    else
+                        % 変更できなかったフェーズ数をカウント
+                        count = count + 1;
+
+                        % PhaseSplitStartMapを更新
+                        obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order - 1 - count) * delta / obj.num_phases;
+                    end
                 else
-                    % 変更できなかったフェーズ数をカウント
-                    count = count + 1;
+                    if obj.PhaseSplitStartMap(phase_id) - obj.PhaseSplitStartMap(former_phase_id) > 10
+                        % PhaseSplitStartMapを更新
+                        obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order - 1 - count) * delta / obj.num_phases;
+                    else
+                        % 変更できなかったフェーズ数をカウント
+                        count = count + 1;
+
+                        % PhaseSplitStartMapを更新
+                        obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order - 1 - count) * delta / obj.num_phases;
+                    end
                 end
             else
                 error('up_or_down is invalid.');

@@ -1,6 +1,7 @@
 classdef Simulator < utils.class.Common
     properties
         Config;
+        Timer;
         Network;
         Controllers;
     end
@@ -14,16 +15,8 @@ classdef Simulator < utils.class.Common
     end
 
     properties
-        dt;
-        total_time;
         seed;
-
-        eval_interval;
-        
         running_flag;
-
-        break_point;
-        current_time;
     end
 
     methods
@@ -34,21 +27,11 @@ classdef Simulator < utils.class.Common
             % VissimのCOMオブジェクトを設定
             obj.create('Vissim');
 
-            % ステップ時間とシミュレーション時間を設定
-            obj.create('dt');
-            obj.create('total_time');
-
-            % 評価指標の測定間隔を設定
-            obj.create('eval_interval');
-
             % シミュレーションが動いているかどうかのフラグ
             obj.running_flag = false;
 
-            % ブレークポイントの初期化
-            obj.break_point = 0;
-
-            % 現在の時間の初期化
-            obj.current_time = 0;
+            % Timerクラスを作成
+            obj.Timer = simulator.Timer(obj);
 
             % Networkクラスを作成
             obj.Network = simulator.Network(obj);

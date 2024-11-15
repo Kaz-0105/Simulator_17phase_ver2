@@ -14,28 +14,6 @@ function create(obj, property_name)
 
         % Vissimにシード値を設定
         obj.Vissim.set('AttValue', 'RandSeed', obj.seed);
-        
-    elseif strcmp(property_name, 'dt')
-        % Simulatorクラス用の設定を取得
-        simulator_config = obj.Config.get('simulator');
-
-        % ステップ時間を設定
-        obj.dt = simulator_config.dt;
-    elseif strcmp(property_name, 'total_time')
-        % Simulatorクラス用の設定を取得
-        simulator_config = obj.Config.get('simulator');
-
-        % シミュレーション時間を設定
-        obj.total_time = simulator_config.total_time;
-
-        % Vissimにシミュレーション時間を設定
-        obj.Vissim.set('AttValue', 'SimPeriod', simulator_config.total_time);
-    elseif strcmp(property_name, 'eval_interval')
-        % Simulatorクラス用の設定を取得
-        simulator_config = obj.Config.get('simulator');
-
-        % 評価指標の測定間隔を設定
-        obj.eval_interval = simulator_config.evaluation.dt;
 
     elseif strcmp(property_name, 'ModelsMap')
         % Modelsクラスを初期化

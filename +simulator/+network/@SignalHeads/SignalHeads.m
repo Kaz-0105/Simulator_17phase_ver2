@@ -1,13 +1,15 @@
 classdef SignalHeads < utils.class.Container
     properties
         Config;
+        Timer;
     end
 
     methods
         function obj = SignalHeads(UpperClass)
             if isa(UpperClass, 'simulator.Network')
-                % ConfigクラスとNetworkクラスを設定
+                % ConfigクラスとTimerクラスとNetworkクラスを設定
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Network', UpperClass);
 
                 % VissimのCOMオブジェクトを設定
