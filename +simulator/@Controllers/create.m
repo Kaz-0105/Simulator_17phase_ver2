@@ -9,24 +9,10 @@ function create(obj, property_name)
             Intersection = Intersections.itemByKey(intersection_id);
 
             % Controllerクラスを作成
-            Controller = simulator.Controller(obj, obj.count() + 1);
+            Controller = simulator.Controller(obj, obj.count() + 1, Intersection);
 
-            % ControllerクラスとIntersectionクラスを紐付け
-            Controller.set('Intersection', Intersection);
-            Intersection.set('Controller', Controller);
-
-            % 交差点の制御方式によって場合分け
-            method = Intersection.get('method');
-
-            if strcmp(method, 'MPC')
-                Controller.create('MPC');
-            elseif strcmp(method, 'Fix')
-                Controller.create('Fix');
-            elseif strcmp(method, 'SCOOT')
-                Controller.create('SCOOT');
-            else
-                error('Error: method is invalid.');
-            end
+            % Controllerクラスに手法を設定
+            Controller.create('Method');
 
             % ElementsにControllerをプッシュ
             obj.add(Controller);

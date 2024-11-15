@@ -1,6 +1,6 @@
 intersections: 
   - id: 1
-    method: "SCOOT"
+    method: "Scoot"
     input_roads:
       - id: 1
         road_id: 5

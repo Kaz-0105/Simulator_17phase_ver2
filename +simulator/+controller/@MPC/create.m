@@ -38,7 +38,7 @@ function create(obj, property_name)
 
                 % D_o（評価範囲）を設定
                 controllers = obj.Config.get('controllers');
-                main_prm.D_o = controllers.MPC.D_o;
+                main_prm.D_o = controllers.Mpc.D_o;
 
                 % D_s（信号の影響圏）を設定
                 main_prm.D_s = v_kmh / 2;
@@ -93,7 +93,7 @@ function create(obj, property_name)
                         branch_prm.v = v_kmh/3.6;
 
                         % D_o（評価範囲）を設定
-                        branch_prm.D_o = controllers.MPC.D_o;
+                        branch_prm.D_o = controllers.Mpc.D_o;
 
                         % D_s（信号の影響圏）を設定
                         branch_prm.D_s = v_kmh / 2;
@@ -160,7 +160,7 @@ function create(obj, property_name)
                         branch_prm.v = v_kmh/3.6;
 
                         % D_o（評価範囲）を設定
-                        branch_prm.D_o = controllers.MPC.D_o;
+                        branch_prm.D_o = controllers.Mpc.D_o;
 
                         % D_s（信号の影響圏）を設定
                         branch_prm.D_s = v_kmh / 2;
@@ -249,7 +249,7 @@ function create(obj, property_name)
 
                     % D_o（評価範囲）を設定
                     controllers = obj.Config.get('controllers');
-                    main_prm.D_o = controllers.MPC.D_o;
+                    main_prm.D_o = controllers.Mpc.D_o;
 
                     % D_s（信号の影響圏）を設定
                     main_prm.D_s = v_kmh / 2;
@@ -307,7 +307,7 @@ function create(obj, property_name)
                                 branch_prm.v = v_kmh/3.6;
 
                                 % D_o（評価範囲）を設定
-                                branch_prm.D_o = controllers.MPC.D_o;
+                                branch_prm.D_o = controllers.Mpc.D_o;
 
                                 % D_s（信号の影響圏）を設定
                                 branch_prm.D_s = v_kmh / 2;
@@ -384,7 +384,7 @@ function create(obj, property_name)
                                 branch_prm.v = v_kmh/3.6;
 
                                 % D_o（評価範囲）を設定
-                                branch_prm.D_o = controllers.MPC.D_o;
+                                branch_prm.D_o = controllers.Mpc.D_o;
 
                                 % D_s（信号の影響圏）を設定
                                 branch_prm.D_s = v_kmh / 2;

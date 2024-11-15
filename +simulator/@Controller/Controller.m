@@ -3,8 +3,6 @@ classdef Controller < utils.class.Common
         Config;
         Timer;
         Controllers;
-
-        Intersection;
     end
 
     properties
@@ -12,7 +10,7 @@ classdef Controller < utils.class.Common
     end
 
     methods 
-        function obj = Controller(Controllers, id)
+        function obj = Controller(Controllers, id, UpperClass)
             % Configクラス、Timerクラス、Controllersクラスを取得
             obj.Config = Controllers.get('Config');
             obj.Timer = Controllers.get('Timer');
@@ -20,6 +18,18 @@ classdef Controller < utils.class.Common
 
             % idを設定
             obj.id = id;
+
+            % UpperClassによって分岐
+            if isa(UpperClass, 'simulator.network.Intersection')
+                % Intersectionクラスを設定
+                obj.set('Intersection' ,UpperClass);
+                obj.Intersection.set('Controller', obj);
+
+                % 制御手法の設定
+                obj.create('Method');
+            else
+                error('UpperClass is invalid');
+            end
         end
     end
 

@@ -1,13 +1,13 @@
 function run(obj)
-    if isprop(obj, 'MPC')
+    if isprop(obj, 'Mpc')
         % skip_flagの更新
-        obj.MPC.update('skip_flag');
+        obj.Mpc.update('skip_flag');
         
         % skip_flagによって分岐
-        if obj.MPC.get('skip_flag')
+        if obj.Mpc.get('skip_flag')
             return;
         else
-            obj.MPC.run();
+            obj.Mpc.run();
         end
 
     elseif isprop(obj, 'Fix')
@@ -21,15 +21,15 @@ function run(obj)
             obj.Fix.run();
         end
 
-    elseif isprop(obj, 'SCOOT')
+    elseif isprop(obj, 'Scoot')
         % skip_flagの更新
-        obj.SCOOT.update('skip_flag');
+        obj.Scoot.update('skip_flag');
 
         % skip_flagによって分岐
-        if obj.SCOOT.get('skip_flag')
+        if obj.Scoot.get('skip_flag')
             return;
         else
-            obj.SCOOT.run();
+            obj.Scoot.run();
         end
     else
         error('Error: property name is invalid.');

@@ -1,4 +1,4 @@
-classdef MPC < utils.class.Common
+classdef Mpc < utils.class.Common
     properties
         Config;
         Controller;
@@ -28,7 +28,7 @@ classdef MPC < utils.class.Common
     end
 
     methods
-        function obj = MPC(Controller)
+        function obj = Mpc(Controller)
             % Configクラスを設定
             obj.Config = Controller.get('Config');
 
@@ -38,16 +38,16 @@ classdef MPC < utils.class.Common
             % Intersectionクラスを設定
             obj.Intersection = Controller.get('Intersection');
 
-            % IntersectionクラスにMPCクラスを設定
-            obj.Intersection.set('MPC', obj);
+            % IntersectionクラスにMpcクラスを設定
+            obj.Intersection.set('Mpc', obj);
 
             % Roadsクラスを設定
             obj.Roads = obj.Intersection.get('Roads');
             
-            % RoadクラスにMPCクラスを設定
+            % RoadクラスにMpcクラスを設定
             for road_id = 1: obj.Roads.input.count()
                 Road = obj.Roads.itemByKey(road_id);
-                Road.set('MPC', obj);
+                Road.set('Mpc', obj);
             end
 
             % u_lengthの設定
@@ -58,9 +58,9 @@ classdef MPC < utils.class.Common
 
             % ホライゾンの設定
             controllers = obj.Config.get('controllers');
-            obj.dt = controllers.MPC.dt;
-            obj.N_p = controllers.MPC.N_p;
-            obj.N_c = controllers.MPC.N_c;
+            obj.dt = controllers.Mpc.dt;
+            obj.N_p = controllers.Mpc.N_p;
+            obj.N_c = controllers.Mpc.N_c;
         end
     end
 

@@ -13,6 +13,10 @@ classdef SignalController < utils.class.Common
         signal_groups;
     end
 
+    properties
+        PhaseSignalGroupsMap;
+    end
+
     methods
         function obj = SignalController(SignalControllers, id)
             % ConfigクラスとTimerクラスとSignalControllersクラスを設定
@@ -38,8 +42,11 @@ classdef SignalController < utils.class.Common
             % signal_groups構造体を作成
             obj.create('signal_groups');
 
-            % GroupOrderMapを作成
+            % OrderGroupMapを作成
             obj.create('OrderGroupMap');
+
+            % PhaseSignalGroupsMapを作成
+            obj.create('PhaseSignalGroupsMap');
         end
     end
 end

@@ -5,34 +5,23 @@ function create(obj, property_name)
 
         % current_timeを取得
         obj.current_time = Simulator.get('current_time');
-        
-    elseif strcmp(property_name, 'MPC')
-        % プロパティとしてMPCを追加
-        prop = addprop(obj, 'MPC');
-        prop.SetAccess = 'public';
-        prop.GetAccess = 'public';
 
-        % MPCクラスを作成
-        obj.MPC = simulator.controller.MPC(obj);
+    elseif strcmp(property_name, 'Method')
+        if isprop(obj, 'Intersection')
+            % 制御手法を取得
+            method = obj.Intersection.get('method');
 
-    elseif strcmp(property_name, 'Fix')
-        % プロパティとしてFixを追加
-        prop = addprop(obj, 'Fix');
-        prop.SetAccess = 'public';
-        prop.GetAccess = 'public';
-
-        % Fixクラスを作成
-        obj.Fix = simulator.controller.Fix(obj);
-
-    elseif strcmp(property_name, 'SCOOT')
-        % プロパティとしてSCOOTを追加
-        prop = addprop(obj, 'SCOOT');
-        prop.SetAccess = 'public';
-        prop.GetAccess = 'public';
-
-        % SCOOTクラスを作成
-        obj.SCOOT = simulator.controller.SCOOT(obj);
-        
+            % 制御手法によって分岐
+            if strcmp(method, 'Mpc')
+                obj.set('Mpc', simulator.controller.Mpc(obj));
+            elseif strcmp(method, 'Fix')
+                obj.set('Fix', simulator.controller.Fix(obj));
+            elseif strcmp(method, 'Scoot')
+                obj.set('Scoot', simulator.controller.Scoot(obj));
+            else
+                error('Error: method is invalid.');
+            end
+        end
     else
         error('Error: property name is invalid.');
     end

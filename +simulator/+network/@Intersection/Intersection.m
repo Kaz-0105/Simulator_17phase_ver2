@@ -3,14 +3,16 @@ classdef Intersection < utils.class.Common
         Config;
         Timer;
         Intersections;
-
         Controller;
         Roads;
     end
 
     properties
+        PhaseSignalGroupsMap;
+    end
+
+    properties
         id;
-        method;
         record_flags;
     end
 
@@ -23,7 +25,7 @@ classdef Intersection < utils.class.Common
 
             % idとメソッドを設定
             obj.id = intersection_struct.id;
-            obj.method = intersection_struct.method;
+            obj.set('method' ,intersection_struct.method);
 
             % intersection_structをセット
             obj.set('intersection_struct', intersection_struct);

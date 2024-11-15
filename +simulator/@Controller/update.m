@@ -7,12 +7,12 @@ function update(obj, property_name)
         obj.current_time = Simulator.get('current_time');
 
         % 手法ごとにcurrent_timeの更新
-        if isprop(obj, 'MPC')
-            obj.MPC.set('current_time', obj.current_time);
+        if isprop(obj, 'Mpc')
+            obj.Mpc.set('current_time', obj.current_time);
         elseif isprop(obj, 'Fix')
             obj.Fix.set('current_time', obj.current_time);
-        elseif isprop(obj, 'SCOOT')
-            obj.SCOOT.set('current_time', obj.current_time);
+        elseif isprop(obj, 'Scoot')
+            obj.Scoot.set('current_time', obj.current_time);
         else
             error('Method is invalid.');
         end

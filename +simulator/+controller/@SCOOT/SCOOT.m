@@ -1,4 +1,4 @@
-classdef SCOOT < utils.class.Common
+classdef Scoot < utils.class.Common
     properties
         Config;
         Timer;
@@ -8,97 +8,83 @@ classdef SCOOT < utils.class.Common
     end
 
     properties
-        delta_s;
-        delta_c;
+        split_change_width;
+        cycle_change_width;
+        min_cycle;
         alpha;
         beta;
+        yellow_time;
+        red_time;
+
         cycle_time;
         num_phases;
-        PhaseSplitStartMap;
     end
 
     properties
         skip_flag;
         objectives;
 
-        current_phase_id;
-        current_split_start;
-        current_cycle_start;
-        
-        next_phase_id;
-        next_split_start;
-        next_cycle_start;
+        phase_ids;
 
+        current_split_start;
+        next_split_start;
         split_adjusted_flag;
+
+        current_cycle_start;
+        next_cycle_start;
     end
 
     properties
         PhaseInflowRateMap;
         PhaseOutflowRateMap;
         PhaseSaturationMap;
+        PhaseSplitStartMap;
     end
 
     methods 
-        function obj = SCOOT(Controller)
-            % Config、Timerクラスを取得
+        function obj = Scoot(Controller)
+            % Config、Timerクラス、Controllerクラスを取得
             obj.Config = Controller.get('Config');
             obj.Timer = Controller.get('Timer');
-        
-            % SCOOTのパラメータを取得
-            scoot = obj.Config.get('controllers').SCOOT;
-            obj.delta_s = scoot.ds;
-            obj.alpha = scoot.alpha;
-            obj.beta = scoot.beta;
-
-            % Controllerクラスを取得
             obj.Controller = Controller;
 
-            % Intersectionクラスを取得
+            % Intersectionクラス、Roadsクラスを取得
             obj.Intersection = Controller.get('Intersection');
-
-            % IntersectionクラスにSCOOTクラスを設定
-            obj.Intersection.set('SCOOT', obj);
-
-            % IntersectionクラスにPhaseSignalGroupsMapを作成
-            obj.create('PhaseSignalGroupsMap');
-
-            % Roadsクラスを取得
             obj.Roads = obj.Intersection.get('Roads').input;
 
-            % RoadクラスにSCOOTクラスを設定
-            for road_id = 1: obj.Roads.count()
-                Road = obj.Roads.itemByKey(road_id);
-                Road.set('SCOOT', obj);
-            end
-
-            % cycle_timeの初期化
-            obj.cycle_time = scoot.cycle;
+            % scootのパラメータを取得
+            scoot = obj.Config.get('controllers').scoot;
+            obj.split_change_width = scoot.split_change_width;
+            obj.min_cycle = scoot.min_cycle;
+            obj.alpha = scoot.alpha;
+            obj.beta = scoot.beta;
+            obj.cycle_time = scoot.initial_cycle;
+            obj.yellow_time = scoot.yellow_time;
+            obj.red_time = scoot.red_time;
 
             % num_phaseを作成
             obj.create('num_phases');
-
-            % current_phase_idとnext_phase_idの初期化
-            obj.current_phase_id = 1;
-            obj.next_phase_id = 2;
-
-            % current_cycle_start、next_cycle_startの初期化
-            obj.current_cycle_start = obj.current_time;
-            obj.next_cycle_start = obj.current_time + obj.cycle_time;
+            obj.cycle_change_width = obj.num_phases;
+            obj.phase_ids = 1: obj.num_phases;
 
             % PhaseSplitStartMapの初期化
             obj.create('PhaseSplitStartMap');
 
             % current_split_start, next_split_startの初期化
-            obj.current_split_start = obj.current_time;
+            obj.current_split_start = obj.Timer.get('current_time');
             obj.next_split_start = obj.PhaseSplitStartMap(obj.next_phase_id);
-
-            % split_adjusted_flagの初期化
             obj.split_adjusted_flag = false;
+
+            % current_cycle_start、next_cycle_startの初期化
+            obj.current_cycle_start = obj.Timer.get('current_time');
+            obj.next_cycle_start = obj.current_time + obj.cycle_time;
 
             % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
             obj.create('PhaseSaturationMap');
             obj.create('PhaseInflowRateMap');
             obj.create('PhaseOutflowRateMap');
+
+            
         end
     end
 

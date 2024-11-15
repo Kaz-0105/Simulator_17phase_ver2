@@ -298,13 +298,13 @@ function create(obj, property_name)
         % Controllersクラス用の設定を作成
         obj.controllers = struct();
 
-        % MPCの設定
-        obj.create('MPC');
+        % Mpcの設定
+        obj.create('Mpc');
 
-        % SCOOTの設定
-        obj.create('SCOOT');
-    elseif strcmp(property_name, 'MPC')
-        % MPCクラス用の設定を作成
+        % Scootの設定
+        obj.create('Scoot');
+    elseif strcmp(property_name, 'Mpc')
+        % Mpcクラス用の設定を作成
         mpc = struct();
 
         % 設定ファイルを読み込む    
@@ -321,10 +321,10 @@ function create(obj, property_name)
         mpc.D_o = data.mpc.D_o;
 
         % mpcをcontrollersにプッシュ
-        obj.controllers.MPC = mpc;
+        obj.controllers.Mpc = mpc;
 
-    elseif strcmp(property_name, 'SCOOT')
-        % SCOOTクラス用の設定を作成
+    elseif strcmp(property_name, 'Scoot')
+        % Scootクラス用の設定を作成
         scoot = struct();
 
         % 設定ファイルを読み込む
@@ -339,12 +339,15 @@ function create(obj, property_name)
         % スプリットの最小時間を取得
         scoot.min_split = data.scoot.min_split;
 
+        % emergency_thresholdを取得
+        scoot.emergency_threshold = data.scoot.emergency_threshold;
+        
         % 指数移動平均の係数を取得
         scoot.alpha = data.scoot.alpha;
         scoot.beta = data.scoot.beta;
 
-        % SCOOTの設定をcontrollersにプッシュ
-        obj.controllers.SCOOT = scoot;
+        % Scootの設定をcontrollersにプッシュ
+        obj.controllers.Scoot = scoot;
     else
         error('error: invalid property_name');
     end

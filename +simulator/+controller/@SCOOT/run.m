@@ -19,9 +19,6 @@ function run(obj)
             % サイクル時間の更新
             obj.update('cycle_time');
 
-            % 飽和率をプリント
-            obj.PhaseSaturationMap.values
-
         elseif strcmp(objective, 'split_change')
             % current_split_startを更新
             obj.update('current_split_start');
@@ -29,9 +26,8 @@ function run(obj)
             % Intersectionクラスから信号を変更する
             obj.Intersection.run(obj.next_phase_id, 'green');
 
-            % current_phase_idとnext_phase_idを更新
-            obj.update('current_phase_id');
-            obj.update('next_phase_id');
+            % phase_idsを更新
+            obj.phase_ids = [obj.phase_ids(2:end), obj.next_phase_id];
 
             % next_split_startを更新
             obj.update('next_split_start', objective);

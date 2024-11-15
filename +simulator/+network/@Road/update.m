@@ -7,25 +7,25 @@ function update(obj, property_name)
         obj.current_time = Network.get('current_time');
 
     elseif strcmp(property_name, 'Vehicles')
-        if isfield(obj.Intersections, 'input')
-            if isprop(obj.Intersections.input, 'MPC')
-                controller = 'MPC';
-            elseif isprop(obj.Intersections.input, 'SCOOT')
-                controller = 'SCOOT';
+        if isfield(obj.Intersections, 'output')
+            if isprop(obj.Intersections.output.get('Controller'), 'Mpc')
+                controller = 'Mpc';
+            elseif isprop(obj.Intersections.output.get('Controller'), 'Scoot')
+                controller = 'Scoot';
             else
                 error('Not defined controller.');
             end
         else
-            if isprop(obj, 'MPC')
-                controller = 'MPC';
-            elseif isprop(obj, 'SCOOT')
-                controller = 'SCOOT';
+            if isprop(obj.Intersections.input.get('Controller'), 'Mpc')
+                controller = 'Mpc';
+            elseif isprop(obj.Intersections.input.get('Controller'), 'Scoot')
+                controller = 'Scoot';
             else
                 error('Not defined controller.');
             end
         end
 
-        if strcmp(controller, 'MPC')
+        if strcmp(controller, 'Mpc')
             % 車両情報のテーブルを初期化
             size = [0, 7];
             variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag', 'preceding_record_id'};
@@ -273,15 +273,15 @@ function update(obj, property_name)
             % vehiclesをRoadにプッシュ
             obj.set('vehicles', vehicles);
 
-        elseif strcmp(controller, 'SCOOT')
+        elseif strcmp(controller, 'Scoot')
             % 現在のフェーズIDとフェーズの数を取得
             try
-                current_phase_id = obj.SCOOT.get('current_phase_id');
-                num_phases = obj.SCOOT.get('num_phases');
+                current_phase_id = obj.Scoot.get('current_phase_id');
+                num_phases = obj.Scoot.get('num_phases');
             catch
-                SCOOT = obj.Intersections.input.get('SCOOT');
-                current_phase_id = SCOOT.get('current_phase_id');
-                num_phases = SCOOT.get('num_phases');
+                Scoot = obj.Intersections.input.get('Scoot');
+                current_phase_id = Scoot.get('current_phase_id');
+                num_phases = Scoot.get('num_phases');
             end
 
             % inflowを取得

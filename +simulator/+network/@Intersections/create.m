@@ -236,7 +236,7 @@ function create(obj, property_name)
             % Intersectionクラスを取得
             Intersection = obj.itemByKey(intersection_id);
 
-            % MPCの変数のIDを設定
+            % Mpcの変数のIDを設定
             Intersection.create('order_id');
         end
         
