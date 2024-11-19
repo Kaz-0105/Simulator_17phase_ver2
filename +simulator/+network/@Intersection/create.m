@@ -10,26 +10,34 @@ function create(obj, property_name)
         % record_flagがtrueのとき
         if obj.record_flags.queue_length
             % queue_tableを初期化
-            names = {'time', 'average', 'max'};
+            names = {'time', 'average_queue_length', 'max_queue_length'};
             types = {'double', 'double', 'double'};
             variable_size = [0, 3];
             queue_table = table('Size', variable_size, 'VariableNames', names, 'VariableTypes', types);
 
             % queue_tableを設定
             obj.set('queue_table', queue_table);
+
+            % average_queue_length, max_queue_lengthを初期化
+            obj.set('average_queue_length', 0);
+            obj.set('max_queue_length', 0);
         end
 
     elseif strcmp(property_name, 'delay_table')
         % record_flagがtrueのとき
         if obj.record_flags.delay_time
             % delay_tableを初期化
-            names = {'time', 'average', 'max'};
+            names = {'time', 'average_delay_time', 'max_delay_time'};
             types = {'double', 'double', 'double'};
             variable_size = [0, 3];
             delay_table = table('Size', variable_size, 'VariableNames', names, 'VariableTypes', types);
 
             % delay_tableを設定
             obj.set('delay_table', delay_table);
+
+            % average_delay_time, max_delay_timeを初期化
+            obj.set('average_delay_time', 0);
+            obj.set('max_delay_time', 0);
         end
         
     elseif strcmp(property_name, 'Roads')

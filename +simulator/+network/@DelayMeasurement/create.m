@@ -65,6 +65,21 @@ function create(obj, property_name)
         obj.FromRoad.set('delay_measurements', [delay_measurements, delay_measurement]);
         obj.FromRoad.get('DelayMeasurements').add(obj);
         
+    elseif strcmp(property_name, 'delay_table')
+        % record_flagsを取得
+        record_flags = obj.FromRoad.get('record_flags');
+
+        % record_flags.delay_timeがtrueの場合
+        if record_flags.delay_time
+            % delay_tableを作成
+            variable_names = {'time', 'delay_time'};
+            variable_types = {'double', 'double'};
+            variable_size = [0, 2];
+            obj.set('delay_table', table('Size', variable_size,'VariableNames', variable_names, 'VariableTypes', variable_types));
+            
+            % delay_timeを初期化
+            obj.set('delay_time', 0);
+        end
     else
         error('Property name is not valid');
     end

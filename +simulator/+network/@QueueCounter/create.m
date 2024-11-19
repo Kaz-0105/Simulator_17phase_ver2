@@ -24,6 +24,22 @@ function create(obj, property_name)
 
         % RoadクラスにQueueCounterクラスをプッシュ
         obj.Road.get('QueueCounters').add(obj);
+
+    elseif strcmp(property_name, 'queue_table')
+        % record_flagsを取得
+        record_flags = obj.Road.get('record_flags');
+
+        % record_flags.queue_lengthがtrueの場合
+        if record_flags.queue_length
+            % queue_tableを作成
+            variable_names = {'time', 'queue_length'};
+            variable_types = {'double', 'double'};
+            variable_size = [0, 2];
+            obj.set('queue_table', table('Size', variable_size,'VariableNames', variable_names, 'VariableTypes', variable_types));
+
+            % queue_lengthを初期化
+            obj.set('queue_length', 0);
+        end
     else
         error('Property name is not a valid class');
     end   

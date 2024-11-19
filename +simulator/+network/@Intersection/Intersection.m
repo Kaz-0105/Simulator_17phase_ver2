@@ -38,6 +38,8 @@ classdef Intersection < utils.class.Common
 
             % record_flagsを作成
             obj.create('record_flags');
+            obj.create('queue_table');
+            obj.create('delay_table');
         end
     end
 

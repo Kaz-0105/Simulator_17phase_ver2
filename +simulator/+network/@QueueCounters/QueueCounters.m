@@ -22,13 +22,22 @@ classdef QueueCounters < utils.class.Container
                 obj.get('Network').get('Roads').delete('QueueCounters');
 
             elseif isa(UpperClass, 'simulator.network.Road')
-                % ConfigクラスとRoadクラスを設定
+                % ConfigクラスとTimerクラスとRoadクラスを設定
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Road', UpperClass);
+
+                % queue_tableを作成
+                obj.create('queue_table');
                 
             else
                 error('UppeClass is not a valid class');
             end
         end
+    end
+
+    methods
+        create(obj, property_name);
+        update(obj, property_name);
     end
 end

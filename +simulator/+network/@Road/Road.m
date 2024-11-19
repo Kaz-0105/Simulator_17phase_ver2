@@ -29,24 +29,24 @@ classdef Road < utils.class.Common
             % road_structを設定
             obj.set('road_struct', road_struct);
 
+            % record_flagsを作成
+            obj.create('record_flags');
+
             % Links, speedを作成
             obj.create('Links');
             obj.create('speed');
 
-            % SignalHeadsを作成
+            % SignalHeadsを初期化
             obj.create('SignalHeads');
 
-            % QueueCountersを作成
+            % QueueCountersを初期化
             obj.create('QueueCounters');
 
-            % DelayMeasurementsを作成
+            % DelayMeasurementsを初期化
             obj.create('DelayMeasurements');
 
             % DataCollectionMeasurementsを初期化
             obj.create('DataCollections');
-
-            % record_flagsを作成
-            obj.create('record_flags');
 
             % Intersectionsの初期化
             obj.Intersections = struct();

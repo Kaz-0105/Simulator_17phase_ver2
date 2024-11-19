@@ -33,6 +33,9 @@ classdef DelayMeasurement < utils.class.Common
 
             % Roadクラス関連の設定
             obj.create('Roads');
+
+            % delay_tableの設定
+            obj.create('delay_table');
         end
     end
 

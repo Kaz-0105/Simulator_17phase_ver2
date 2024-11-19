@@ -1,12 +1,5 @@
 function update(obj, property_name)
-    if strcmp(property_name, 'current_time')
-        % Networkクラスを取得
-        Network = obj.Roads.get('Network');
-
-        % current_timeを更新
-        obj.current_time = Network.get('current_time');
-
-    elseif strcmp(property_name, 'Vehicles')
+    if strcmp(property_name, 'Vehicles')
         if isfield(obj.Intersections, 'output')
             if isprop(obj.Intersections.output.get('Controller'), 'Mpc')
                 controller = 'Mpc';
@@ -396,140 +389,20 @@ function update(obj, property_name)
         else
             error('Method is invalid.');
         end
-
-    % elseif strcmp(property_name, 'DataCollections')
-    %     % DataCollectionsを初期化
-    %     obj.DataCollections.input = simulator.network.DataCollections(obj);
-    %     obj.DataCollections.output = simulator.network.DataCollections(obj);
         
     elseif strcmp(property_name, 'Evaluation')
-        % queue_tableが存在するとき
-        if isprop(obj, 'queue_table')
-            % queue_tableの更新
-            obj.update('queue_table');
-        end
-
-        % delay_tableが存在するとき
-        if isprop(obj, 'delay_table')
-            % delay_tableの更新
-            obj.update('delay_table');
-        end
-
-    elseif strcmp(property_name, 'queue_table')
-        % メインリンクのQueueCounterのComオブジェクトを取得
-        QueueCounter = obj.queue_counters.main.Vissim;
-
-        % queue_lengthを取得
-        queue_length = round(QueueCounter.get('AttValue', 'QLen(Current, Last)'), 1);
-
-        % NaNの場合は0に変換
-        if isnan(queue_length)
-            queue_length = 0;
-        end
-
-        % average_queue_lengthとmax_queue_lengthを初期化
-        average_queue_length = queue_length;
-        max_queue_length = queue_length;
-
-        % 分岐車線があるとき
-        if isfield(obj.queue_counters, 'branch')
-            % 分岐の数を初期化
-            num_branch = 0;
-
-            for direction = ["left", "right"]
-                % char型に変換
-                direction = char(direction);
-
-                % direcitionに対応する分岐が存在する場合
-                if isfield(obj.queue_counters.branch, direction)
-                    % メインリンクの車線数を取得
-                    main_num_lanes = obj.links.main.lanes;
-
-                    % branch構造体を取得
-                    branch = obj.queue_counters.branch.(direction);
-
-                    % QueueCounterのComオブジェクトを取得
-                    QueueCounter = branch.Vissim;
-
-                    % queue_lengthを取得
-                    queue_length = round(QueueCounter.get('AttValue', 'QLen(Current, Last)'), 1);
-
-                    % NaNの場合は0に変換
-                    if isnan(queue_length)
-                        queue_length = 0;
-                    end
-
-                    % num_branchを更新
-                    num_branch = num_branch + 1;
-
-                    % average_queue_lengthとmax_queue_lengthを更新
-                    average_queue_length = average_queue_length + 1/(main_num_lanes + num_branch) * (queue_length - average_queue_length);
-                    max_queue_length = max(max_queue_length, queue_length);
-                end
-            end
-        end
-
-        % queue_tableにプッシュ
-        obj.queue_table(end + 1, :) = {obj.current_time, round(average_queue_length, 1), round(max_queue_length, 1)};
-    elseif strcmp(property_name, 'delay_table')
-        % RouteAverageDelayMapとRouteNumMeasurementsMapを初期化
-        RouteAverageDelayMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
-        RouteNumMeasurementsMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
-
-        % delay_measurementを走査
-        for delay_measurement = obj.delay_measurements
-            % route_idを取得
-            route_id = delay_measurement.route_id;
-
-            % DelayMeasurementのComオブジェクトを取得
-            DelayMeasurement = delay_measurement.Vissim;
-
-            % delay_timeを取得
-            delay_time = round(DelayMeasurement.get('AttValue', 'VehDelay(Current, Last, All)'), 1);
-
-            % NaNの場合は0に変換
-            if isnan(delay_time)
-                delay_time = 0;
+        % 流出交差点が存在する場合
+        if isfield(obj.Intersections, 'output')
+            if obj.record_flags.queue_length
+                % QueueCountersのqueue_tableを更新
+                obj.QueueCounters.update('queue_table');
             end
 
-            % 最初の測定ではないかつdelay_timeが0の場合
-            if height(obj.delay_table) ~= 0 && delay_time == 0
-                % colume_nameを作成
-                column_name = sprintf('route_%d', route_id);
-
-                % 前の値を取得
-                delay_time = obj.delay_table{end, column_name};
-            end
-
-            % RouteNumMeasurementsMapにプッシュ
-            if isKey(RouteNumMeasurementsMap, route_id)
-                RouteNumMeasurementsMap(route_id) = RouteNumMeasurementsMap(route_id) + 1;
-            else
-                RouteNumMeasurementsMap(route_id) = 1;
-            end
-
-            % RouteAverageDelayMapにプッシュ
-            if isKey(RouteAverageDelayMap, route_id)
-                RouteAverageDelayMap(route_id) = round(RouteAverageDelayMap(route_id) + 1/RouteNumMeasurementsMap(route_id) * (delay_time - RouteAverageDelayMap(route_id)), 1);
-            else
-                RouteAverageDelayMap(route_id) = delay_time;
+            if obj.record_flags.delay_time
+                % DelayMeasurementsのdelay_tableを更新
+                obj.DelayMeasurements.update('delay_table');
             end
         end
-
-        % new_recordを初期化
-        new_record = {obj.current_time};
-
-        % route_idsを作成
-        route_ids = sort(cell2mat(RouteAverageDelayMap.keys), 'ascend');
-
-        % RouteAverageDelayMapを走査
-        for route_id = route_ids
-            % new_recordにプッシュ
-            new_record{end + 1} = RouteAverageDelayMap(route_id);
-        end
-
-        % delay_tableにプッシュ
-        obj.delay_table(end + 1, :) = new_record;
     else
         error('error: Property name is invalid.');
     end

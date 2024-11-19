@@ -27,6 +27,9 @@ classdef QueueCounter < utils.class.Common
 
             % Roadの設定
             obj.create('Road');
+
+            % queue_tableの設定
+            obj.create('queue_table');
         end
     end
 end

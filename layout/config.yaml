@@ -6,7 +6,7 @@ simulator :
   quick_mode : 0
   evaluation :
     time_step : 10
-    queue_length : "off"
+    queue_length : "on"
     delay_time : "on"
     calc_time : "off"
   save : 

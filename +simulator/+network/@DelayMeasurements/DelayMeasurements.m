@@ -22,9 +22,14 @@ classdef DelayMeasurements < utils.class.Container
                 obj.get('Network').get('Roads').delete('DelayMeasurements');
                 
             elseif isa(UpperClass, 'simulator.network.Road')
-                % ConfigクラスとRoadクラスを設定
+                % ConfigクラスとTimerクラスとRoadクラスを設定
                 obj.Config = UpperClass.get('Config');
+                obj.Timer = UpperClass.get('Timer');
                 obj.set('Road', UpperClass);
+
+                % delay_tableを作成
+                obj.create('delay_table');
+                
             else
                 error('UppeClass is not a valid class');
             end

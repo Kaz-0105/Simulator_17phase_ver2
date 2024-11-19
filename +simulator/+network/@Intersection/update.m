@@ -1,12 +1,5 @@
-function update(obj, property_name)
-    if strcmp(property_name, 'current_time')
-        % Networkクラスを取得
-        Network = obj.Intersections.get('Network');
-
-        % current_timeを更新
-        obj.current_time = Network.get('current_time');
-        
-    elseif strcmp(property_name, 'SignalGroup')
+function update(obj, property_name)    
+    if strcmp(property_name, 'SignalGroup')
         % PhaseSignalGroupsMapを取得
         PhaseSignalGroupsMap = obj.SignalController.get('PhaseSignalGroupsMap');
 
@@ -23,87 +16,61 @@ function update(obj, property_name)
 
         % フェーズIDが1のとき
         obj.SignalController.run(1, 'green');
-
-
+        
     elseif strcmp(property_name, 'Evaluation')
         % queue_tableが存在するとき
-        if isprop(obj, 'queue_table')
+        if obj.record_flags.queue_length
             % queue_tableの更新
             obj.update('queue_table');
         end
 
         % delay_tableが存在するとき
-        if isprop(obj, 'delay_table')
+        if obj.record_flags.delay_time
             % delay_tableの更新
             obj.update('delay_table');
         end
 
     elseif strcmp(property_name, 'queue_table')
         % average_queue_lengthとmax_queue_lengthを初期化
-        average_queue_length = 0;
-        max_queue_length = 0;
+        obj.average_queue_length = 0;
+        obj.max_queue_length = 0;
 
-        % road_counterを初期化
-        road_counter = 0;
+        % num_roadsを取得
+        num_roads = obj.Roads.input.count();
 
         % Roadクラスを走査
         for road_id = obj.Roads.input.getKeys()
             % Roadクラスを取得
             Road = obj.Roads.input.itemByKey(road_id);
 
-            % queue_tableを取得
-            queue_table = Road.get('queue_table');
-
-            % 最後のレコードを取得
-            queue_record = queue_table(end, :);
-
-            % road_counterを更新
-            road_counter = road_counter + 1;
-
-            % average_queue_lengthを更新
-            average_queue_length = average_queue_length + (queue_record.average - average_queue_length) / road_counter;
-
-            % max_queue_lengthを更新
-            max_queue_length = max(max_queue_length, queue_record.max);
+            % average_queue_lengthとmax_queue_lengthを更新
+            obj.average_queue_length = obj.average_queue_length + Road.get('QueueCounters').get('average_queue_length') / num_roads;
+            obj.max_queue_length = max(obj.max_queue_length, Road.get('QueueCounters').get('max_queue_length'));
         end
 
         % queue_tableを更新
-        obj.queue_table(end + 1, :) = {obj.current_time, average_queue_length, max_queue_length};
+        obj.queue_table(end + 1, :) = {obj.Timer.get('current_time'), obj.average_queue_length, obj.max_queue_length};
 
     elseif strcmp(property_name, 'delay_table')
-        % average_delayとmax_delayを初期化
-        average_delay = 0;
-        max_delay = 0;
+        % average_delay_timeとmax_delay_timeを初期化
+        obj.average_delay_time = 0;
+        obj.max_delay_time = 0;
 
-        % counterを初期化
-        counter = 0;
+        % num_roadsを取得
+        num_roads = obj.Roads.input.count();
 
         % Roadクラスを走査
-        for road_id = 1 : obj.Roads.input.count()
+        for road_id = obj.Roads.input.getKeys()
             % Roadクラスを取得
             Road = obj.Roads.input.itemByKey(road_id);
 
-            % delay_tableを取得
-            delay_table = Road.get('delay_table');
-
-            % 最後のレコードを取得
-            delay_record = delay_table(end, :);
-
-            % average_delayを更新
-            for route_id = 1: width(delay_record) - 1
-                % counterをインクリメント
-                counter = counter + 1;
-
-                % average_delayを更新
-                average_delay = average_delay + (delay_record{1, 1 + route_id} - average_delay) / counter;
-
-                % max_delayを更新
-                max_delay = max(max_delay, delay_record{1, 1 + route_id});
-            end
+            % average_delay_timeとmax_delay_timeを更新
+            obj.average_delay_time = obj.average_delay_time + Road.get('DelayMeasurements').get('average_delay_time') / num_roads;
+            obj.max_delay_time = max(obj.max_delay_time, Road.get('DelayMeasurements').get('max_delay_time'));
         end
 
         % delay_tableを更新
-        obj.delay_table(end + 1, :) = {obj.current_time, average_delay, max_delay};
+        obj.delay_table(end + 1, :) = {obj.Timer.get('current_time'), obj.average_delay_time, obj.max_delay_time};
     else
         error('Property name is invalid.');
     end
