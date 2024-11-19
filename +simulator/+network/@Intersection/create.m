@@ -83,7 +83,7 @@ function create(obj, property_name)
     
     elseif strcmp(property_name, 'RoadOrderMap')
         % RoadOrderMapを初期化
-        obj.set('RoadOrderMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
+        obj.set('RoadOrderMap', containers.Map('KeyType', 'double', 'ValueType', 'double'));
 
         % 流入道路を走査
         for order = obj.Roads.input.getKeys()

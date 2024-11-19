@@ -308,7 +308,7 @@ function update(obj, property_name)
                     inflow = 0;
                     
                     % PhaseInflowMapを初期化
-                    PhaseInflowMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+                    PhaseInflowMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
 
                     % phase_idを走査
                     for phase_id = 1: num_phases
@@ -337,7 +337,7 @@ function update(obj, property_name)
                 outflow = 0;
 
                 % PhaseOutflowMapを初期化
-                PhaseOutflowMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+                PhaseOutflowMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
 
                 % phase_idを走査
                 for phase_id = 1: num_phases

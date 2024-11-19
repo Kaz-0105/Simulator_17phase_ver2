@@ -11,10 +11,6 @@ classdef Simulator < utils.class.Common
     end
 
     properties
-        ModelsMap;
-    end
-
-    properties
         seed;
         running_flag;
     end
@@ -38,9 +34,6 @@ classdef Simulator < utils.class.Common
 
             % Controllersクラスを作成
             obj.Controllers = simulator.Controllers(obj);
-
-            % Modelsクラスを作成
-            obj.create('ModelsMap');
         end
     end
 

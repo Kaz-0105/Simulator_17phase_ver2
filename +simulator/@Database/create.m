@@ -3,7 +3,7 @@ function create(obj, property_name)
         if strcmp(obj.file, 'simulator')
             % namesとtypesを初期化
             names = {'id', 'seed', 'simulation_time'};
-            types = {'int32', 'int32', 'int32'};
+            types = {'double', 'double', 'double'};
 
             % Intersectionsクラスを取得
             Intersections = obj.Simulator.get('Network').get('Intersections');
@@ -11,7 +11,7 @@ function create(obj, property_name)
             % intersection_{id}をnamesに追加
             for id = 1: Intersections.count()
                 names{end + 1} = ['intersection_', num2str(id)];
-                types{end + 1} = 'int32';
+                types{end + 1} = 'double';
             end
 
             % 続きを追加
@@ -24,7 +24,7 @@ function create(obj, property_name)
 
             types = [types, ...
                 {
-                    'int32', 'double', 'double', 'double', ...
+                    'double', 'double', 'double', 'double', ...
                     'double', 'double', 'double', 'double'
                 }
             ];
@@ -34,7 +34,7 @@ function create(obj, property_name)
         elseif strcmp(obj.file, 'intersection')
             % namesとtypesを初期化
             names = {'id', 'num_roads', 'method_id'};
-            types = {'int32', 'int32', 'int32'};
+            types = {'double', 'double', 'double'};
 
             % Intersectionsクラスを取得
             Intersections = obj.Simulator.get('Network').get('Intersections');
@@ -59,7 +59,7 @@ function create(obj, property_name)
             % road_{id}をnamesに追加
             for id = 1: max_num_roads
                 names{end + 1} = ['road_', num2str(id)];
-                types{end + 1} = 'int32';
+                types{end + 1} = 'double';
             end
 
             % tableを作成
@@ -68,7 +68,7 @@ function create(obj, property_name)
         elseif strcmp(obj.file, 'road')
             % namesとtypesを初期化
             names = {'id'};
-            types = {'int32'};
+            types = {'double'};
 
             % Intersectionsクラスを取得
             Intersections = obj.Simulator.get('Network').get('Intersections');
@@ -85,12 +85,12 @@ function create(obj, property_name)
         elseif strcmp(obj.file, 'inputs')
             % namesとtypesを初期化
             names = {'id'};
-            types = {'int32'};
+            types = {'double'};
 
         elseif strcmp(obj.file, 'method')
             % namesとtypesを初期化
             names = {'id', 'name'};
-            types = {'int32', 'string'};
+            types = {'double', 'string'};
 
             % tableを作成
             obj.table = table('Size', [0, length(names)], 'VariableNames', names, 'VariableTypes', types);

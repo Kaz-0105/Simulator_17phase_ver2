@@ -2,24 +2,24 @@ parameters:
   roads:
     - id: 1
       speed: 60
-      inflows: 700
+      inflows: 900
     - id: 2
       speed: 60
     - id: 3
       speed: 60
     - id: 4
       speed: 60
-      inflows: 700
+      inflows: 500
     - id: 5
       speed: 60
-      inflows: 700
+      inflows: 900
     - id: 6
       speed: 60
     - id: 7
       speed: 60
     - id: 8
       speed: 60
-      inflows: 700
+      inflows: 500
 
   intersections:
     - id: 1
@@ -32,6 +32,7 @@ parameters:
               value: 3
             - id: 3
               value: 1
+          template_id: 1
         - id: 2
           rel_flows:
             - id: 1
@@ -40,6 +41,7 @@ parameters:
               value: 3
             - id: 3
               value: 1
+          template_id: 1
         - id: 3
           rel_flows:
             - id: 1
@@ -48,6 +50,7 @@ parameters:
               value: 3
             - id: 3
               value: 1
+          template_id: 1
         - id: 4
           rel_flows:
             - id: 1
@@ -56,3 +59,4 @@ parameters:
               value: 3
             - id: 3
               value: 1
+          template_id: 1

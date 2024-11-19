@@ -25,9 +25,6 @@ function run(obj)
         end 
     end
 
-    % グラフの描画
-    obj.create('graph');
-
-    % 結果の保存
-    obj.save();
+    % 性能指標表示
+    obj.Network.run();
 end

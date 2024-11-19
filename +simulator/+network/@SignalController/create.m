@@ -45,7 +45,7 @@ function create(obj, property_name)
 
     elseif strcmp(property_name, 'OrderGroupMap')
         % GroupOrderMapを初期化
-        obj.set('OrderGroupMap', containers.Map('KeyType', 'int32', 'ValueType', 'int32'));
+        obj.set('OrderGroupMap', containers.Map('KeyType', 'double', 'ValueType', 'double'));
 
         % SignalGroupを取得
         for signal_group_id = obj.SignalGroups.getKeys()
@@ -61,7 +61,7 @@ function create(obj, property_name)
     
     elseif strcmp(property_name, 'PhaseSignalGroupsMap')
         % PhaseSignalGroupsMapを初期化
-        obj.PhaseSignalGroupsMap = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+        obj.PhaseSignalGroupsMap = containers.Map('KeyType', 'double', 'ValueType', 'any');
 
         % Roadsクラスを取得
         Roads = obj.Intersection.get('Roads').input;

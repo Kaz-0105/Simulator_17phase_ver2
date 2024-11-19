@@ -70,6 +70,8 @@ classdef Network < utils.class.Common
     end
 
     methods
+        create(obj, property_name);
         update(obj, property_name);
+        run(obj);
     end
 end

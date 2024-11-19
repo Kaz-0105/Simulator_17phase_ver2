@@ -35,7 +35,7 @@ function create(obj, property_name)
         RoadOrderMap = Intersection.get('RoadOrderMap');
 
         % 道路の数を取得
-        num_roads = int32(RoadOrderMap.Count())/2;
+        num_roads = double(RoadOrderMap.Count())/2;
 
         % vehicle_route構造体を初期化
         vehicle_route.id = obj.id;

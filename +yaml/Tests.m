@@ -62,7 +62,7 @@ classdef Tests < matlab.unittest.TestCase
                 'test', "test"
                 't', "t"
                 1.23, "1.23"
-                int32(1), "1"
+                double(1), "1"
                 true, "true"
                 struct("a", "test", "b", 123), "{a: test, b: 123.0}"
                 {}, "[]"
@@ -79,9 +79,9 @@ classdef Tests < matlab.unittest.TestCase
                 [], "[]"
                 zeros(1, 0), "[]"
                 zeros(0, 1), "[]"
-                int32(ones(2, 2, 2)), sprintf("- - [1, 1]\n  - [1, 1]\n- - [1, 1]\n  - [1, 1]")
-                num2cell(int32(ones(2, 2, 2))), sprintf("- - [1, 1]\n  - [1, 1]\n- - [1, 1]\n  - [1, 1]")
-                int32(ones(2, 1, 2)), sprintf("- [1, 1]\n- [1, 1]")
+                double(ones(2, 2, 2)), sprintf("- - [1, 1]\n  - [1, 1]\n- - [1, 1]\n  - [1, 1]")
+                num2cell(double(ones(2, 2, 2))), sprintf("- - [1, 1]\n  - [1, 1]\n- - [1, 1]\n  - [1, 1]")
+                double(ones(2, 1, 2)), sprintf("- [1, 1]\n- [1, 1]")
                 };
 
             for test = tests'

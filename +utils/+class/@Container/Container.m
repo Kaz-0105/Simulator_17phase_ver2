@@ -5,11 +5,11 @@ classdef Container < utils.class.Common
     
     methods
         function obj = Container()
-            obj.Elements = containers.Map('KeyType', 'int32', 'ValueType', 'any');
+            obj.Elements = containers.Map('KeyType', 'double', 'ValueType', 'any');
         end
 
         function num_elements = count(obj)
-            num_elements = int32(obj.Elements.Count);
+            num_elements = double(obj.Elements.Count);
         end
 
         function element = itemByKey(obj, key)

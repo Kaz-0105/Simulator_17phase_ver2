@@ -1,7 +1,7 @@
 function validate(obj, property_name)
     if strcmp(property_name, 'MLD')
         % MLDHeightMapの初期化
-        MLDHeightMap = containers.Map('KeyType', 'char', 'ValueType', 'int32');
+        MLDHeightMap = containers.Map('KeyType', 'char', 'ValueType', 'double');
 
         % 行列を走査
         for matrix_name = ["A", "B1", "B2", "B3", "C", "D1", "D2", "D3", "E", "F1", "F2", "F3", "G"]

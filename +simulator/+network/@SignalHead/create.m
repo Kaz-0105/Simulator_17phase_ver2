@@ -27,7 +27,7 @@ function create(obj, property_name)
         RoadOrderMap = Intersection.get('RoadOrderMap');
 
         % 交差点の道路の数を取得
-        num_roads = int32(RoadOrderMap.Count())/2;
+        num_roads = double(RoadOrderMap.Count())/2;
 
         % 信号頭の順番を設定
         from_road_order = RoadOrderMap(obj.FromRoad.get('id'));

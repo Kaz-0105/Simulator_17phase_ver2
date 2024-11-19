@@ -4,14 +4,14 @@ function create(obj, property_name)
         PhaseSignalGroupsMap = obj.Intersection.get('SignalController').get('PhaseSignalGroupsMap');
 
         % num_phasesを設定
-        obj.num_phases = int32(PhaseSignalGroupsMap.Count);
+        obj.num_phases = double(PhaseSignalGroupsMap.Count);
 
     elseif strcmp(property_name, 'PhaseSplitStartMap')
         % PhaseSplitMapの初期化
         obj.PhaseSplitStartMap = containers.Map('KeyType', 'double', 'ValueType', 'double');
 
         % バリデーションを行う
-        if mod(int32(obj.cycle_time), obj.num_phases) ~= 0
+        if mod(int64(obj.cycle_time), obj.num_phases) ~= 0
             error('Cycle time is not divisible by the number of phases.');
         end
 
@@ -26,7 +26,7 @@ function create(obj, property_name)
         
     elseif strcmp(property_name, 'PhaseSaturationMap')
         % PhaseSaturationRateMapの初期化
-        obj.PhaseSaturationMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+        obj.PhaseSaturationMap = containers.Map('KeyType', 'int64', 'ValueType', 'double');
 
         % フェーズを走査
         for phase_id = 1: obj.num_phases
@@ -35,7 +35,7 @@ function create(obj, property_name)
         end
     elseif strcmp(property_name, 'PhaseInflowRateMap')
         % PhaseInflowRateMapの初期化
-        obj.PhaseInflowRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+        obj.PhaseInflowRateMap = containers.Map('KeyType', 'int64', 'ValueType', 'double');
 
         % フェーズを走査
         for phase_id = 1: obj.num_phases
@@ -44,7 +44,7 @@ function create(obj, property_name)
         end
     elseif strcmp(property_name, 'PhaseOutflowRateMap')
         % PhaseOutflowRateMapの初期化
-        obj.PhaseOutflowRateMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
+        obj.PhaseOutflowRateMap = containers.Map('KeyType', 'int64', 'ValueType', 'double');
 
         % フェーズを走査
         for phase_id = 1: obj.num_phases

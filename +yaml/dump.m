@@ -14,7 +14,7 @@ function result = dump(data, style)
 %       2D/3D non-scalar array  | Nested sequences
 %       struct                  | Mapping
 %       scalar single/double    | Floating-point number
-%       scalar int8/../int64    | Integer
+%       scalar int8/../double    | Integer
 %       scalar logical          | Boolean
 %       scalar string           | String
 %       char vector             | String

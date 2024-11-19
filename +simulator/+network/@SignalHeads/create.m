@@ -18,7 +18,7 @@ function create(obj, property_name)
 
     elseif strcmp(property_name, 'GroupHeadsMap')
         % GroupHeadsMapを作成
-        obj.set('GroupHeadsMap', containers.Map('KeyType', 'int32', 'ValueType', 'any'));
+        obj.set('GroupHeadsMap', containers.Map('KeyType', 'double', 'ValueType', 'any'));
 
         % SignalHeadを走査
         for signal_head_id = obj.getKeys()
