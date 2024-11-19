@@ -10,7 +10,8 @@ classdef Scoot < utils.class.Common
     properties
         split_change_width;
         cycle_change_width;
-        min_cycle;
+        min_split_time;
+        emergency_threshold;
         alpha;
         beta;
         yellow_time;
@@ -55,12 +56,13 @@ classdef Scoot < utils.class.Common
             % scootのパラメータを取得
             scoot = obj.Config.get('controllers').scoot;
             obj.split_change_width = scoot.split_change_width;
-            obj.min_cycle = scoot.min_cycle;
+            obj.min_split_time = scoot.min_split_time;
             obj.alpha = scoot.alpha;
             obj.beta = scoot.beta;
-            obj.cycle_time = scoot.initial_cycle;
+            obj.cycle_time = scoot.initial_cycle_time;
             obj.yellow_time = scoot.yellow_time;
             obj.red_time = scoot.red_time;
+            obj.emergency_threshold = scoot.emergency_threshold;
 
             % num_phaseを作成
             obj.create('num_phases');
@@ -72,19 +74,17 @@ classdef Scoot < utils.class.Common
 
             % current_split_start, next_split_startの初期化
             obj.current_split_start = obj.Timer.get('current_time');
-            obj.next_split_start = obj.PhaseSplitStartMap(obj.next_phase_id);
+            obj.next_split_start = obj.PhaseSplitStartMap(obj.phase_ids(2));
             obj.split_adjusted_flag = false;
 
             % current_cycle_start、next_cycle_startの初期化
             obj.current_cycle_start = obj.Timer.get('current_time');
-            obj.next_cycle_start = obj.current_time + obj.cycle_time;
+            obj.next_cycle_start = obj.Timer.get('current_time') + obj.cycle_time;
 
             % PhaseSaturationRateMap、PhaseInflowRateMap、PhaseOutflowRateMapの初期化
             obj.create('PhaseSaturationMap');
             obj.create('PhaseInflowRateMap');
             obj.create('PhaseOutflowRateMap');
-
-            
         end
     end
 

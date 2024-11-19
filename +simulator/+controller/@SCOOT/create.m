@@ -20,7 +20,7 @@ function create(obj, property_name)
             if phase_id == 1
                 obj.PhaseSplitStartMap(phase_id) = obj.Timer.get('current_time') + obj.cycle_time;
             else
-                obj.PhaseSplitStartMap(phase_id) = obj.Timer.get('current_time') + obj.cycle_time / 3 * (phase_id - 1);
+                obj.PhaseSplitStartMap(phase_id) = obj.Timer.get('current_time') + obj.cycle_time / obj.num_phases * (phase_id - 1);
             end
         end
         

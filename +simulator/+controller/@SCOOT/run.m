@@ -23,11 +23,14 @@ function run(obj)
             % current_split_startを更新
             obj.update('current_split_start');
 
+            % SignalControllerクラスを取得
+            SignalController = obj.Intersection.get('SignalController');
+
             % Intersectionクラスから信号を変更する
-            obj.Intersection.run(obj.next_phase_id, 'green');
+            SignalController.run(obj.phase_ids(2), 'green');
 
             % phase_idsを更新
-            obj.phase_ids = [obj.phase_ids(2:end), obj.next_phase_id];
+            obj.phase_ids = [obj.phase_ids(2:end), obj.phase_ids(1)];
 
             % next_split_startを更新
             obj.update('next_split_start', objective);
@@ -38,13 +41,18 @@ function run(obj)
             obj.update('next_cycle_start');
 
         elseif strcmp(objective, 'yellow')
+            % IntersectionクラスからSignalControllerクラスを取得
+            SignalController = obj.Intersection.get('SignalController');
+
             % Intersectionクラスから信号を変更する
-            obj.Intersection.run(obj.current_phase_id, 'yellow');
+            SignalController.run(obj.phase_ids(1), 'yellow');
 
         elseif strcmp(objective, 'red')
+            % IntersectionクラスからSignalControllerクラスを取得
+            SignalController = obj.Intersection.get('SignalController');
+
             % Intersectionクラスから信号を変更する
-            obj.Intersection.run(obj.current_phase_id, 'red');
-            
+            SignalController.run(obj.phase_ids(1), 'red');  
         else
             error('Objective is invalid.');
         end

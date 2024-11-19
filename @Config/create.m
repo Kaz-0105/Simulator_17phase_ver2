@@ -334,10 +334,10 @@ function create(obj, property_name)
         scoot.split_change_width = data.scoot.split_change_width;
 
         % スタートの周期を取得
-        scoot.initial_cycle = data.scoot.initial_cycle;
+        scoot.initial_cycle_time = data.scoot.initial_cycle_time;
 
         % スプリットの最小時間を取得
-        scoot.min_split = data.scoot.min_split;
+        scoot.min_split_time = data.scoot.min_split_time;
 
         % emergency_thresholdを取得
         scoot.emergency_threshold = data.scoot.emergency_threshold;
@@ -346,8 +346,12 @@ function create(obj, property_name)
         scoot.alpha = data.scoot.alpha;
         scoot.beta = data.scoot.beta;
 
+        % 黄色時間と赤時間を取得
+        scoot.yellow_time = data.scoot.yellow_time;
+        scoot.red_time = data.scoot.red_time;
+
         % Scootの設定をcontrollersにプッシュ
-        obj.controllers.Scoot = scoot;
+        obj.controllers.scoot = scoot;
     else
         error('error: invalid property_name');
     end

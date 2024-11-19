@@ -100,8 +100,6 @@ function create(obj, property_name)
 
         elseif strcmp(obj.Intersection.get('method'), 'Mpc')
         end
-
-        obj.delete('OrderGroupMap');
        
     else
         error('Property name is invalid.');

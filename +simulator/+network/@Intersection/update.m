@@ -7,14 +7,24 @@ function update(obj, property_name)
         obj.current_time = Network.get('current_time');
         
     elseif strcmp(property_name, 'SignalGroup')
+        % PhaseSignalGroupsMapを取得
+        PhaseSignalGroupsMap = obj.SignalController.get('PhaseSignalGroupsMap');
+
         % フェーズを走査
-        for phase_id = cell2mat(obj.PhaseSignalGroupsMap.keys())
+        for phase_id = cell2mat(PhaseSignalGroupsMap.keys())
+            % フェーズIDが1のときはスキップ
             if phase_id == 1
-                obj.run(phase_id, 'green');
-            else
-                obj.run(phase_id, 'red');
+                continue;
             end
+            
+            % 信号の色を変更
+            obj.SignalController.run(phase_id, 'red');
         end
+
+        % フェーズIDが1のとき
+        obj.SignalController.run(1, 'green');
+
+
     elseif strcmp(property_name, 'Evaluation')
         % queue_tableが存在するとき
         if isprop(obj, 'queue_table')

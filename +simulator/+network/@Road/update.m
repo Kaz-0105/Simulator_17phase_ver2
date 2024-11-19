@@ -27,11 +27,11 @@ function update(obj, property_name)
 
         if strcmp(controller, 'Mpc')
             % 車両情報のテーブルを初期化
-            size = [0, 7];
+            variable_size = [0, 7];
             variable_names = {'id', 'pos', 'route', 'stop_lane', 'branch_flag', 'leader_flag', 'preceding_record_id'};
             variable_types = {'double', 'double', 'double', 'double', 'double', 'double', 'double'};
 
-            vehicles = table('Size', size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
+            vehicles = table('Size', variable_size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
 
             % メインリンクのVehiclesのComオブジェクトを取得
             Vehicles = obj.links.main.Vissim.Vehs;
@@ -275,13 +275,29 @@ function update(obj, property_name)
 
         elseif strcmp(controller, 'Scoot')
             % 現在のフェーズIDとフェーズの数を取得
-            try
-                current_phase_id = obj.Scoot.get('current_phase_id');
-                num_phases = obj.Scoot.get('num_phases');
-            catch
-                Scoot = obj.Intersections.input.get('Scoot');
-                current_phase_id = Scoot.get('current_phase_id');
-                num_phases = Scoot.get('num_phases');
+            if isfield(obj.Intersections, 'output')
+                % Scootクラスを取得
+                Scoot = obj.Intersections.output.get('Controller').get('Scoot');
+
+                % phase_idsを取得
+                phase_ids = Scoot.get('phase_ids');
+
+                % current_phase_idとnum_phasesを取得
+                current_phase_id = phase_ids(1);
+                num_phases = size(phase_ids, 1);
+
+            elseif isfield(obj.Intersections, 'input')
+                % Scootクラスを取得
+                Scoot = obj.Intersections.input.get('Controller').get('Scoot');
+
+                % phase_idsを取得
+                phase_ids = Scoot.get('phase_ids');
+
+                % current_phase_idとnum_phasesを取得
+                current_phase_id = phase_ids(1);
+                num_phases = size(phase_ids, 1);
+            else
+                error('error: Intersection is invalid.');
             end
 
             % inflowを取得

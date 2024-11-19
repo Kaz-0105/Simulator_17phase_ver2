@@ -190,35 +190,38 @@ function update(obj, property_name , varargin)
             % 前後のフェーズの飽和度を比較し分岐
             if obj.PhaseSaturationMap(obj.phase_ids(1)) < obj.PhaseSaturationMap(obj.phase_ids(2))  
                 % スプリットの長さが変更後に最小の連続時間を確保できるかどうかで場合分け
-                if obj.PhaseSplitStartMap(obj.phase_ids(2)) - obj.current_split_start  < obj.min_cycle + obj.split_change_width
+                if obj.PhaseSplitStartMap(obj.phase_ids(2)) - obj.current_split_start  < obj.min_split_time + obj.split_change_width
                     % next_split_startを更新
-                    obj.next_split_start = obj.current_split_start + obj.min_cycle;
+                    obj.next_split_start = obj.current_split_start + obj.min_split_time;
                 else
                     % next_split_startを更新
                     obj.next_split_start = obj.next_split_start - obj.split_change_width;
 
+                    % SignalControllerクラスを取得
+                    SignalController = obj.Intersection.get('SignalController');
+
                     % 現在のフェーズを黄色信号に変更
-                    obj.Intersection.run(obj.phase_ids(1), 'yellow');
+                    SignalController.run(obj.phase_ids(1), 'yellow');
                 end
 
                 % 最小の連続時間を確保できるとき
-                if obj.PhaseSplitStartMap(obj.phase_ids(2)) - obj.current_split_start >= obj.min_cycle + 1
+                if obj.PhaseSplitStartMap(obj.phase_ids(2)) - obj.current_split_start >= obj.min_split_time + 1
                     % PhaseSplitStartMapを更新
                     obj.PhaseSplitStartMap(obj.phase_ids(2)) = obj.PhaseSplitStartMap(obj.phase_ids(2)) - 1;
                 end
 
             elseif obj.PhaseSaturationMap(obj.phase_ids(1)) > obj.PhaseSaturationMap(obj.phase_ids(2))
                 % スプリットの長さが変更後に最小の連続時間を確保できるかどうかで場合分け
-                if obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.PhaseSplitStartMap(obj.phase_ids(2)) < obj.min_cycle + obj.split_change_width
+                if obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.PhaseSplitStartMap(obj.phase_ids(2)) < obj.min_split_time + obj.split_change_width
                     % next_split_startを更新
-                    obj.next_split_start = obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.min_cycle;
+                    obj.next_split_start = obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.min_split_time;
                 else
                     % next_split_startを更新
                     obj.next_split_start = obj.next_split_start + obj.split_change_width;
                 end
 
                 % PhaseSplitStartMapを更新
-                if obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.PhaseSplitStartMap(obj.phase_ids(2)) >= obj.min_cycle + 1
+                if obj.PhaseSplitStartMap(obj.phase_ids(3)) - obj.PhaseSplitStartMap(obj.phase_ids(2)) >= obj.min_split_time + 1
                     obj.PhaseSplitStartMap(obj.phase_ids(2)) = obj.PhaseSplitStartMap(obj.phase_ids(2)) + 1;
                 end
             end
@@ -299,12 +302,12 @@ function update(obj, property_name , varargin)
             elseif strcmp(cycle_change_type, 'down')
                 % スプリットの長さが10秒より大きいかどうかで場合分け
                 if order == 1
-                    if obj.PhaseSplitStartMap(phase_id) + obj.cycle_time - obj.PhaseSplitStartMap(obj.phase_ids(end)) <= obj.min_cycle
+                    if obj.PhaseSplitStartMap(phase_id) + obj.cycle_time - obj.PhaseSplitStartMap(obj.phase_ids(end)) <= obj.min_split_time
                         % 変更できなかったフェーズ数をカウント
                         count = count + 1;
                     end
                 else
-                    if obj.PhaseSplitStartMap(phase_id) - obj.PhaseSplitStartMap(obj.phase_ids(end)) <= obj.min_cycle
+                    if obj.PhaseSplitStartMap(phase_id) - obj.PhaseSplitStartMap(obj.phase_ids(end)) <= obj.min_split_time
                         % 変更できなかったフェーズ数をカウント
                         count = count + 1;
                     end
@@ -312,7 +315,7 @@ function update(obj, property_name , varargin)
                     % PhaseSplitStartMapを更新
                     obj.PhaseSplitStartMap(phase_id) = obj.PhaseSplitStartMap(phase_id) - (order - 1 - count);
                 end
-            elseif strcmp(property_name, 'emergency_up')
+            elseif strcmp(cycle_change_type, 'emergency_up')
                 % PhaseSplitStartMapを更新
                 if found_flag == false
                     if phase_id ~= max_saturation_phase_id + 1

@@ -230,10 +230,10 @@ function update(obj, property_name)
             vehicles = Road.get('vehicles');
 
             % delta_t_tableを初期化
-            size = [0, 3];
+            variable_size = [0, 3];
             variable_names = {'id', 'stop_lane', 'delta_t'};
             variable_types = {'double', 'double', 'double'};
-            delta_t_table = table('Size', size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
+            delta_t_table = table('Size', variable_size, 'VariableNames', variable_names, 'VariableTypes', variable_types);
 
             % 車線を走査
             for lane_id = 1: num_lanes

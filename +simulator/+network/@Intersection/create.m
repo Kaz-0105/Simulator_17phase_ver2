@@ -12,8 +12,8 @@ function create(obj, property_name)
             % queue_tableを初期化
             names = {'time', 'average', 'max'};
             types = {'double', 'double', 'double'};
-            size = [0, 3];
-            queue_table = table('Size', size, 'VariableNames', names, 'VariableTypes', types);
+            variable_size = [0, 3];
+            queue_table = table('Size', variable_size, 'VariableNames', names, 'VariableTypes', types);
 
             % queue_tableを設定
             obj.set('queue_table', queue_table);
@@ -25,8 +25,8 @@ function create(obj, property_name)
             % delay_tableを初期化
             names = {'time', 'average', 'max'};
             types = {'double', 'double', 'double'};
-            size = [0, 3];
-            delay_table = table('Size', size, 'VariableNames', names, 'VariableTypes', types);
+            variable_size = [0, 3];
+            delay_table = table('Size', variable_size, 'VariableNames', names, 'VariableTypes', types);
 
             % delay_tableを設定
             obj.set('delay_table', delay_table);

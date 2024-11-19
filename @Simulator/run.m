@@ -10,7 +10,6 @@ function run(obj)
         end
 
         % Controllersクラスを更新
-        obj.Controllers.update('current_time');
         obj.Controllers.run();
 
         % Timerクラスを更新

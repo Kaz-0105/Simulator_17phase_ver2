@@ -49,4 +49,8 @@ classdef SignalController < utils.class.Common
             obj.create('PhaseSignalGroupsMap');
         end
     end
+
+    methods
+        run(obj, phase_id, color);
+    end
 end
