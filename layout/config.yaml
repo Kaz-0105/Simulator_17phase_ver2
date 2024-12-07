@@ -1,7 +1,7 @@
 simulator : 
-  folder : "two_lane"
+  folder : "one_lane"
   time_step : 1 
-  finish_time : 1000
+  finish_time : 50
   seed : 1
   quick_mode : 0
   evaluation :
@@ -10,7 +10,7 @@ simulator :
     delay_time : "on"
     calc_time : "off"
   save : 
-    performance_indicators: "on"
+    results: "on"
     
 
 mpc :

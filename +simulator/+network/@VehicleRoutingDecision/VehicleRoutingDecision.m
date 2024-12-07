@@ -48,4 +48,14 @@ classdef VehicleRoutingDecision < utils.class.Common
     methods
         create(obj, property_name);
     end
+
+    methods
+        function relflows = getRelFlows(obj)
+            relflows = zeros(1, obj.VehicleRoutes.count());
+            for route_id = obj.VehicleRoutes.getKeys()
+                VehicleRoute = obj.VehicleRoutes.itemByKey(route_id);
+                relflows(route_id) = VehicleRoute.get('relflow');
+            end
+        end
+    end
 end

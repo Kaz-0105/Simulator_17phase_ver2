@@ -48,10 +48,10 @@ function create(obj, property_name)
         save = struct();
 
         % performance_indicatorsの保存の有無を設定
-        if strcmp(char(data.simulator.save.performance_indicators), 'on')
-            save.performance_indicators = true;
+        if strcmp(char(data.simulator.save.results), 'on')
+            save.results = true;
         else
-            save.performance_indicators = false;
+            save.results = false;
         end
         
         % saveをsimulatorにプッシュ

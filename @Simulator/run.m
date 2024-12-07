@@ -27,4 +27,7 @@ function run(obj)
 
     % 性能指標表示
     obj.Network.run();
+
+    % 結果の保存
+    obj.save();
 end
