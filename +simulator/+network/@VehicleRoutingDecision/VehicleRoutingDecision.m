@@ -16,6 +16,7 @@ classdef VehicleRoutingDecision < utils.class.Common
     end
 
     methods
+        % VehicleRoutingDecisionクラスのコンストラクタ
         function obj = VehicleRoutingDecision(VehicleRoutingDecisions, id)
             % ConfigクラスとTimerクラスとVehicleRoutingDecisionsクラスを設定
             obj.Config = VehicleRoutingDecisions.get('Config');
@@ -54,7 +55,7 @@ classdef VehicleRoutingDecision < utils.class.Common
             relflows = zeros(1, obj.VehicleRoutes.count());
             for route_id = obj.VehicleRoutes.getKeys()
                 VehicleRoute = obj.VehicleRoutes.itemByKey(route_id);
-                relflows(route_id) = VehicleRoute.get('relflow');
+                relflows(route_id) = VehicleRoute.get('rel_flow');
             end
         end
     end

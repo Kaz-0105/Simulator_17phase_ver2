@@ -44,7 +44,7 @@ function update(obj, property_name)
             Road = obj.Roads.input.itemByKey(road_id);
 
             % average_queue_lengthとmax_queue_lengthを更新
-            obj.average_queue_length = obj.average_queue_length + Road.get('QueueCounters').get('average_queue_length') / num_roads;
+            obj.average_queue_length = obj.average_queue_length + Road.get('QueueCounters').get('queue_length') / num_roads;
             obj.max_queue_length = max(obj.max_queue_length, Road.get('QueueCounters').get('max_queue_length'));
         end
 

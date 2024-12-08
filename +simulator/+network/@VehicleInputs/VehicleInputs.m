@@ -16,4 +16,8 @@ classdef VehicleInputs < utils.class.Container
             obj.create('Elements');
         end
     end
+
+    methods
+        create(obj, property_name);
+    end
 end

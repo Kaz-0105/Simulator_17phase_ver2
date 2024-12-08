@@ -47,11 +47,18 @@ function create(obj, property_name)
         % save構造体を初期化
         save = struct();
 
-        % performance_indicatorsの保存の有無を設定
+        % resultsの保存の有無を設定
         if strcmp(char(data.simulator.save.results), 'on')
             save.results = true;
         else
             save.results = false;
+        end
+
+        % time_seriesの保存の有無を設定
+        if strcmp(char(data.simulator.save.time_series), 'on')
+            save.time_series = true;
+        else
+            save.time_series = false;
         end
         
         % saveをsimulatorにプッシュ

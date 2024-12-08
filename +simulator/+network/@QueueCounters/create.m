@@ -21,13 +21,13 @@ function create(obj, property_name)
         % record_flags.queue_lengthがtrueの場合
         if record_flags.queue_length
             % queue_tableを作成
-            variable_names = {'time', 'average_queue_length', 'max_queue_length'};
+            variable_names = {'time', 'queue_length', 'max_queue_length'};
             variable_types = {'double', 'double', 'double'};
             variable_size = [0, 3];
             obj.set('queue_table', table('Size', variable_size,'VariableNames', variable_names, 'VariableTypes', variable_types));
             
             % average_queue_lengthとmax_queue_lengthを初期化
-            obj.set('average_queue_length', 0);
+            obj.set('queue_length', 0);
             obj.set('max_queue_length', 0);
         end
     else

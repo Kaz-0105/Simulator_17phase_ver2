@@ -10,7 +10,7 @@ function update(obj, property_name)
         end
 
         % average_queue_lengthとmax_queue_lengthを初期化
-        obj.average_queue_length = 0;
+        obj.queue_length = 0;
         obj.max_queue_length = 0;
 
         % 要素クラスを走査
@@ -19,12 +19,12 @@ function update(obj, property_name)
             QueueCounter = obj.itemByKey(queue_counter_id);
 
             % average_queue_lengthとmax_queue_lengthを更新
-            obj.average_queue_length = obj.average_queue_length + QueueCounter.get('queue_length')/obj.count();
+            obj.queue_length = obj.queue_length + QueueCounter.get('queue_length');
             obj.max_queue_length = max(obj.max_queue_length, QueueCounter.get('queue_length'));
         end
 
         % queue_tableにプッシュ
-        obj.queue_table(end + 1, :) = {obj.Timer.get('current_time'), obj.average_queue_length, obj.max_queue_length};
+        obj.queue_table(end + 1, :) = {obj.Timer.get('current_time'), obj.queue_length, obj.max_queue_length};
     else
         error('property_name is invalid');
     end
