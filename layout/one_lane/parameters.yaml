@@ -2,24 +2,24 @@ parameters:
   roads:
     - id: 1
       speed: 60
-      inflows: 500
+      inflows: 700
     - id: 2
       speed: 60
     - id: 3
       speed: 60
     - id: 4
       speed: 60
-      inflows: 500
+      inflows: 700
     - id: 5
       speed: 60
-      inflows: 900
+      inflows: 700
     - id: 6
       speed: 60
     - id: 7
       speed: 60
     - id: 8
       speed: 60
-      inflows: 900
+      inflows: 700
 
   intersections:
     - id: 1

@@ -167,7 +167,7 @@ function saveTimeSeriesForMscs(obj, simulator)
             continue;
         end
 
-        number = str2double(strrep(file_struct.name, 'time_series'));
+        number = str2double(strrep(strrep(file_struct.name, 'time_series', ''), '.csv', ''));
 
         if number > last_number
             last_number = number;

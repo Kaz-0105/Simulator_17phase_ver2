@@ -33,7 +33,7 @@ classdef Timer < utils.class.Common
             obj.create('evaluation_interval');
 
             % evaluation_flagを初期化
-            obj.evaluation_flag = false;
+            obj.evaluation_flag = true;
 
             % finish_flagを初期化
             obj.finish_flag = false;

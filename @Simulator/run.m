@@ -25,6 +25,9 @@ function run(obj)
         end 
     end
 
+    % 最後の評価指標の更新
+    obj.Network.update('Evaluation');
+
     % 性能指標表示
     obj.Network.run();
 
